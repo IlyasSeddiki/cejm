@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réussir la CEJM - BTS SIO SISR</title>
+    <style>
+        /* --- VARIABLES & RESET (Style Apple) --- */
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: #ffffff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent-blue: #0071e3;
+            --accent-hover: #0077ed;
+            --danger: #ff3b30;
+            --success: #34c759;
+            --radius: 18px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 0.8rem 0;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .logo span { color: var(--accent-blue); }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            margin-left: 25px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-links button:hover, .nav-links button.active { color: var(--text-primary); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 20px; font-weight: 700; }
+        .hero p { font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 40px; font-weight: 400; }
+        .hero-badge {
+            background: #e8f2ff; color: var(--accent-blue);
+            padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+        }
+
+        /* --- LAYOUT GÉNÉRAL --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: none; }
+        .container.active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-size: 2.5rem; margin-bottom: 40px; text-align: center; letter-spacing: -1px; }
+
+        /* --- GRID CARDS (Cours) --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        .card h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .card .subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .card ul { list-style: none; margin-top: 15px; }
+        .card li { margin-bottom: 8px; font-size: 0.95rem; color: #444; position: relative; padding-left: 20px; }
+        .card li::before { content: "•"; color: var(--accent-blue); position: absolute; left: 0; font-weight: bold; }
+
+        /* --- TAGS SPÉCIAUX SISR --- */
+        .sisr-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 5px;
+        }
+        .sisr-tag::before { content: "💻 "; }
+
+        /* --- SECTION MÉTHODE (SYLLOGISME) --- */
+        .method-box {
+            background: white; border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); margin-bottom: 40px;
+        }
+        
+        .syllogisme-step {
+            display: flex; align-items: flex-start; margin-bottom: 30px; padding: 20px;
+            background: #f9f9f9; border-radius: 12px; border-left: 5px solid var(--accent-blue);
+        }
+        .step-number {
+            font-size: 3rem; font-weight: 800; color: rgba(0,0,0,0.05); margin-right: 20px; line-height: 1;
+        }
+        .step-content h4 { color: var(--accent-blue); margin-bottom: 5px; }
+        
+        .example-box {
+            background: #e8f2ff; padding: 15px; border-radius: 8px; margin-top: 10px; font-style: italic; color: #333;
+        }
+        .example-title { font-weight: bold; font-size: 0.8rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 5px; display: block; }
+
+        /* --- LIENS SISR --- */
+        .link-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: white; padding: 25px; margin-bottom: 15px; border-radius: 12px;
+            border-left: 5px solid #34c759; box-shadow: var(--shadow);
+        }
+        .cejm-concept { font-weight: bold; width: 30%; }
+        .arrow { font-size: 1.5rem; color: #ccc; }
+        .sisr-app { width: 55%; color: #555; }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center; padding: 40px; color: var(--text-secondary); font-size: 0.9rem;
+            border-top: 1px solid rgba(0,0,0,0.1); margin-top: 60px;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-container { flex-direction: column; }
+            .nav-links { margin-top: 15px; display: flex; gap: 10px; overflow-x: auto; width: 100%; justify-content: center; }
+            .nav-links button { margin: 0 10px; font-size: 0.8rem; }
+            .link-row { flex-direction: column; text-align: center; gap: 10px; }
+            .cejm-concept, .sisr-app { width: 100%; }
+            .arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">CEJM <span>SISR</span></div>
+            <div class="nav-links">
+                <button onclick="showSection('home')" class="active">Accueil</button>
+                <button onclick="showSection('cours1')">Cours An. 1</button>
+                <button onclick="showSection('cours2')">Cours An. 2</button>
+                <button onclick="showSection('methodes')">Méthodes & Syllogisme</button>
+                <button onclick="showSection('sisr')">Lien SISR</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="home" class="container active">
+        <div class="hero">
+            <span class="hero-badge">Spécial BTS SIO Option SISR</span>
+            <h1>La CEJM simple, logique et orientée Tech.</h1>
+            <p>Comprendre l'entreprise, maîtriser le droit et réussir l'examen sans par cœur inutile. Tout le programme résumé pour le futur administrateur réseau.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card" onclick="showSection('cours2')">
+                <h3>Le Numérique & l'Entreprise</h3>
+                <span class="subtitle">Thème 4 (Crucial)</span>
+                <p>RGPD, Contrats Cloud, Cybersécurité, Plateformes... Le cœur de votre futur métier.</p>
+            </div>
+            <div class="card" onclick="showSection('methodes')">
+                <h3>Le Syllogisme Juridique</h3>
+                <span class="subtitle">Méthode Examen</span>
+                <p>La technique infaillible pour analyser une situation juridique et gagner des points.</p>
+            </div>
+            <div class="card" onclick="showSection('sisr')">
+                <h3>Pourquoi la CEJM ?</h3>
+                <span class="subtitle">Contexte Pro</span>
+                <p>Comprendre pourquoi un DSI achète ou loue, et comment on protège un réseau légalement.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="cours1" class="container">
+        <h2>Programme 1ère Année : Les Fondamentaux</h2>
+        <div class="grid">
+            <div class="card">
+                <span class="subtitle">Thème 2 : Régulation</span>
+                <h3>L'Environnement (PESTEL)</h3>
+                <p>L'entreprise subit des influences externes qu'elle ne maîtrise pas.</p>
+                <ul>
+                    <li><strong>P</strong>olitique & <strong>É</strong>conomique (Inflation, Taux)</li>
+                    <li><strong>S</strong>ocioculturel & <strong>É</strong>cologique</li>
+                    <li><strong>T</strong>echnologique (Innovation, Fibre, 5G)</li>
+                    <li><strong>L</strong>égal (RGPD, Loi travail)</li>
+                </ul>
+                <div class="sisr-tag">Veille technologique obligatoire</div>
+            </div>
+
+            <div class="card">
+                <span class="subtitle">Thème 2 : Droit</span>
+                <h3>Propriété & Concurrence</h3>
+                <ul>
+                    <li><strong>INPI :</strong> Brevet (Tech, 20 ans), Marque (Logo, 10 ans).</li>
+                    <li><strong>Concurrence Déloyale :</strong> Parasitisme, dénigrement (Art 1240).</li>
+                    <li><strong>Pratiques Anticoncurrentielles :</strong> Ententes illicites, Abus de position dominante (Ex: Google/Microsoft).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <span class="subtitle">Thème 3 : Organisation</span>
+                <h3>Financement & Production</h3>
+                <ul>
+                    <li><strong>Cycles :</strong> Investissement (Long terme, CAPEX) vs Exploitation (Court terme, OPEX).</li>
+                    <li><strong>BFR :</strong> Décalage de trésorerie (Payer les techs avant d'être payé par le client).</li>
+                    <li><strong>Externalisation :</strong> "Faire ou Faire-faire" ? Les ESN existent grâce à ça.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <span class="subtitle">Thème 3 : Risques</span>
+                <h3>La Responsabilité</h3>
+                <ul>
+                    <li><strong>Civile (Réparer) :</strong> Contractuelle (Contrat mal exécuté) ou Extracontractuelle (Dommage à un tiers).</li>
+                    <li><strong>Pénale (Punir) :</strong> Infraction à la loi (ex: Piratage, non-respect RGPD).</li>
+                    <li><strong>Risques Numériques :</strong> Perte de données, arrêt de service.</li>
+                </ul>
+                <div class="sisr-tag">SLA & Assurance Cyber</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cours2" class="container">
+        <h2>Programme 2ème Année : Numérique & Travail</h2>
+        <p style="text-align:center; margin-bottom:30px; color:var(--text-secondary);">Le cœur du sujet pour l'option SISR.</p>
+        
+        <div class="grid">
+            <div class="card" style="border-left: 5px solid var(--accent-blue);">
+                <span class="subtitle">Thème 4 : Économie Numérique</span>
+                <h3>Modèles & Plateformes</h3>
+                <ul>
+                    <li><strong>3 Piliers :</strong> Tech, Éco, Social.</li>
+                    <li><strong>Effet de réseau :</strong> Plus il y a d'utilisateurs, plus le service a de valeur (Facebook, Uber).</li>
+                    <li><strong>Modèles :</strong> Freemium, Abonnement (SaaS), Yield Management (Prix flexible).</li>
+                </ul>
+            </div>
+
+            <div class="card" style="border-left: 5px solid var(--accent-blue);">
+                <span class="subtitle">Thème 4 : Droit du Numérique</span>
+                <h3>RGPD & Cybersurveillance</h3>
+                <ul>
+                    <li><strong>RGPD :</strong> Consentement, Portabilité, Droit à l'oubli. CNIL = Gendarme.</li>
+                    <li><strong>Admin vs Salarié :</strong> L'admin PEUT surveiller les logs et PC, MAIS doit informer avant (Transparence).</li>
+                    <li><strong>Exception :</strong> Interdiction d'ouvrir un dossier nommé "PERSONNEL".</li>
+                </ul>
+                <div class="sisr-tag">Action quotidienne du SysAdmin</div>
+            </div>
+
+            <div class="card" style="border-left: 5px solid var(--accent-blue);">
+                <span class="subtitle">Thème 4 : Contrats IT</span>
+                <h3>Contrats & Preuve</h3>
+                <ul>
+                    <li><strong>Preuve électronique :</strong> Valable si auteur identifié + intégrité conservée (Signature qualifiée).</li>
+                    <li><strong>Clauses B2B :</strong> Confidentialité, Réversibilité (Récupérer ses données Cloud), SLA (Engagement de disponibilité).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <span class="subtitle">Thème 5 : Travail</span>
+                <h3>Contrats & Marché</h3>
+                <ul>
+                    <li><strong>Contrat de travail :</strong> Lien de subordination (Ordres, Contrôle, Sanction).</li>
+                    <li><strong>Clauses :</strong> Non-concurrence (Doit être payée !), Mobilité (Fréquent en ESN).</li>
+                    <li><strong>Chômage :</strong> Politiques Actives (Formation) vs Passives (Indemnités).</li>
+                </ul>
+                <div class="sisr-tag">Votre futur statut en ESN</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="methodes" class="container">
+        <h2>La Méthode du Cas Pratique</h2>
+        
+        <div class="method-box">
+            <h3>1. Analyser une Situation Juridique</h3>
+            <p>Avant de répondre, vous devez "traduire" l'énoncé en langage juridique.</p>
+            
+            <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: #fff0f0; padding: 15px; border-radius: 8px;">
+                    <strong style="color:var(--danger)">❌ Langage Courant (Faits bruts)</strong>
+                    <p><em>"Monsieur Laporte de chez Proxyval est énervé car 9 de ses employés sont partis chez Numehome, la boite concurrente créée par un ancien."</em></p>
+                </div>
+                <div style="background: #f0fff4; padding: 15px; border-radius: 8px;">
+                    <strong style="color:var(--success)">✅ Qualification Juridique</strong>
+                    <p><em>"Une personne morale (Proxyval) subit un débauchage massif de ses salariés par une entreprise concurrente (Numehome), entraînant une désorganisation."</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="method-box">
+            <h3>2. Le Syllogisme Juridique (La Machine à Points)</h3>
+            <p>Pour répondre à une question de droit (ex: "Que peut faire l'entreprise ?"), utilisez TOUJOURS cette structure en 3 étapes.</p>
+
+            <div class="syllogisme-step">
+                <div class="step-number">A</div>
+                <div class="step-content">
+                    <h4>La Majeure (La Règle)</h4>
+                    <p>Citez la règle de droit, la loi ou le principe général. Ne parlez pas encore du cas.</p>
+                    <div class="example-box">
+                        <span class="example-title">Exemple :</span>
+                        "Selon l'article 1240 du Code Civil, tout fait quelconque de l'homme, qui cause à autrui un dommage, oblige celui par la faute duquel il est arrivé à le réparer. La concurrence déloyale nécessite une faute, un préjudice et un lien de causalité."
+                    </div>
+                </div>
+            </div>
+
+            <div class="syllogisme-step">
+                <div class="step-number">B</div>
+                <div class="step-content">
+                    <h4>La Mineure (L'Application)</h4>
+                    <p>Appliquez la règle aux faits de l'exercice.</p>
+                    <div class="example-box">
+                        <span class="example-title">Exemple (Cas Proxyval) :</span>
+                        "En l'espèce, l'entreprise NUMEHOME a débauché 9 salariés de PROXYVAL (Faute). Cela entraîne une désorganisation de la production et des coûts de remplacement pour PROXYVAL (Préjudice). Le lien de causalité est direct."
+                    </div>
+                </div>
+            </div>
+
+            <div class="syllogisme-step">
+                <div class="step-number">C</div>
+                <div class="step-content">
+                    <h4>La Conclusion</h4>
+                    <p>Donnez la solution concrète.</p>
+                    <div class="example-box">
+                        <span class="example-title">Exemple :</span>
+                        "Par conséquent, l'entreprise PROXYVAL est fondée à intenter une action en concurrence déloyale contre NUMEHOME pour obtenir des dommages-intérêts."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sisr" class="container">
+        <h2>Lien CEJM ↔ SISR</h2>
+        <p>Pourquoi on fait de l'éco-droit quand on veut configurer des routeurs ?</p>
+
+        <div class="link-row">
+            <div class="cejm-concept">
+                <h4>Obligation de Moyens vs Résultat</h4>
+                <small>Droit des contrats (Responsabilité)</small>
+            </div>
+            <div class="arrow">→</div>
+            <div class="sisr-app">
+                <strong>Contexte Prestataire :</strong> Si vous vendez une connexion Internet, c'est une obligation de <em>résultat</em> (ça marche ou pas). Si vous faites une désinfection virale complexe, c'est souvent une obligation de <em>moyens</em> (vous faites le max, mais sans garantie absolue).
+            </div>
+        </div>
+
+        <div class="link-row">
+            <div class="cejm-concept">
+                <h4>Clause de Réversibilité</h4>
+                <small>Contrats Informatiques</small>
+            </div>
+            <div class="arrow">→</div>
+            <div class="sisr-app">
+                <strong>Cloud Computing :</strong> Quand une entreprise quitte AWS ou Azure, elle doit pouvoir récupérer ses données dans un format lisible. C'est un enjeu technique majeur lors de la fin d'un contrat d'hébergement.
+            </div>
+        </div>
+
+        <div class="link-row">
+            <div class="cejm-concept">
+                <h4>Principe de Proportionnalité</h4>
+                <small>Cybersurveillance (RGPD/Droit du travail)</small>
+            </div>
+            <div class="arrow">→</div>
+            <div class="sisr-app">
+                <strong>Administration Système :</strong> Vous n'avez pas le droit de mettre un keylogger (enregistreur de frappe) permanent sur tous les PC "juste au cas où". La surveillance doit être proportionnée au risque de sécurité.
+            </div>
+        </div>
+
+        <div class="link-row">
+            <div class="cejm-concept">
+                <h4>Investissement (CAPEX) vs Charges (OPEX)</h4>
+                <small>Financement</small>
+            </div>
+            <div class="arrow">→</div>
+            <div class="sisr-app">
+                <strong>Infrastructure :</strong> Acheter un serveur physique à 5000€ est un Investissement (Amortissement sur 5 ans). Louer un serveur virtuel à 100€/mois est une Charge. La DSI choisit souvent la solution selon la santé financière de l'entreprise.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Conçu pour les étudiants de BTS SIO SISR • Basé sur le programme officiel CEJM</p>
+        <p style="margin-top:10px; font-size:0.8rem;">Contenu généré à partir des cours : Thèmes 2, 3, 4, 5 & Méthodologie juridique.</p>
+    </footer>
+
+    <script>
+        // Scripts simples pour la navigation
+        function showSection(sectionId) {
+            // Cacher toutes les sections
+            const sections = document.querySelectorAll('.container');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Désactiver tous les boutons
+            const buttons = document.querySelectorAll('.nav-links button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Afficher la section demandée
+            document.getElementById(sectionId).classList.add('active');
+
+            // Activer le bouton correspondant (logique simple basée sur l'ordre ou l'ID)
+            // Ici on boucle pour trouver celui qui a l'onclick correspondant
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(sectionId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Scroll top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
