@@ -10,17 +10,15 @@
             --bg-card: #ffffff;
             --text-main: #1d1d1f;
             --text-muted: #86868b;
-            --accent: #0066cc; /* Bleu plus "pro" */
+            --accent: #0066cc;
             --accent-light: #e3f2fd;
             --border: #d2d2d7;
             --radius: 12px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --code-bg: #f5f5f7;
             --success: #34c759;
-            --warning: #ff9f0a;
             --danger: #ff3b30;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,13 +54,14 @@
         .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
         .logo span { color: var(--accent); }
 
+        .nav-items { display: flex; gap: 10px; }
         .nav-items button {
             background: none; border: none; font-size: 0.9rem;
-            margin-left: 20px; cursor: pointer; color: var(--text-muted); font-weight: 500;
-            transition: all 0.2s;
+            padding: 8px 12px; cursor: pointer; color: var(--text-muted); font-weight: 600;
+            transition: all 0.2s; border-radius: 6px;
         }
-        .nav-items button:hover, .nav-items button.active { color: var(--text-main); }
-        .nav-items button.active { border-bottom: 2px solid var(--accent); }
+        .nav-items button:hover { color: var(--text-main); background: rgba(0,0,0,0.05); }
+        .nav-items button.active { color: #fff; background: var(--accent); }
 
         /* --- LAYOUT --- */
         .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: none; }
@@ -70,12 +69,12 @@
 
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
-        h2 { font-size: 1.8rem; margin: 40px 0 20px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
-        h3 { font-size: 1.3rem; margin: 20px 0 10px; color: var(--accent); }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; letter-spacing: -1px; }
+        h2 { font-size: 1.6rem; margin: 30px 0 15px; border-bottom: 2px solid var(--border); padding-bottom: 5px; }
+        h3 { font-size: 1.2rem; margin: 20px 0 10px; color: var(--accent); font-weight: 700; }
         p { margin-bottom: 15px; text-align: justify; }
 
-        /* --- CARDS & ACCORDIONS --- */
+        /* --- ACCORDIONS --- */
         .accordion {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -86,18 +85,18 @@
         }
         
         .accordion-header {
-            padding: 20px;
+            padding: 18px 25px;
             cursor: pointer;
             background: #fff;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1.05rem;
             transition: background 0.2s;
         }
         .accordion-header:hover { background: #f9f9f9; }
-        .accordion-header::after { content: '+'; font-size: 1.5rem; color: var(--accent); }
+        .accordion-header::after { content: '+'; font-size: 1.5rem; color: var(--accent); font-weight: 400; }
         .accordion.open .accordion-header::after { content: '-'; }
 
         .accordion-body {
@@ -107,9 +106,9 @@
             transition: max-height 0.3s ease-out, padding 0.3s ease;
             background: #fafafa;
         }
-        .accordion.open .accordion-body { padding: 25px; max-height: 2000px; }
+        .accordion.open .accordion-body { padding: 25px; max-height: 3000px; }
 
-        /* --- TABLEAUX & LISTES --- */
+        /* --- ELEMENTS VISUELS --- */
         ul { padding-left: 20px; margin-bottom: 15px; }
         li { margin-bottom: 8px; }
         strong { color: #000; font-weight: 700; }
@@ -117,43 +116,37 @@
         .highlight-box {
             background: var(--accent-light);
             border-left: 4px solid var(--accent);
-            padding: 15px;
-            margin: 20px 0;
+            padding: 15px; margin: 20px 0;
             border-radius: 0 var(--radius) var(--radius) 0;
         }
 
         .sisr-context {
-            background: #e8f5e9;
-            border: 1px solid #c8e6c9;
-            color: #2e7d32;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 0.9rem;
+            background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32;
+            padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;
+            font-weight: 500;
         }
-        .sisr-context::before { content: "💻 CONTEXTE SISR : "; font-weight: 800; }
+        .sisr-context::before { content: "💻 SISR : "; font-weight: 800; }
 
-        /* --- SYLLOGISME SPECIFIC --- */
+        /* --- SYLLOGISME --- */
         .majeure-box {
             background: #fff; border: 1px solid var(--accent);
             padding: 20px; margin-bottom: 20px; border-radius: 8px;
-            position: relative;
+            position: relative; box-shadow: var(--shadow-sm);
         }
         .majeure-title {
             position: absolute; top: -12px; left: 20px;
             background: var(--accent); color: white;
-            padding: 2px 10px; font-size: 0.8rem; font-weight: bold;
-            border-radius: 4px;
+            padding: 2px 10px; font-size: 0.75rem; font-weight: bold;
+            border-radius: 4px; text-transform: uppercase;
         }
-        .legal-ref { font-family: monospace; color: var(--text-muted); display: block; margin-top: 5px; font-size: 0.85rem; }
+        .legal-ref { font-family: monospace; color: var(--text-muted); display: block; margin-top: 5px; font-size: 0.85rem; text-align: right; }
+        .condition-list li { list-style: none; }
+        .condition-list li::before { content: "✅ "; }
 
-        .condition-list li { margin-bottom: 5px; list-style-type: none; }
-        .condition-list li::before { content: "✅"; margin-right: 8px; }
-
-        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .nav-items { display: none; } /* Pour simplifier ici, idéalement menu burger */
+            .nav-items { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: center; overflow-x: auto; }
+            .container { margin-bottom: 80px; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -161,114 +154,120 @@
 
     <header>
         <nav>
-            <div class="logo">CEJM <span>EXPERT</span></div>
+            <div class="logo">CEJM <span>SISR</span></div>
             <div class="nav-items">
-                <button onclick="showTab('cours')" class="active">Cours Complets</button>
-                <button onclick="showTab('syllogisme')">MÉTHODE & MAJEURES</button>
-                <button onclick="showTab('entrainement')">Cas Pratiques</button>
+                <button onclick="showTab('annee1')" class="active">ANNÉE 1</button>
+                <button onclick="showTab('annee2')">ANNÉE 2</button>
+                <button onclick="showTab('syllogisme')">MÉTHODE (Syllogisme)</button>
+                <button onclick="showTab('entrainement')">CAS PRATIQUES</button>
             </div>
         </nav>
     </header>
 
-    <div id="cours" class="container active">
-        <h1>Cours Complets et Structurés</h1>
-        <p>Programme intégral BTS SIO SISR (Années 1 & 2) avec focus technique.</p>
+    <div id="annee1" class="container active">
+        <h1>Programme Première Année</h1>
+        <p>Les bases de l'économie, du droit et de l'organisation de l'entreprise.</p>
 
         <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 2 : La Régulation Économique & Juridique</div>
+            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 2 : La Régulation de l'Activité Économique</div>
             <div class="accordion-body">
-                <h3>1. L'Analyse de l'Environnement (PESTEL)</h3>
-                <p>L'entreprise ne décide pas tout. Elle subit des contraintes externes (Macro-environnement). L'outil PESTEL permet de classer ces facteurs en <strong>Opportunités</strong> ou <strong>Menaces</strong>.</p>
+                <h3>1. L'Analyse PESTEL (Macro-environnement)</h3>
+                <p>L'entreprise subit des influences externes sur lesquelles elle ne peut pas agir directement.</p>
                 <ul>
-                    <li><strong>Politique :</strong> Stabilité de l'État, politique fiscale.</li>
-                    <li><strong>Économique :</strong> Inflation (augmente le coût du matériel), Taux d'intérêt (coût de l'emprunt pour la DSI).</li>
-                    <li><strong>Socioculturel :</strong> Nomades digitaux, télétravail.</li>
-                    <li><strong>Technologique :</strong> Obsolescence rapide, 5G, Fibre, IA. <span style="color:red">(Crucial pour SISR)</span></li>
-                    <li><strong>Écologique :</strong> Green IT, RSE, recyclage des DEEE.</li>
-                    <li><strong>Légal :</strong> RGPD, Lois sur la surveillance.</li>
+                    <li><strong>P</strong>olitique : Stabilité fiscale, aides de l'État.</li>
+                    <li><strong>É</strong>conomique : Inflation, taux d'intérêt (impact sur le coût du crédit).</li>
+                    <li><strong>S</strong>ocioculturel : Habitudes de consommation (télétravail).</li>
+                    <li><strong>T</strong>echnologique : Innovations, Brevets, 5G, Obsolescence. <span style="color:var(--accent)">(Critique pour SISR)</span>.</li>
+                    <li><strong>É</strong>cologique : RSE, normes environnementales.</li>
+                    <li><strong>L</strong>égal : Droit du travail, RGPD.</li>
                 </ul>
 
-                <h3>2. La Régulation par le Droit</h3>
-                <p>Le marché n'est pas une zone de non-droit. Des règles s'imposent pour garantir une concurrence loyale.</p>
+                <h3>2. Le Rôle de l'État & Politiques</h3>
+                <p>L'État régule l'économie via deux leviers principaux :</p>
                 <ul>
-                    <li><strong>Autorités (AAI) :</strong>
+                    <li><strong>Politique Budgétaire :</strong> Joue sur les dépenses publiques et impôts (Relance vs Rigueur).</li>
+                    <li><strong>Politique Monétaire (BCE) :</strong> Joue sur les <em>Taux Directeurs</em>. Si la BCE monte les taux, emprunter pour acheter des serveurs coûte plus cher.</li>
+                </ul>
+
+                <h3>3. La Régulation par le Droit</h3>
+                <ul>
+                    <li><strong>Autorités (AAI) :</strong> ARCEP (Télécoms), CNIL (Données), Autorité de la Concurrence.</li>
+                    <li><strong>Propriété Industrielle (INPI) :</strong>
                         <ul>
-                            <li><strong>ARCEP :</strong> Régule les Télécoms (Fibre/Réseau).</li>
-                            <li><strong>CNIL :</strong> Régule les Données Personnelles.</li>
-                            <li><strong>ANSSI :</strong> Régule la Cybersécurité (OIV/OSE).</li>
+                            <li><strong>Brevet :</strong> Protège une invention technique (20 ans).</li>
+                            <li><strong>Marque :</strong> Signe distinctif (10 ans renouvelable).</li>
                         </ul>
                     </li>
-                    <li><strong>Propriété Intellectuelle (INPI) :</strong>
-                        <ul>
-                            <li><strong>Le Brevet :</strong> Protège une <em>invention technique</em>. Durée : 20 ans max. Donne un monopole d'exploitation.</li>
-                            <li><strong>La Marque :</strong> Signe distinctif. Durée : 10 ans, renouvelable indéfiniment.</li>
-                            <li><strong>Droit d'auteur :</strong> Protège les œuvres de l'esprit (dont le code source du logiciel). Pas de dépôt nécessaire, naît de la création.</li>
-                        </ul>
-                    </li>
+                    <li><strong>Droit de la Concurrence :</strong> Interdiction des ententes illicites et abus de position dominante.</li>
                 </ul>
             </div>
         </div>
 
         <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 3 : Organisation & Responsabilité</div>
+            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 3 : L'Organisation de l'Activité</div>
             <div class="accordion-body">
-                <h3>1. La Structure Juridique</h3>
+                <h3>1. Structures Juridiques</h3>
                 <ul>
-                    <li><strong>EI (Entreprise Individuelle) :</strong> Patrimoines pro et perso séparés (loi 2022), mais responsabilité du dirigeant forte. Pas de personnalité morale distincte.</li>
-                    <li><strong>Sociétés (SARL, SAS, SA) :</strong> Création d'une <em>Personne Morale</em>. Responsabilité des associés limitée aux apports (sauf faute de gestion).
-                        <br><em>SISR :</em> La SAS est très prisée des startups Tech pour sa souplesse statutaire.
-                    </li>
+                    <li><strong>EI (Entreprise Individuelle) :</strong> Pas de personnalité morale. Responsabilité du dirigeant. Patrimoine pro/perso séparés depuis 2022.</li>
+                    <li><strong>Sociétés (SARL, SAS, SA) :</strong> Création d'une <em>Personne Morale</em>. Responsabilité limitée aux apports. Le dirigeant est mandataire social.</li>
                 </ul>
 
-                <h3>2. Responsabilité Civile vs Pénale</h3>
+                <h3>2. Responsabilité de l'Entreprise</h3>
                 <div class="highlight-box">
-                    <strong>Responsabilité Civile (Réparer) :</strong> Vise à indemniser une victime.
-                    <br> - <em>Contractuelle :</em> Mauvaise exécution d'un contrat (ex: SLA non tenu).
-                    <br> - <em>Extracontractuelle (Délictuelle) :</em> Dommage causé à un tiers hors contrat (ex: un câble mal fixé fait tomber un client).
+                    <strong>Responsabilité Civile (Réparer) :</strong>
+                    <ul>
+                        <li><strong>Contractuelle :</strong> Dommage causé à un co-contractant (Client) lors de l'exécution du contrat. (Ex: Panne serveur violant le SLA).</li>
+                        <li><strong>Extracontractuelle (Délictuelle) :</strong> Dommage causé à un tiers avec qui on n'a pas de contrat. (Art 1240 Code Civil).</li>
+                    </ul>
+                    <strong>Responsabilité Pénale (Punir) :</strong> Infraction à la loi (Vol, Escroquerie, Intrusion STAD).
                 </div>
-                <div class="highlight-box" style="border-color: var(--danger); background: #fff5f5;">
-                    <strong>Responsabilité Pénale (Punir) :</strong> Vise à sanctionner une infraction à la loi (Amende, Prison).
-                    <br>Exemples SISR : Accès frauduleux à un STAD (Système de Traitement Automatisé de Données), violation du secret des correspondances.
-                </div>
+                <div class="sisr-context">Obligation de <strong>Moyens</strong> (faire son possible) vs <strong>Résultat</strong> (s'engager à réussir). Un FAI a une obligation de résultat sur la connexion.</div>
 
-                <h3>3. Obligation de Moyens vs Résultat</h3>
+                <h3>3. Financement & Production</h3>
                 <ul>
-                    <li><strong>Obligation de Résultat :</strong> Le prestataire s'engage à atteindre un but précis (ex: Livrer 10 PC, fournir une connexion Internet). S'il échoue, il est responsable d'office.</li>
-                    <li><strong>Obligation de Moyens :</strong> Le prestataire s'engage à faire "son possible" (ex: Désinfection virale, débuggage complexe). Le client doit prouver la faute pour engager sa responsabilité.</li>
+                    <li><strong>Cycles :</strong> Investissement (Long terme, CAPEX) vs Exploitation (Court terme, BFR).</li>
+                    <li><strong>Externalisation :</strong> Confier une activité non-stratégique à un tiers (Ex: Une banque externalise son support IT à une ESN).</li>
                 </ul>
             </div>
         </div>
+    </div>
 
-        <div class="accordion open"> <div class="accordion-header" onclick="toggleAccordion(this)">Thème 4 : L'Impact du Numérique (Cœur SISR)</div>
+    <div id="annee2" class="container">
+        <h1>Programme Deuxième Année</h1>
+        <p>Focus : Numérique, Droit du Cyberespace et Droit du Travail.</p>
+
+        <div class="accordion open">
+            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 4 : L'Impact du Numérique (Cœur SISR)</div>
             <div class="accordion-body">
-                <h3>1. Le RGPD (Règlement Général sur la Protection des Données)</h3>
-                <p>Texte européen applicable à toute donnée identifiant une personne physique.</p>
+                <h3>1. Économie du Numérique</h3>
                 <ul>
-                    <li><strong>Principes clés :</strong> Finalité (pourquoi on collecte ?), Minimisation (juste ce qu'il faut), Sécurité, Transparence.</li>
-                    <li><strong>Droits des personnes :</strong> Accès, Rectification, Oubli, Portabilité, Opposition.</li>
-                    <li><strong>Sanctions :</strong> Jusqu'à 4% du CA mondial ou 20M€.</li>
+                    <li><strong>3 Piliers :</strong> Technologique (Réseau), Économique (Nouveaux acteurs), Social (Usages).</li>
+                    <li><strong>Effets de Réseau :</strong> La valeur d'un service augmente avec le nombre d'utilisateurs.</li>
+                    <li><strong>Plateformisation :</strong> Désintermédiation (suppression des intermédiaires classiques) puis Ré-intermédiation (la plateforme devient le maître).</li>
                 </ul>
-                <div class="sisr-context">En tant qu'Admin, vous devez sécuriser les bases de données (Chiffrement, Habilitations) pour respecter l'obligation de sécurité du RGPD.</div>
 
-                <h3>2. La Cybersurveillance & Vie Privée au Travail</h3>
-                <p>L'employeur (et l'admin réseau par délégation) a le pouvoir de contrôler l'activité.</p>
+                <h3>2. RGPD & Protection des Personnes</h3>
+                <p>Le <strong>Règlement Général sur la Protection des Données</strong> impose :</p>
                 <ul>
-                    <li><strong>Principe :</strong> Tout ce qui est sur le PC pro est présumé professionnel. L'employeur peut l'ouvrir hors présence du salarié.</li>
-                    <li><strong>L'Exception "PERSONNEL" :</strong> Si un dossier/fichier/mail est identifié comme "Personnel" ou "Privé", l'employeur NE PEUT PAS l'ouvrir seul (sauf risque grave ou décision de justice).</li>
-                    <li><strong>Conditions de mise en place :</strong>
-                        1. Information préalable (individuelle + CSE).
-                        2. Proportionnalité au but recherché.
-                        3. Déclaration au registre RGPD.
+                    <li><strong>Droits :</strong> Accès, Rectification, Oubli, Portabilité.</li>
+                    <li><strong>Obligations :</strong> Consentement explicite, Sécurité (Chiffrement), Registre des traitements.</li>
+                </ul>
+                <div class="sisr-context">
+                    <strong>Cybersurveillance :</strong> L'administrateur peut accéder aux fichiers du salarié (présumés professionnels) SAUF s'ils sont nommés "PERSONNEL".
+                    Condition : Informer le salarié AVANT de surveiller (Principe de transparence).
+                </div>
+
+                <h3>3. Contrats & Preuve Électronique</h3>
+                <ul>
+                    <li><strong>Preuve :</strong> L'écrit électronique a la même valeur que le papier si :
+                        1. La personne est dûment identifiée (Signature électronique).
+                        2. L'écrit est conservé dans des conditions garantissant son intégrité.
                     </li>
-                </ul>
-
-                <h3>3. Les Contrats Informatiques</h3>
-                <ul>
-                    <li><strong>Contrat de Prestation Cloud (SaaS/IaaS) :</strong>
+                    <li><strong>Clauses Contrats Cloud (B2B) :</strong>
                         <ul>
-                            <li><strong>SLA (Service Level Agreement) :</strong> Clause définissant la qualité de service (Disponibilité 99.9%). Prévoit des pénalités en cas de panne.</li>
-                            <li><strong>Clause de Réversibilité :</strong> Oblige le prestataire à restituer les données dans un format exploitable à la fin du contrat.</li>
-                            <li><strong>Clause de Confidentialité :</strong> Cruciale pour protéger les données hébergées.</li>
+                            <li><strong>Réversibilité :</strong> Pouvoir récupérer ses données en fin de contrat.</li>
+                            <li><strong>SLA (Service Level Agreement) :</strong> Garantie de disponibilité (ex: 99.9%).</li>
+                            <li><strong>Confidentialité :</strong> Secret des données hébergées.</li>
                         </ul>
                     </li>
                 </ul>
@@ -279,20 +278,27 @@
             <div class="accordion-header" onclick="toggleAccordion(this)">Thème 5 : Les Mutations du Travail</div>
             <div class="accordion-body">
                 <h3>1. Le Contrat de Travail</h3>
-                <p>Défini par trois éléments cumulatifs : une prestation de travail, une rémunération, et un <strong>Lien de Subordination</strong> (Pouvoir de direction, contrôle, sanction).</p>
+                <p>Il existe dès qu'il y a : Une prestation, Une rémunération, et un <strong>Lien de Subordination</strong>.</p>
+                <div class="highlight-box">
+                    <strong>Lien de Subordination :</strong> Pouvoir de l'employeur de donner des ordres, d'en contrôler l'exécution et de sanctionner les manquements. C'est ce qui distingue le Salarié du Freelance.
+                </div>
 
-                <h3>2. Clauses Spécifiques (Voir section Méthode pour détails juridiques)</h3>
+                <h3>2. Les Clauses Spécifiques</h3>
                 <ul>
-                    <li><strong>Clause de Non-Concurrence :</strong> Interdit de travailler chez le concurrent après le départ.</li>
-                    <li><strong>Clause de Mobilité :</strong> Le salarié accepte par avance de changer de lieu de travail.</li>
-                    <li><strong>Clause de Dédit-Formation :</strong> Le salarié rembourse sa formation s'il part trop tôt.</li>
+                    <li><strong>Clause de Mobilité :</strong> Le salarié accepte à l'avance de changer de lieu de travail.</li>
+                    <li><strong>Clause de Non-Concurrence :</strong> Interdit de partir chez le concurrent. <span style="color:red">ATTENTION conditions strictes (voir onglet Méthode).</span></li>
                 </ul>
 
-                <h3>3. Rupture du Contrat</h3>
+                <h3>3. Le Marché du Travail</h3>
                 <ul>
-                    <li><strong>Démission :</strong> Volonté claire et non équivoque du salarié.</li>
-                    <li><strong>Licenciement :</strong> Doit avoir une Cause Réelle et Sérieuse (Faute, motif éco, insuffisance).</li>
-                    <li><strong>Rupture Conventionnelle :</strong> Accord amiable (avec indemnités).</li>
+                    <li><strong>Offre de travail :</strong> Vient des ménages (Salariés).</li>
+                    <li><strong>Demande de travail :</strong> Vient des entreprises.</li>
+                    <li><strong>Politiques de l'emploi :</strong>
+                        <ul>
+                            <li><strong>Actives :</strong> Formation, aide à l'embauche (Favoriser le retour à l'emploi).</li>
+                            <li><strong>Passives :</strong> Indemnités chômage, préretraite (Rendre le chômage supportable).</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -300,111 +306,88 @@
 
     <div id="syllogisme" class="container">
         <h1>La Méthode du Syllogisme Juridique</h1>
-        <p>C'est la mécanique intellectuelle obligatoire pour l'examen. Ne répondez jamais par "Oui" ou "Non" directement.</p>
+        <p>Pour l'analyse de situation juridique, la structure de réponse est figée. Apprenez-la par cœur.</p>
 
-        <div class="highlight-box">
-            <h3>Structure de la réponse (Le "M.M.C")</h3>
-            <ol>
-                <li><strong>MAJEURE (La Règle) :</strong> "En droit, [Citer la règle générale ou l'article]."</li>
-                <li><strong>MINEURE (Les Faits) :</strong> "En l'espèce, [Appliquer la règle au cas précis]."</li>
-                <li><strong>CONCLUSION (La Solution) :</strong> "En conséquence, [Donner le résultat]."</li>
+        <div class="highlight-box" style="background: white; border: 1px solid var(--accent);">
+            <h3>Structure "M.M.C"</h3>
+            <ol style="margin-left:20px;">
+                <li><strong>MAJEURE (La Règle) :</strong> "En droit, selon l'article X..." (Citer la règle générale).</li>
+                <li><strong>MINEURE (Les Faits) :</strong> "En l'espèce..." (Appliquer aux faits de l'exercice).</li>
+                <li><strong>CONCLUSION (Solution) :</strong> "En conséquence..." (Le résultat logique).</li>
             </ol>
         </div>
 
-        <h2>🛠 BANQUE DE MAJEURES (À APPRENDRE PAR CŒUR)</h2>
-        <p>Voici les règles prêtes à copier-coller pour les cas classiques de l'examen.</p>
-
+        <h2>BANQUE DE MAJEURES (À copier sur votre copie)</h2>
+        
         <div class="majeure-box">
-            <span class="majeure-title">RESPONSABILITÉ CIVILE</span>
-            <p><strong>La Règle :</strong> Selon l'article 1240 du Code Civil, pour engager la responsabilité civile extracontractuelle d'une personne (ou d'une entreprise), trois conditions cumulatives doivent être réunies :</p>
+            <span class="majeure-title">RESPONSABILITÉ CIVILE (ART 1240)</span>
+            <p><strong>La Règle :</strong> Pour engager la responsabilité civile extracontractuelle, trois conditions cumulatives sont nécessaires :</p>
             <ul class="condition-list">
-                <li>Une <strong>Faute</strong> (ou un fait générateur).</li>
-                <li>Un <strong>Préjudice</strong> (Dommage certain, direct et personnel).</li>
-                <li>Un <strong>Lien de Causalité</strong> prouvé entre la faute et le dommage.</li>
-            </ul>
-            <span class="legal-ref">Art. 1240 Code Civil</span>
-        </div>
-
-        <div class="majeure-box">
-            <span class="majeure-title">CONCURRENCE DÉLOYALE</span>
-            <p><strong>La Règle :</strong> L'action en concurrence déloyale sanctionne les pratiques commerciales abusives. Elle repose sur la responsabilité civile (Art 1240) et nécessite de prouver une faute parmi les suivantes :</p>
-            <ul>
-                <li><strong>Le Dénigrement :</strong> Critiquer publiquement les produits/services d'un concurrent.</li>
-                <li><strong>L'Imitation / Confusion :</strong> Créer une ressemblance visuelle pour tromper le client.</li>
-                <li><strong>La Désorganisation :</strong> Débauchage massif de salariés, vol de fichiers clients.</li>
-                <li><strong>Le Parasitisme :</strong> Profiter des investissements d'autrui sans rien dépenser.</li>
+                <li>Une <strong>Faute</strong> (fait générateur).</li>
+                <li>Un <strong>Préjudice</strong> (certain, direct et personnel).</li>
+                <li>Un <strong>Lien de Causalité</strong> entre la faute et le dommage.</li>
             </ul>
         </div>
 
         <div class="majeure-box" style="border-color: var(--danger);">
             <span class="majeure-title" style="background:var(--danger);">CLAUSE DE NON-CONCURRENCE</span>
-            <p><strong>La Règle (Jurisprudence) :</strong> Pour être valide, une clause de non-concurrence insérée dans un contrat de travail doit respecter <strong>4 conditions cumulatives</strong> :</p>
+            <p><strong>La Règle (Jurisprudence) :</strong> Une clause de non-concurrence n'est valide que si elle respecte <strong>4 conditions cumulatives</strong> :</p>
             <ul class="condition-list">
-                <li>Elle doit être <strong>indispensable à la protection des intérêts légitimes</strong> de l'entreprise (savoir-faire spécifique).</li>
-                <li>Elle doit être <strong>limitée dans le temps</strong> (ex: 2 ans maximum, selon la convention collective).</li>
-                <li>Elle doit être <strong>limitée dans l'espace</strong> (ex: une région, pas la France entière).</li>
-                <li>Elle doit comporter une <strong>contrepartie financière</strong> (indemnité versée au salarié).</li>
+                <li>Elle est indispensable à la protection des <strong>intérêts légitimes</strong> de l'entreprise.</li>
+                <li>Elle est limitée dans le <strong>temps</strong> (ex: 2 ans).</li>
+                <li>Elle est limitée dans l'<strong>espace</strong> (ex: Région IDF).</li>
+                <li>Elle comporte une <strong>contrepartie financière</strong> (indemnité) pour le salarié.</li>
             </ul>
-            <p style="font-size:0.9rem; color:red;"><em>Si une seule condition manque, la clause est nulle et le salarié est libéré.</em></p>
+            <p style="font-size:0.9rem; margin-top:10px;"><em>Si une condition manque = Clause Nulle.</em></p>
         </div>
 
         <div class="majeure-box">
-            <span class="majeure-title">VALIDITÉ D'UN CONTRAT</span>
-            <p><strong>La Règle :</strong> Selon l'article 1128 du Code Civil, trois conditions sont nécessaires pour la validité d'un contrat :</p>
-            <ul class="condition-list">
-                <li>Le <strong>consentement</strong> des parties (libre, éclairé, sans vice : erreur, dol, violence).</li>
-                <li>La <strong>capacité</strong> de contracter (être majeur, avoir le pouvoir de représenter l'entreprise).</li>
-                <li>Un <strong>contenu licite et certain</strong> (l'objet du contrat doit être légal).</li>
-            </ul>
-        </div>
-
-        <div class="majeure-box">
-            <span class="majeure-title">CYBERSURVEILLANCE</span>
-            <p><strong>La Règle :</strong> L'employeur a le droit de contrôler l'activité des salariés (pouvoir de direction), mais ce droit est limité par l'article L1121-1 du Code du Travail :</p>
+            <span class="majeure-title">CONCURRENCE DÉLOYALE</span>
+            <p><strong>La Règle :</strong> L'action en concurrence déloyale sanctionne des fautes comme :</p>
             <ul>
-                <li>Nul ne peut apporter aux droits des personnes des restrictions qui ne seraient pas justifiées par la nature de la tâche à accomplir ni <strong>proportionnées</strong> au but recherché.</li>
-                <li>L'employeur doit avoir <strong>informé préalablement</strong> les salariés et le CSE de la mise en place du dispositif de surveillance.</li>
+                <li>Le <strong>Dénigrement</strong> (Critique publique).</li>
+                <li>L'<strong>Imitation</strong> (Risque de confusion).</li>
+                <li>La <strong>Désorganisation</strong> (Débauchage massif).</li>
+                <li>Le <strong>Parasitisme</strong> (Profiter du savoir-faire sans payer).</li>
+            </ul>
+        </div>
+
+        <div class="majeure-box">
+            <span class="majeure-title">VALIDITÉ CONTRAT (ART 1128)</span>
+            <p><strong>La Règle :</strong> Le contrat est valide si 3 conditions sont réunies :</p>
+            <ul class="condition-list">
+                <li>Consentement libre et éclairé (sans erreur, dol ou violence).</li>
+                <li>Capacité de contracter.</li>
+                <li>Contenu licite et certain.</li>
             </ul>
         </div>
     </div>
 
     <div id="entrainement" class="container">
-        <h1>Entraînement : Cas Type Examen</h1>
+        <h1>Cas Pratiques Types</h1>
         
         <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Cas : La fuite de données chez TECH-SOLUTIONS</div>
+            <div class="accordion-header" onclick="toggleAccordion(this)">Cas 1 : Clause de Non-Concurrence Abusive</div>
             <div class="accordion-body">
-                <p><strong>Faits :</strong> M. Martin, admin système chez Tech-Solutions, découvre que M. Durand (salarié) a envoyé la base client à un concurrent depuis sa boite mail pro. M. Martin a accédé à la boite mail de Durand en son absence pour le prouver. Le mail était titré "Projet A". Durand conteste la preuve en disant que c'est une violation de sa vie privée.</p>
-                
+                <p><strong>Situation :</strong> Un développeur quitte son ESN. Son contrat lui interdit de travailler pour tout concurrent "dans le monde entier" pendant "10 ans", sans indemnité.</p>
                 <div class="highlight-box">
-                    <h3>Correction par Syllogisme :</h3>
-                    
-                    <p><strong>1. Problème de droit :</strong> L'employeur peut-il consulter les emails d'un salarié en son absence et les utiliser comme preuve ?</p>
-                    
-                    <p><strong>2. Majeure :</strong> En droit, les dossiers et fichiers créés par un salarié grâce à l'outil informatique mis à sa disposition par l'employeur sont présumés avoir un caractère professionnel. L'employeur peut donc y avoir accès hors de la présence du salarié, sauf si le fichier est identifié comme "personnel". (Arrêt Nikon, Cass. Soc. 2001).</p>
-                    
-                    <p><strong>3. Mineure :</strong> En l'espèce, le mail litigieux envoyé par M. Durand était titré "Projet A". Il n'était pas identifié comme "Personnel" ou "Privé". Il est donc présumé professionnel.</p>
-                    
-                    <p><strong>4. Conclusion :</strong> En conséquence, l'employeur (via M. Martin) avait le droit de consulter ce mail. La preuve est licite et M. Durand pourra être sanctionné.</p>
+                    <strong>Correction Syllogisme :</strong>
+                    <br>1. <strong>Majeure :</strong> Une clause de non-concurrence doit être limitée dans le temps, l'espace, proportionnée et rémunérée.
+                    <br>2. <strong>Mineure :</strong> Ici, "Monde entier" et "10 ans" sont excessifs. De plus, il n'y a pas de contrepartie financière.
+                    <br>3. <strong>Conclusion :</strong> La clause est nulle. Le développeur peut travailler où il veut.
                 </div>
             </div>
         </div>
-        
+
         <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Cas : La clause abusive</div>
+            <div class="accordion-header" onclick="toggleAccordion(this)">Cas 2 : La Preuve par Email (Arrêt Nikon)</div>
             <div class="accordion-body">
-                <p><strong>Faits :</strong> Un développeur démissionne. Son contrat contient une clause de non-concurrence : "Interdiction de travailler pour tout concurrent en Europe pendant 5 ans. Pas d'indemnité prévue."</p>
-                
-                <div class="highlight-box" style="border-left-color: var(--danger);">
-                    <h3>Correction par Syllogisme :</h3>
-                    
-                    <p><strong>1. Problème de droit :</strong> La clause de non-concurrence imposée au développeur est-elle valide ?</p>
-                    
-                    <p><strong>2. Majeure :</strong> En droit (Jurisprudence), une clause de non-concurrence doit cumuler 4 conditions pour être valide : protection des intérêts légitimes, limitation dans le temps et l'espace, et contrepartie financière.</p>
-                    
-                    <p><strong>3. Mineure :</strong> En l'espèce, la clause est excessive dans le temps (5 ans), l'espace (Europe) et surtout, elle ne prévoit aucune contrepartie financière.</p>
-                    
-                    <p><strong>4. Conclusion :</strong> En conséquence, la clause est nulle. Le développeur est libre de travailler où il veut immédiatement.</p>
+                <p><strong>Situation :</strong> L'employeur accède à la boite mail d'un salarié absent et trouve des preuves de déloyauté dans un dossier nommé "PROJET X". Le salarié crie à la violation de vie privée.</p>
+                <div class="highlight-box">
+                    <strong>Correction Syllogisme :</strong>
+                    <br>1. <strong>Majeure :</strong> Les fichiers sur l'ordinateur pro sont présumés professionnels, sauf s'ils sont identifiés comme "PERSONNEL". L'employeur peut les ouvrir hors présence du salarié.
+                    <br>2. <strong>Mineure :</strong> Le dossier s'appelait "PROJET X", pas "PERSONNEL".
+                    <br>3. <strong>Conclusion :</strong> L'accès est licite, la preuve est recevable.
                 </div>
             </div>
         </div>
@@ -412,19 +395,21 @@
 
     <script>
         function showTab(tabId) {
-            // Cacher tous les contenus
+            // Masquer tous les conteneurs
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             // Désactiver tous les boutons
             document.querySelectorAll('.nav-items button').forEach(el => el.classList.remove('active'));
             
-            // Activer la cible
+            // Afficher le bon conteneur
             document.getElementById(tabId).classList.add('active');
             
-            // Activer le bouton (basique, basé sur l'ordre)
-            const index = ['cours', 'syllogisme', 'entrainement'].indexOf(tabId);
-            if(index !== -1) {
-                document.querySelectorAll('.nav-items button')[index].classList.add('active');
-            }
+            // Activer le bon bouton
+            const buttons = document.querySelectorAll('.nav-items button');
+            if(tabId === 'annee1') buttons[0].classList.add('active');
+            if(tabId === 'annee2') buttons[1].classList.add('active');
+            if(tabId === 'syllogisme') buttons[2].classList.add('active');
+            if(tabId === 'entrainement') buttons[3].classList.add('active');
+            
             window.scrollTo(0,0);
         }
 
