@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiches de cours — CEJM BTS SIO SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ——— YEAR TABS ——— */
+    .year-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 6px;
+      width: fit-content;
+    }
+    .year-tab {
+      padding: 9px 22px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .year-tab.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,113,227,0.3);
+    }
+    .year-tab:not(.active):hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ——— FICHES GRID ——— */
+    .fiches-section { display: none; }
+    .fiches-section.active { display: block; }
+
+    .fiches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .fiche-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-xs);
+      position: relative;
+    }
+    .fiche-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent);
+    }
+    .fiche-card:hover .fiche-overlay { opacity: 1; }
+
+    .fiche-img-wrap {
+      width: 100%;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+    .fiche-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.4s ease;
+    }
+    .fiche-card:hover .fiche-img-wrap img { transform: scale(1.04); }
+
+    .fiche-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,113,227,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .fiche-overlay span {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .fiche-info {
+      padding: 12px 14px;
+      border-top: 1px solid var(--border-light);
+    }
+    .fiche-num {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+    .fiche-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ——— LIGHTBOX ——— */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #lightbox.open { display: flex; }
+
+    .lb-container {
+      position: relative;
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lb-image-wrap {
+      width: 100%;
+      max-height: 80vh;
+      overflow: hidden;
+      border-radius: var(--radius);
+      position: relative;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lbImage {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      transition: opacity 0.2s ease;
+      cursor: zoom-in;
+    }
+    #lbImage.zoomed {
+      cursor: zoom-out;
+      max-height: none;
+      max-width: none;
+      width: auto;
+    }
+
+    .lb-caption {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px 20px;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    .lb-caption strong { color: #60a5fa; }
+
+    .lb-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lb-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+      backdrop-filter: blur(4px);
+    }
+    .lb-btn:hover { background: var(--accent); }
+    .lb-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .lb-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+      line-height: 1;
+    }
+    .lb-close:hover { background: var(--red); border-color: var(--red); }
+
+    .lb-counter {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem;
+      font-weight: 500;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .lb-zoom-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: var(--font);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .lb-zoom-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* ——— EMPTY STATE ——— */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
+
+    @media (max-width: 600px) {
+      .fiches-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .year-tabs { width: 100%; }
+      .year-tab { flex: 1; text-align: center; }
+      .lb-close { top: 8px; right: 8px; position: fixed; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html">Méthode</a></li>
+        <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+        <li><a href="fiches.html" class="active">Fiches</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html">Méthode</a>
+    <a href="cas-pratiques.html">Cas Prat.</a>
+    <a href="fiches.html" class="active">Fiches</a>
+  </nav>
+
+  <main class="page">
+
+    <div class="page-hero">
+      <div class="badge">Cours originaux</div>
+      <h1>Fiches de Cours</h1>
+      <p>Consultez directement les fiches originales. Cliquez sur une fiche pour l'afficher en plein écran.</p>
+    </div>
+
+    <!-- YEAR TABS -->
+    <div class="year-tabs">
+      <button class="year-tab active" onclick="switchYear('an1', this)">📘 1ère Année</button>
+      <button class="year-tab" onclick="switchYear('an2', this)">💻 2ème Année</button>
+    </div>
+
+    <!-- ====== 1ÈRE ANNÉE ====== -->
+    <div class="fiches-section active" id="an1">
+      <div class="fiches-grid" id="grid-an1">
+
+        <div class="fiche-card" onclick="openLightbox('an1', 0)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/1t.png" alt="Chapitre 1" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 1</div>
+            <div class="fiche-title">Le financement de l'entreprise</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 1)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/2t%20(1).png" alt="Chapitre 2" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 2</div>
+            <div class="fiche-title">La structure juridique de l'entreprise</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 2)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/3t%20(1).png" alt="Chapitre 3" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 3 — Partie 1</div>
+            <div class="fiche-title">Les risques liés à l'activité (RC)</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 3)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/3%2C5t%20(1).png" alt="Chapitre 3 suite" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 3 — Partie 2</div>
+            <div class="fiche-title">Responsabilité civile & produits défectueux</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 4)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/4t%20(1).png" alt="Chapitre 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 4</div>
+            <div class="fiche-title">Les choix de production</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 5)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/5t%20(1).png" alt="Chapitre 5" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 5 — Partie 1</div>
+            <div class="fiche-title">La régulation économique par le droit</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 6)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/5.5t%20(1).png" alt="Chapitre 5 suite" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 5 — Partie 2</div>
+            <div class="fiche-title">Politiques économiques & limites État</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 7)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/6t%20(1).png" alt="Chapitre 6" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 6 — Partie 1</div>
+            <div class="fiche-title">L'environnement de l'entreprise</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 8)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/7t%20(1).png" alt="Chapitre 7" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 6 — Partie 2</div>
+            <div class="fiche-title">Droit de la concurrence</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an1', 9)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm premiere ann%C3%A9e/7.5t%20(1).png" alt="Chapitre 7.5" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 7</div>
+            <div class="fiche-title">Propriété industrielle — Brevet & Marque</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====== 2ÈME ANNÉE ====== -->
+    <div class="fiches-section" id="an2">
+      <div class="fiches-grid" id="grid-an2">
+
+        <div class="fiche-card" onclick="openLightbox('an2', 0)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.1%20theme%204.png" alt="2.1 Thème 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 4 — 2.1</div>
+            <div class="fiche-title">Évolutions liées à la révolution numérique</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 1)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.2%20theme%204.png" alt="2.2 Thème 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 4 — 2.2</div>
+            <div class="fiche-title">Adaptation à l'économie numérique</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 2)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.3%20theme%204.png" alt="2.3 Thème 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 4 — 2.3</div>
+            <div class="fiche-title">Protection des personnes — RGPD</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 3)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.4%20theme%204.png" alt="2.4 Thème 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 4 — 2.4</div>
+            <div class="fiche-title">Protection des actifs immatériels</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 4)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.5%20theme%204.jpg" alt="2.5 Thème 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 4 — 2.5</div>
+            <div class="fiche-title">Preuve électronique & contrats numériques</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 5)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.6%20theme%204.png" alt="2.6 Thème 4" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 4 — 2.6</div>
+            <div class="fiche-title">Incidence du numérique sur le management (SI)</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 6)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.7theme%205.png" alt="2.7 Thème 5" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 5 — 2.7</div>
+            <div class="fiche-title">Évolutions du marché du travail</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 7)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.8%20theme%205.png" alt="2.8 Thème 5" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 5 — 2.8</div>
+            <div class="fiche-title">Les politiques de l'emploi</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 8)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.9%20theme%205.png" alt="2.9 Thème 5" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Thème 5 — 2.9</div>
+            <div class="fiche-title">Les relations collectives & dialogue social</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 9)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/ch10.jpg" alt="Chapitre 10" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 10</div>
+            <div class="fiche-title">Le contrat de travail et son évolution</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 10)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/11.jpeg" alt="Chapitre 11" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 11</div>
+            <div class="fiche-title">Motivation au travail & GPEC</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 11)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/12.jpeg" alt="Chapitre 12" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 12</div>
+            <div class="fiche-title">Gestion des talents & Digital Natives</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 12)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/14.jpeg" alt="Chapitre 14" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Chapitre 14</div>
+            <div class="fiche-title">Négociation collective & GEPP</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 13)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.13.jpg" alt="2.13" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Fiche 2.13</div>
+            <div class="fiche-title">La démarche et le diagnostic stratégique</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 14)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.16.jpg" alt="2.16" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Fiche 2.16</div>
+            <div class="fiche-title">Données confidentielles & cybersécurité</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 15)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/2.17.jpg" alt="2.17" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Fiche 2.17</div>
+            <div class="fiche-title">Exploitation des logiciels et licences</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 16)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/analyse%20situation%20juridique.jpg" alt="Analyse juridique" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Méthode</div>
+            <div class="fiche-title">Analyser une situation juridique</div>
+          </div>
+        </div>
+
+        <div class="fiche-card" onclick="openLightbox('an2', 17)">
+          <div class="fiche-img-wrap">
+            <img src="chapitre cejm deuxieme ann%C3%A9e/suite%20abnalye%20situation%20juridique.jpg" alt="Suite analyse juridique" loading="lazy">
+            <div class="fiche-overlay"><span>Ouvrir</span></div>
+          </div>
+          <div class="fiche-info">
+            <div class="fiche-num">Méthode — Suite</div>
+            <div class="fiche-title">Qualifier les faits & syllogisme juridique</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ====== LIGHTBOX ====== -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualiseur de fiches">
+    <div class="lb-container">
+
+      <button class="lb-close" onclick="closeLightbox()" title="Fermer (Échap)">✕</button>
+
+      <div class="lb-image-wrap">
+        <img id="lbImage" src="" alt="Fiche de cours" onclick="toggleZoom(this)">
+      </div>
+
+      <div class="lb-caption" id="lbCaption">
+        <strong id="lbNum"></strong> — <span id="lbTitle"></span>
+      </div>
+
+      <div class="lb-controls">
+        <button class="lb-btn" id="btnPrev" onclick="navigate(-1)" title="Précédent (←)">←</button>
+        <span class="lb-counter" id="lbCounter"></span>
+        <button class="lb-btn" id="btnNext" onclick="navigate(1)" title="Suivant (→)">→</button>
+        <button class="lb-zoom-btn" onclick="toggleZoom(document.getElementById('lbImage'))">⊕ Zoom</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
+  <script>
+    // ——— DATA ———
+    const FICHES = {
+      an1: [
+        { num: 'Chapitre 1',         title: 'Le financement de l\'entreprise',            src: 'chapitre cejm premiere année/1t.png' },
+        { num: 'Chapitre 2',         title: 'La structure juridique de l\'entreprise',    src: 'chapitre cejm premiere année/2t (1).png' },
+        { num: 'Chapitre 3 — P.1',   title: 'Les risques liés à l\'activité (RC)',        src: 'chapitre cejm premiere année/3t (1).png' },
+        { num: 'Chapitre 3 — P.2',   title: 'RC & produits défectueux',                  src: 'chapitre cejm premiere année/3,5t (1).png' },
+        { num: 'Chapitre 4',         title: 'Les choix de production',                   src: 'chapitre cejm premiere année/4t (1).png' },
+        { num: 'Chapitre 5 — P.1',   title: 'La régulation économique par le droit',     src: 'chapitre cejm premiere année/5t (1).png' },
+        { num: 'Chapitre 5 — P.2',   title: 'Politiques économiques & limites État',     src: 'chapitre cejm premiere année/5.5t (1).png' },
+        { num: 'Chapitre 6 — P.1',   title: 'L\'environnement de l\'entreprise',         src: 'chapitre cejm premiere année/6t (1).png' },
+        { num: 'Chapitre 6 — P.2',   title: 'Droit de la concurrence',                   src: 'chapitre cejm premiere année/7t (1).png' },
+        { num: 'Chapitre 7',         title: 'Propriété industrielle — Brevet & Marque',  src: 'chapitre cejm premiere année/7.5t (1).png' },
+      ],
+      an2: [
+        { num: 'Thème 4 — 2.1',  title: 'Évolutions liées à la révolution numérique',        src: 'chapitre cejm deuxieme année/2.1 theme 4.png' },
+        { num: 'Thème 4 — 2.2',  title: 'Adaptation à l\'économie numérique',                src: 'chapitre cejm deuxieme année/2.2 theme 4.png' },
+        { num: 'Thème 4 — 2.3',  title: 'Protection des personnes — RGPD',                   src: 'chapitre cejm deuxieme année/2.3 theme 4.png' },
+        { num: 'Thème 4 — 2.4',  title: 'Protection des actifs immatériels',                 src: 'chapitre cejm deuxieme année/2.4 theme 4.png' },
+        { num: 'Thème 4 — 2.5',  title: 'Preuve électronique & contrats numériques',         src: 'chapitre cejm deuxieme année/2.5 theme 4.jpg' },
+        { num: 'Thème 4 — 2.6',  title: 'Incidence du numérique sur le management (SI)',     src: 'chapitre cejm deuxieme année/2.6 theme 4.png' },
+        { num: 'Thème 5 — 2.7',  title: 'Évolutions du marché du travail',                   src: 'chapitre cejm deuxieme année/2.7theme 5.png' },
+        { num: 'Thème 5 — 2.8',  title: 'Les politiques de l\'emploi',                      src: 'chapitre cejm deuxieme année/2.8 theme 5.png' },
+        { num: 'Thème 5 — 2.9',  title: 'Les relations collectives & dialogue social',       src: 'chapitre cejm deuxieme année/2.9 theme 5.png' },
+        { num: 'Chapitre 10',    title: 'Le contrat de travail et son évolution',             src: 'chapitre cejm deuxieme année/ch10.jpg' },
+        { num: 'Chapitre 11',    title: 'Motivation au travail & GPEC',                      src: 'chapitre cejm deuxieme année/11.jpeg' },
+        { num: 'Chapitre 12',    title: 'Gestion des talents & Digital Natives',             src: 'chapitre cejm deuxieme année/12.jpeg' },
+        { num: 'Chapitre 14',    title: 'Négociation collective & GEPP',                     src: 'chapitre cejm deuxieme année/14.jpeg' },
+        { num: 'Fiche 2.13',     title: 'La démarche et le diagnostic stratégique',          src: 'chapitre cejm deuxieme année/2.13.jpg' },
+        { num: 'Fiche 2.16',     title: 'Données confidentielles & cybersécurité',           src: 'chapitre cejm deuxieme année/2.16.jpg' },
+        { num: 'Fiche 2.17',     title: 'Exploitation des logiciels et licences',            src: 'chapitre cejm deuxieme année/2.17.jpg' },
+        { num: 'Méthode',        title: 'Analyser une situation juridique',                  src: 'chapitre cejm deuxieme année/analyse situation juridique.jpg' },
+        { num: 'Méthode — Suite','title': 'Qualifier les faits & syllogisme juridique',      src: 'chapitre cejm deuxieme année/suite abnalye situation juridique.jpg' },
+      ]
+    };
+
+    // fix title field (accidental 'title' key)
+    FICHES.an2[17].title = FICHES.an2[17]['title'];
+
+    let currentYear = 'an1';
+    let currentIndex = 0;
+
+    // ——— SWITCH YEAR ———
+    function switchYear(year, btn) {
+      document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.fiches-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(year).classList.add('active');
+      currentYear = year;
+    }
+
+    // ——— OPEN LIGHTBOX ———
+    function openLightbox(year, index) {
+      currentYear = year;
+      currentIndex = index;
+      renderLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function renderLightbox() {
+      const list = FICHES[currentYear];
+      const item = list[currentIndex];
+      const img = document.getElementById('lbImage');
+
+      img.classList.remove('zoomed');
+      img.style.transform = '';
+      img.src = item.src;
+      img.alt = item.title;
+
+      document.getElementById('lbNum').textContent = item.num;
+      document.getElementById('lbTitle').textContent = item.title;
+      document.getElementById('lbCounter').textContent = `${currentIndex + 1} / ${list.length}`;
+
+      document.getElementById('btnPrev').disabled = currentIndex === 0;
+      document.getElementById('btnNext').disabled = currentIndex === list.length - 1;
+    }
+
+    // ——— NAVIGATE ———
+    function navigate(dir) {
+      const list = FICHES[currentYear];
+      const next = currentIndex + dir;
+      if (next < 0 || next >= list.length) return;
+      currentIndex = next;
+      renderLightbox();
+    }
+
+    // ——— CLOSE ———
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ——— ZOOM ———
+    function toggleZoom(img) {
+      img.classList.toggle('zoomed');
+    }
+
+    // ——— KEYBOARD ———
+    document.addEventListener('keydown', e => {
+      const lb = document.getElementById('lightbox');
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+      if (e.key === 'Escape')     closeLightbox();
+    });
+
+    // ——— CLICK OUTSIDE ———
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    });
+  </script>
+</body>
+</html>

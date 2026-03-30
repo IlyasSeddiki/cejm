@@ -918,6 +918,10 @@ mark {
 /* ——————————————————————————————————————
    RESPONSIVE
 —————————————————————————————————————— */
+
+/* Mobile nav hidden by default on desktop */
+.mobile-nav { display: none; }
+
 @media (max-width: 768px) {
   .nav-links { display: none; }
 
