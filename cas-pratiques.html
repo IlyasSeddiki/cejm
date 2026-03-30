@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cas Pratiques — CEJM BTS SIO SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font);
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .cas-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cas-tag { margin-bottom: 8px; }
+
+    .correction-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all var(--transition);
+      margin-top: 12px;
+    }
+    .correction-toggle:hover { background: var(--accent-dark); }
+    .correction-toggle.shown { background: var(--text); }
+
+    .correction-panel {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+    }
+    .correction-panel.visible { display: block; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html">Méthode</a></li>
+        <li><a href="cas-pratiques.html" class="active">Cas Pratiques</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html">Méthode</a>
+    <a href="cas-pratiques.html" class="active">Cas Pratiques</a>
+  </nav>
+
+  <main class="page">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="badge">Entraînement</div>
+      <h1>Cas Pratiques</h1>
+      <p>8 cas corrigés pas à pas avec la méthode syllogisme. Couvrent la responsabilité, le numérique, le droit du travail et les contrats.</p>
+    </div>
+
+    <div class="callout callout-blue" style="margin-bottom:24px;">
+      <div class="callout-title">Comment utiliser ces cas ?</div>
+      Lisez l'énoncé, posez-vous la question juridique, tentez de rédiger votre syllogisme, puis cliquez sur <strong>"Voir la correction"</strong> pour comparer. Ne trichez pas — c'est en essayant qu'on progresse.
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCas('all', this)">Tous (8)</button>
+      <button class="filter-btn" onclick="filterCas('civil', this)">Responsabilité civile</button>
+      <button class="filter-btn" onclick="filterCas('numerique', this)">Droit numérique</button>
+      <button class="filter-btn" onclick="filterCas('travail', this)">Droit du travail</button>
+      <button class="filter-btn" onclick="filterCas('contrat', this)">Droit des contrats</button>
+    </div>
+
+    <div class="cas-grid" id="casGrid">
+
+      <!-- ====== CAS 1 ====== -->
+      <div class="cas-card" data-theme="civil">
+        <div class="cas-header">
+          <div class="cas-num">1</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-blue">Responsabilité civile</span> <span class="tag tag-gray">Art. 1240 C.Civ.</span></div>
+            <div class="cas-title">La panne serveur et le préjudice client</div>
+            <div class="cas-sub">Obligation de résultat · SLA · Responsabilité contractuelle</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p>La société <strong>DataCloud SAS</strong> est un hébergeur cloud qui s'est engagée contractuellement à garantir une disponibilité de ses serveurs à <strong>99,9%</strong> par mois (SLA). En mars 2024, une mauvaise configuration lors d'une mise à jour provoque une panne de <strong>48 heures</strong>, rendant le service indisponible. La société <strong>Retail Plus</strong>, cliente, ne peut plus traiter ses commandes en ligne et subit une perte de chiffre d'affaires estimée à <strong>85 000 €</strong>. DataCloud invoque la complexité technique de la panne pour s'exonérer.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>Retail Plus peut-elle engager la responsabilité civile de DataCloud SAS et obtenir réparation de son préjudice ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, la responsabilité civile contractuelle est engagée lorsqu'une partie à un contrat n'exécute pas, exécute mal ou exécute tardivement ses obligations, causant un préjudice à son cocontractant (art. 1231-1 Code Civil). Par ailleurs, lorsqu'un débiteur est tenu d'une <strong>obligation de résultat</strong>, la seule inexécution suffit à engager sa responsabilité, sans qu'il soit nécessaire de prouver une faute. Il ne peut s'exonérer qu'en démontrant un cas de force majeure (événement extérieur, imprévisible et irrésistible).</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, DataCloud s'est engagée contractuellement à une disponibilité de 99,9% — ce qui constitue une obligation de résultat. Or la disponibilité effective de mars 2024 est de seulement ~93% (48h sur ~720h). Le résultat promis n'est pas atteint. La panne est due à une erreur interne de configuration (mauvaise mise à jour), ce qui écarte toute exonération pour force majeure, l'événement n'étant ni extérieur ni irrésistible. Retail Plus a subi un préjudice direct et certain de 85 000 €.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, DataCloud SAS n'a pas respecté son obligation de résultat contractuelle. Sa responsabilité civile contractuelle est engagée. Elle devra verser des dommages-intérêts à Retail Plus correspondant au préjudice subi (85 000 €), et les pénalités prévues au SLA s'appliqueront également.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 2 ====== -->
+      <div class="cas-card" data-theme="travail">
+        <div class="cas-header">
+          <div class="cas-num">2</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-purple">Droit du travail</span> <span class="tag tag-gray">Jurisprudence Cass. Soc.</span></div>
+            <div class="cas-title">La clause de non-concurrence abusive</div>
+            <div class="cas-sub">Validité des clauses · 4 conditions cumulatives</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p><strong>Alexis Durand</strong>, développeur réseau senior, quitte son ESN <strong>NetPro SA</strong> après 6 ans. Son contrat contient une clause de non-concurrence qui lui interdit de travailler pour "tout concurrent dans le secteur informatique <strong>dans le monde entier</strong> pendant <strong>5 ans</strong>", sans mentionner de contrepartie financière. Alexis souhaite rejoindre une startup concurrente basée à Paris.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>La clause de non-concurrence est-elle valide ? Alexis peut-il librement rejoindre la startup ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, selon la jurisprudence constante de la Chambre sociale de la Cour de cassation, une clause de non-concurrence n'est licite que si elle respecte <strong>quatre conditions cumulatives</strong> : elle doit être indispensable à la protection des intérêts légitimes de l'entreprise, être limitée dans le <strong>temps</strong>, être limitée dans l'<strong>espace</strong>, et prévoir une <strong>contrepartie financière</strong> pour le salarié. L'absence de l'une de ces conditions entraîne la nullité de la clause.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, la clause prévoit une interdiction "dans le monde entier" — limitation géographique manifestement excessive et non délimitée. La durée de 5 ans est disproportionnée (généralement 2 ans maximum). Surtout, aucune contrepartie financière n'est prévue. Deux conditions au moins font défaut, voire trois.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, la clause de non-concurrence est <strong>nulle</strong>. Alexis Durand peut librement rejoindre la startup concurrente. Il pourrait même saisir le Conseil de Prud'hommes pour faire constater cette nullité et réclamer des dommages-intérêts si la clause l'a empêché de travailler.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 3 ====== -->
+      <div class="cas-card" data-theme="numerique">
+        <div class="cas-header">
+          <div class="cas-num">3</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-blue">Droit numérique</span> <span class="tag tag-gray">RGPD · Art. 83</span></div>
+            <div class="cas-title">Fuite de données et notification CNIL</div>
+            <div class="cas-sub">RGPD · Obligations du responsable de traitement</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p>La société <strong>MédiSoft</strong> édite un logiciel de gestion médicale utilisé par des cabinets de médecins. Le <strong>lundi 10 juin 2024 à 8h</strong>, son responsable technique découvre qu'une vulnérabilité dans l'API a permis à un tiers d'accéder à <strong>15 000 dossiers patients</strong> (noms, diagnostics, numéros de sécu). MédiSoft hésite à notifier la CNIL, craignant une mauvaise publicité. Elle attend finalement <strong>5 jours</strong> pour faire la déclaration.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>MédiSoft a-t-elle respecté ses obligations au titre du RGPD ? Quelles sanctions risque-t-elle ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, le RGPD (Règlement UE 2016/679) impose à tout responsable de traitement de notifier toute violation de données personnelles à l'autorité de contrôle compétente (la CNIL en France) dans un délai de <strong>72 heures</strong> après en avoir pris connaissance (art. 33 RGPD). Si la violation est susceptible d'engendrer un risque élevé pour les personnes concernées, celles-ci doivent également être informées sans délai (art. 34). En cas de manquement, la CNIL peut infliger une amende allant jusqu'à <strong>10 millions d'euros ou 2% du CA mondial</strong> (ou 20M€ / 4% du CA pour les violations les plus graves).</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, MédiSoft a eu connaissance de la violation le 10 juin à 8h. Le délai de 72 heures expirait donc le 13 juin à 8h. Or MédiSoft n'a notifié la CNIL qu'après <strong>5 jours</strong>, soit largement au-delà du délai légal. De plus, les données concernées (dossiers médicaux) sont des données de santé — données sensibles de catégorie spéciale, soumises à un régime de protection renforcé. Le risque pour les 15 000 personnes est donc élevé, ce qui imposait également leur notification directe.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, MédiSoft a manqué à ses obligations RGPD en ne respectant pas le délai de 72 heures et en ne notifiant pas les personnes concernées. Elle s'expose à une sanction de la CNIL pouvant atteindre des millions d'euros, ainsi qu'à des actions en responsabilité civile des 15 000 patients victimes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 4 ====== -->
+      <div class="cas-card" data-theme="numerique">
+        <div class="cas-header">
+          <div class="cas-num">4</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-blue">Droit numérique</span> <span class="tag tag-red">Droit pénal</span></div>
+            <div class="cas-title">L'administrateur curieux — Accès non autorisé au STAD</div>
+            <div class="cas-sub">Art. 323-1 C.Pén. · Infraction informatique</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p><strong>Karim</strong>, administrateur réseau chez <strong>TechGroup</strong>, dispose d'accès privilégiés aux serveurs de l'entreprise. Par curiosité, il accède au serveur de la filiale allemande de TechGroup, auquel il n'a pas le droit d'accéder selon la politique de sécurité interne. Il consulte des fichiers RH contenant les salaires des cadres dirigeants, sans modifier ni supprimer quoi que ce soit. Il estime qu'il s'agit du "même groupe" et qu'il n'a rien fait de mal.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>Karim a-t-il commis une infraction pénale ? Quelles en sont les conséquences ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, l'article 323-1 du Code Pénal punit "le fait d'accéder ou de se maintenir, <strong>frauduleusement</strong>, dans tout ou partie d'un système de traitement automatisé de données" de <strong>2 ans d'emprisonnement et 60 000 € d'amende</strong>. L'accès est frauduleux dès lors qu'il s'effectue sans autorisation ou en dépassement d'une autorisation. L'infraction est constituée même en l'absence de dommage ou de vol de données.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, Karim n'avait aucune autorisation pour accéder au serveur de la filiale allemande — la politique de sécurité l'excluait explicitement de son périmètre. Le fait qu'il appartienne au même groupe ou qu'il n'ait pas modifié les données est indifférent : le délit est constitué dès l'accès non autorisé, même sans intention malveillante particulière. Son accès était donc bien frauduleux au sens pénal.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, Karim a commis l'infraction d'accès frauduleux à un STAD (art. 323-1 C.Pén.), passible de 2 ans d'emprisonnement et 60 000 € d'amende. Il engage également sa responsabilité disciplinaire (licenciement pour faute grave possible) et la responsabilité civile de TechGroup vis-à-vis de la filiale allemande.</p>
+            </div>
+            <div class="callout callout-red" style="margin-top:12px;">
+              <div class="callout-title">Leçon SISR</div>
+              Le principe du <strong>moindre privilège</strong> (least privilege) s'impose techniquement ET juridiquement. En tant qu'admin, on n'accède qu'aux ressources expressément autorisées. "J'avais les droits techniques" ne vaut pas autorisation juridique.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 5 ====== -->
+      <div class="cas-card" data-theme="civil">
+        <div class="cas-header">
+          <div class="cas-num">5</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-blue">Responsabilité civile</span> <span class="tag tag-gray">Produits défectueux</span></div>
+            <div class="cas-title">Le logiciel défectueux et la perte de données</div>
+            <div class="cas-sub">Art. 1245 C.Civ. · Responsabilité du fait des produits défectueux</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p>La société <strong>SoftBuild</strong> édite un logiciel de sauvegarde automatique de données. Un bug dans la version 4.2, non détecté lors des tests, provoque la corruption de <strong>3 ans de données comptables</strong> chez son client <strong>CabinetExpert</strong>. CabinetExpert doit reconstituer ces données, engageant des frais de <strong>120 000 €</strong>. SoftBuild affirme que le bug "ne pouvait pas être connu au moment de la mise sur le marché".</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>La responsabilité civile de SoftBuild peut-elle être engagée sur le fondement des produits défectueux ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, les articles 1245 et suivants du Code Civil instaurent une responsabilité du fait des produits défectueux. Le producteur est responsable du dommage causé par un défaut de son produit, <strong>qu'il soit ou non lié au consommateur par un contrat</strong>, et même sans qu'une faute soit prouvée. Un produit est défectueux lorsqu'il n'offre pas la sécurité à laquelle on peut légitimement s'attendre. Seul le "risque de développement" (défaut inconnaissable en l'état des connaissances au moment de la mise sur le marché) peut exonérer le producteur.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, SoftBuild a mis sur le marché un logiciel de sauvegarde dont la fonction principale est de protéger les données. Un bug qui corrompt les données constitue manifestement un défaut : le produit n'offre pas la sécurité attendue d'un outil de sauvegarde. SoftBuild invoque le "risque de développement", mais ce moyen d'exonération s'applique aux risques véritablement inconnaissables — or un test rigoureux de logiciel de sauvegarde devrait détecter une corruption de données. CabinetExpert a subi un préjudice direct et certain de 120 000 €.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, la responsabilité de SoftBuild est engagée sur le fondement des articles 1245 s. C.Civ. L'exonération pour risque de développement semble difficile à retenir ici. SoftBuild devra indemniser CabinetExpert à hauteur des 120 000 € de préjudice subi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 6 ====== -->
+      <div class="cas-card" data-theme="travail">
+        <div class="cas-header">
+          <div class="cas-num">6</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-purple">Droit du travail</span> <span class="tag tag-gray">Modification contrat</span></div>
+            <div class="cas-title">La mutation forcée vers Lyon</div>
+            <div class="cas-sub">Modification des conditions de travail · Clause de mobilité</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p><strong>Sophie</strong>, technicienne réseau à <strong>NetOps Paris</strong>, est mutée de force sur le site de Lyon. Son contrat ne contient <strong>pas de clause de mobilité</strong>. Son employeur invoque des "nécessités organisationnelles". Sophie, dont les enfants sont scolarisés à Paris et le conjoint y travaille, refuse la mutation. L'employeur la licencie pour refus.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>L'employeur pouvait-il imposer cette mutation ? Le licenciement est-il justifié ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, le lieu de travail est un élément du contrat de travail. Sa modification constitue une <strong>modification d'un élément essentiel du contrat</strong> qui nécessite l'accord exprès du salarié, sauf clause de mobilité préalablement convenue. En l'absence de clause de mobilité, un changement de lieu de travail vers une zone géographique différente ne peut être imposé unilatéralement par l'employeur. Si le salarié refuse, l'employeur doit soit renoncer à la mutation, soit engager une procédure de licenciement. Mais ce licenciement pour refus d'une modification substantielle ne constitue pas une faute du salarié.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, aucune clause de mobilité ne figure au contrat de Sophie. La mutation Paris → Lyon constitue un changement de zone géographique significatif, qui modifie substantiellement le lieu de travail. Sophie était en droit de refuser. Son refus ne peut pas être constitutif d'une faute justifiant un licenciement disciplinaire.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, l'employeur ne pouvait pas imposer cette mutation sans l'accord de Sophie. Le licenciement repose sur le refus d'une modification contractuelle non légitime. Sophie pourra saisir le Conseil de Prud'hommes pour obtenir la requalification du licenciement en licenciement sans cause réelle et sérieuse, et obtenir des dommages-intérêts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 7 ====== -->
+      <div class="cas-card" data-theme="contrat">
+        <div class="cas-header">
+          <div class="cas-num">7</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-green">Droit des contrats</span> <span class="tag tag-gray">Art. 1128 C.Civ.</span></div>
+            <div class="cas-title">Le contrat signé sous pression — Le dol</div>
+            <div class="cas-sub">Vices du consentement · Nullité du contrat</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p>La TPE <strong>BoutiqueWeb</strong> signe un contrat de maintenance informatique avec <strong>EasyIT</strong>. Le commercial d'EasyIT a présenté des études comparatives falsifiées faisant croire que la concurrence coûtait 3 fois plus cher, et a caché que le logiciel fourni n'était compatible qu'avec Windows XP (hors support). BoutiqueWeb découvre la supercherie 2 mois après signature. Elle demande la nullité du contrat.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>BoutiqueWeb peut-elle obtenir la nullité du contrat ? Sur quel fondement ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, l'article 1128 du Code Civil pose les conditions de validité d'un contrat : consentement libre et éclairé, capacité, contenu licite et certain. Le consentement est vicié notamment par le <strong>dol</strong> (art. 1137 C.Civ.) : manœuvres frauduleuses, mensonges ou dissimulations intentionnelles d'informations déterminantes qui amènent l'autre partie à contracter. Le dol est une cause de nullité relative du contrat, qui peut être invoquée dans un délai de <strong>5 ans</strong> à compter de la découverte.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, EasyIT a présenté des études comparatives falsifiées (manœuvres frauduleuses) et a délibérément dissimulé l'incompatibilité du logiciel avec les systèmes modernes (réticence dolosive). Ces deux éléments constituent un dol. Sans ces informations trompeuses, BoutiqueWeb n'aurait vraisemblablement pas signé — le dol est donc déterminant du consentement.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, le consentement de BoutiqueWeb a été vicié par dol. BoutiqueWeb peut demander la nullité relative du contrat devant le tribunal judiciaire. En plus de la nullité, elle pourra réclamer des dommages-intérêts à EasyIT sur le fondement de la responsabilité délictuelle (art. 1240 C.Civ.) pour le préjudice subi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CAS 8 ====== -->
+      <div class="cas-card" data-theme="numerique">
+        <div class="cas-header">
+          <div class="cas-num">8</div>
+          <div>
+            <div class="cas-tag"><span class="tag tag-blue">Droit numérique</span> <span class="tag tag-purple">Propriété intellectuelle</span></div>
+            <div class="cas-title">L'utilisation de logiciel sans licence conforme</div>
+            <div class="cas-sub">Droit d'auteur · Contrefaçon · Licences logicielles</div>
+          </div>
+        </div>
+        <div class="cas-body">
+          <div class="cas-section-label">Énoncé</div>
+          <p>Lors d'un audit interne, il est découvert que l'entreprise <strong>LogiTrans</strong> utilise <strong>47 postes sous Microsoft Office</strong> avec une seule licence valide achetée. Le responsable informatique estimait que "la licence d'entreprise couvrait tout le monde". L'éditeur Microsoft mandate un prestataire pour auditer les licences et constate l'infraction.</p>
+
+          <div class="cas-section-label">Question</div>
+          <p><em>LogiTrans est-elle en situation d'infraction ? Quelles sont les conséquences civiles et pénales ?</em></p>
+
+          <button class="correction-toggle" onclick="toggleCorrection(this)">▷ Voir la correction</button>
+
+          <div class="correction-panel">
+            <div class="syllogisme-step">
+              <span class="step-label majeure">MAJEURE</span>
+              <p>En droit, le logiciel est protégé par le droit d'auteur dès sa création (L.111-1 CPI). La reproduction ou l'utilisation d'un logiciel sans autorisation de l'auteur ou de l'éditeur constitue une <strong>contrefaçon</strong> (L.335-3 CPI). La contrefaçon engage la responsabilité civile (dommages-intérêts) ET pénale (jusqu'à <strong>3 ans d'emprisonnement et 300 000 €</strong> d'amende). L'utilisateur professionnel est présumé connaître les termes de la licence (CLUF) et ne peut pas invoquer sa bonne foi pour s'exonérer totalement.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label mineure">MINEURE</span>
+              <p>En l'espèce, LogiTrans dispose d'une seule licence Microsoft Office alors que 47 postes l'utilisent. Chaque installation non couverte par une licence valide constitue une reproduction non autorisée. L'argument du responsable informatique ("la licence couvre tout") est inopérant : le CLUF Microsoft précise clairement le nombre de postes autorisés. L'entreprise a donc commis 46 contrefaçons réitérées.</p>
+            </div>
+            <div class="syllogisme-step">
+              <span class="step-label conclusion">CONCLUSION</span>
+              <p>En conséquence, LogiTrans est en situation de contrefaçon. Sur le plan civil, Microsoft peut réclamer des dommages-intérêts correspondant au manque à gagner (prix de 46 licences + préjudice moral). Sur le plan pénal, les dirigeants risquent jusqu'à 3 ans d'emprisonnement et 300 000 € d'amende. LogiTrans devra immédiatement régulariser sa situation en achetant les licences manquantes.</p>
+            </div>
+            <div class="callout callout-blue" style="margin-top:12px;">
+              <div class="callout-title">Leçon SISR</div>
+              La gestion des licences (SAM — Software Asset Management) est une mission à part entière de l'administrateur. Un audit de licences régulier est obligatoire pour prévenir ce type de risque juridique et financier.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cas-grid -->
+
+  </main>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+
+  <script src="js/script.js"></script>
+  <script>
+    function toggleCorrection(btn) {
+      const panel = btn.nextElementSibling;
+      const isVisible = panel.classList.contains('visible');
+      panel.classList.toggle('visible', !isVisible);
+      btn.textContent = isVisible ? '▷ Voir la correction' : '▽ Masquer la correction';
+      btn.classList.toggle('shown', !isVisible);
+    }
+
+    function filterCas(theme, btn) {
+      // Update buttons
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter cards
+      document.querySelectorAll('.cas-card').forEach(card => {
+        if (theme === 'all' || card.dataset.theme === theme) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

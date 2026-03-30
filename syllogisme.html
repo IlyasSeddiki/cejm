@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Méthode Syllogisme — CEJM BTS SIO SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .method-hero {
+      background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%);
+      border-radius: var(--radius-lg);
+      padding: 36px 36px;
+      color: #fff;
+      margin-bottom: 32px;
+    }
+    .method-hero h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 8px; }
+    .method-hero p { opacity: 0.88; font-size: 0.95rem; line-height: 1.6; margin: 0; }
+
+    .mmc-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      margin: 28px 0;
+    }
+    .mmc-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .mmc-box .mmc-letter {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+    .mmc-box.m1 .mmc-letter { color: var(--accent); }
+    .mmc-box.m2 .mmc-letter { color: var(--orange); }
+    .mmc-box.c .mmc-letter { color: var(--green); }
+    .mmc-box .mmc-label { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .mmc-box .mmc-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+    .mmc-arrow { font-size: 1.4rem; color: var(--text-muted); }
+
+    .qual-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .qual-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      text-align: center;
+      box-shadow: var(--shadow-xs);
+    }
+    .qual-box .q-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .qual-box .q-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+    .qual-box .q-desc { font-size: 0.78rem; color: var(--text-secondary); }
+
+    .example-bloc {
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin: 16px 0;
+    }
+    .example-bloc .ex-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .banque-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .mmc-flow { grid-template-columns: 1fr; }
+      .mmc-arrow { display: none; }
+      .qual-flow { grid-template-columns: 1fr; }
+      .qual-box .mmc-arrow { display: none; }
+      .banque-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html" class="active">Méthode</a></li>
+        <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html" class="active">Méthode</a>
+    <a href="cas-pratiques.html">Cas Pratiques</a>
+  </nav>
+
+  <main class="page">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="badge">Méthodologie juridique</div>
+      <h1>La Méthode du Syllogisme</h1>
+      <p>La structure incontournable pour analyser toute situation juridique à l'examen. À maîtriser par cœur.</p>
+    </div>
+
+    <!-- MÉTHODE MMC -->
+    <div class="method-hero">
+      <h2>La structure M — M — C</h2>
+      <p>Pour toute question juridique, la réponse suit toujours la même structure logique en trois temps : Majeure → Mineure → Conclusion.</p>
+    </div>
+
+    <div class="mmc-flow">
+      <div class="mmc-box m1">
+        <div class="mmc-letter">M</div>
+        <div class="mmc-label">Majeure</div>
+        <div class="mmc-desc">La règle de droit applicable.<br><em>"En droit, selon l'article X…"</em></div>
+      </div>
+      <div class="mmc-arrow">→</div>
+      <div class="mmc-box m2">
+        <div class="mmc-letter">M</div>
+        <div class="mmc-label">Mineure</div>
+        <div class="mmc-desc">Application aux faits de l'espèce.<br><em>"En l'espèce…"</em></div>
+      </div>
+      <div class="mmc-arrow">→</div>
+      <div class="mmc-box c">
+        <div class="mmc-letter">C</div>
+        <div class="mmc-label">Conclusion</div>
+        <div class="mmc-desc">La solution logique qui en découle.<br><em>"En conséquence…"</em></div>
+      </div>
+    </div>
+
+    <div class="callout callout-orange" style="margin-bottom:32px;">
+      <div class="callout-title">Règle d'or</div>
+      Ne jamais commencer par les faits. Toujours poser la règle de droit <strong>en premier</strong> (la majeure), puis appliquer aux faits (mineure), puis conclure. L'ordre est imposé.
+    </div>
+
+
+    <!-- ÉTAPES DÉTAILLÉES -->
+    <h2 class="section-title"><span class="icon">📐</span>Les étapes détaillées</h2>
+
+    <div class="accordion-group">
+
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num">1</div>Qualifier les faits</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>Avant même de rédiger le syllogisme, il faut <strong>qualifier juridiquement la situation</strong>, c'est-à-dire identifier à quelle catégorie juridique les faits appartiennent.</p>
+
+            <div class="qual-flow">
+              <div class="qual-box">
+                <div class="q-num">1</div>
+                <div class="q-title">Lire les faits</div>
+                <div class="q-desc">Relever les acteurs, les actes, les dates, les préjudices éventuels.</div>
+              </div>
+              <div class="mmc-arrow">→</div>
+              <div class="qual-box">
+                <div class="q-num">2</div>
+                <div class="q-title">Identifier le problème</div>
+                <div class="q-desc">Quelle question juridique se pose ? (Responsabilité ? Validité d'un contrat ? Licéité d'une clause ?)</div>
+              </div>
+              <div class="mmc-arrow">→</div>
+              <div class="qual-box">
+                <div class="q-num">3</div>
+                <div class="q-title">Trouver la règle</div>
+                <div class="q-desc">Quelle règle de droit s'applique ? (Code Civil, Code du Travail, jurisprudence…)</div>
+              </div>
+            </div>
+
+            <h3>Formulation du problème juridique</h3>
+            <p>Le problème juridique se formule <strong>sous forme de question</strong>. Il contient les parties et la question de droit :</p>
+            <div class="example-bloc">
+              <div class="ex-label">Exemple de formulation</div>
+              <p><em>"La société PROXYVAL peut-elle engager la responsabilité civile extracontractuelle de la société NUMÉROME pour les préjudices subis ?"</em></p>
+              <p><em>"La clause de non-concurrence insérée dans le contrat de M. Dupont est-elle valide ?"</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num">2</div>Rédiger la Majeure (la règle de droit)</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>La majeure énonce la règle de droit <strong>générale et abstraite</strong> applicable à la situation. Elle ne doit pas encore mentionner les faits du cas.</p>
+
+            <h3>Formules d'introduction à mémoriser</h3>
+            <div class="callout callout-blue">
+              <ul>
+                <li><em>"En droit, selon l'article [X] du Code Civil / Code du Travail / Code Pénal…"</em></li>
+                <li><em>"D'après la jurisprudence de la Cour de cassation…"</em></li>
+                <li><em>"Aux termes du RGPD (Règlement n°2016/679)…"</em></li>
+                <li><em>"Selon le principe général du droit…"</em></li>
+              </ul>
+            </div>
+
+            <h3>Que contient la majeure ?</h3>
+            <ul>
+              <li>La règle générale (principe + conditions d'application).</li>
+              <li>La référence juridique précise (article, loi, règlement).</li>
+              <li>Les conditions cumulatives ou alternatives si elles existent.</li>
+            </ul>
+
+            <div class="callout callout-green">
+              <div class="callout-title">Astuce examen</div>
+              Si vous ne connaissez pas l'article exact, citez quand même la règle générale. La référence précise est un plus, mais l'essentiel est de démontrer que vous connaissez la règle.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num">3</div>Rédiger la Mineure (application aux faits)</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>La mineure applique la règle générale aux faits <strong>concrets du cas</strong> soumis. C'est ici qu'on cite les éléments du cas pratique.</p>
+
+            <h3>Formules d'introduction</h3>
+            <div class="callout callout-blue">
+              <ul>
+                <li><em>"En l'espèce…"</em> (formule standard)</li>
+                <li><em>"Dans les faits qui nous sont soumis…"</em></li>
+                <li><em>"Or, en l'occurrence…"</em></li>
+              </ul>
+            </div>
+
+            <h3>Méthode pour la mineure</h3>
+            <p>Reprendre <strong>chaque condition de la majeure</strong> et vérifier si elle est remplie ou non dans les faits :</p>
+            <div class="example-bloc">
+              <div class="ex-label">Exemple — Art. 1240 (RC extracontractuelle)</div>
+              <p><em>"En l'espèce, [Entreprise A] a commis une faute en [décrire le fait]. Cette faute a causé un préjudice certain et direct à [Entreprise B] qui a subi [décrire le dommage]. Il existe bien un lien de causalité direct entre la faute et le préjudice."</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num">4</div>Rédiger la Conclusion</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>La conclusion est la <strong>réponse directe et claire</strong> à la question juridique posée. Elle découle logiquement de la majeure et de la mineure.</p>
+
+            <h3>Formules d'introduction</h3>
+            <div class="callout callout-blue">
+              <ul>
+                <li><em>"En conséquence…"</em></li>
+                <li><em>"Ainsi…"</em></li>
+                <li><em>"Par conséquent…"</em></li>
+                <li><em>"Il en résulte que…"</em></li>
+              </ul>
+            </div>
+
+            <h3>Que contient la conclusion ?</h3>
+            <ul>
+              <li>La réponse directe à la question posée (oui/non + justification).</li>
+              <li>Les conséquences juridiques pratiques (dommages-intérêts, nullité, etc.).</li>
+              <li>Éventuellement une limite ou une nuance si les faits sont ambigus.</li>
+            </ul>
+
+            <div class="example-bloc">
+              <div class="ex-label">Exemple</div>
+              <p><em>"En conséquence, les trois conditions de la responsabilité civile extracontractuelle étant réunies, [Entreprise A] devra réparer le préjudice subi par [Entreprise B] en lui versant des dommages et intérêts."</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion-group -->
+
+
+    <!-- BANQUE DE MAJEURES -->
+    <h2 class="section-title" style="margin-top:48px;"><span class="icon">📚</span>Banque de Majeures</h2>
+    <p style="color:var(--text-secondary); margin-bottom:24px;">Ces formulations sont à connaître par cœur. Vous pouvez les réutiliser telles quelles à l'examen en adaptant les faits dans la mineure.</p>
+
+    <div class="banque-grid">
+
+      <div class="majeure-card">
+        <div class="m-title">Responsabilité Civile Extracontractuelle — Art. 1240 C.Civ.</div>
+        <p><strong>Règle :</strong> Pour engager la responsabilité civile extracontractuelle d'une personne, trois conditions cumulatives doivent être réunies :</p>
+        <ul class="condition-list">
+          <li>Une <strong>faute</strong> (fait générateur : acte illicite ou négligence)</li>
+          <li>Un <strong>préjudice</strong> (certain, direct et personnel)</li>
+          <li>Un <strong>lien de causalité</strong> direct entre la faute et le préjudice</li>
+        </ul>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">Art. 1240 Code Civil</p>
+      </div>
+
+      <div class="majeure-card green">
+        <div class="m-title" style="color:var(--green)">Responsabilité Civile Contractuelle</div>
+        <p><strong>Règle :</strong> La responsabilité civile contractuelle est engagée lorsque :</p>
+        <ul class="condition-list">
+          <li>Il existe un <strong>contrat valide</strong></li>
+          <li>L'une des parties n'a <strong>pas exécuté</strong> ou mal exécuté ses obligations</li>
+          <li>Cette inexécution a causé un <strong>préjudice</strong> au co-contractant</li>
+        </ul>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">Art. 1231-1 Code Civil</p>
+      </div>
+
+      <div class="majeure-card red">
+        <div class="m-title">Clause de Non-Concurrence — Jurisprudence Cass. Soc.</div>
+        <p><strong>Règle :</strong> Une clause de non-concurrence n'est licite que si elle remplit <strong>4 conditions cumulatives</strong> :</p>
+        <ul class="condition-list">
+          <li>Elle est indispensable à la protection des <strong>intérêts légitimes</strong> de l'entreprise</li>
+          <li>Elle est limitée dans le <strong>temps</strong></li>
+          <li>Elle est limitée dans l'<strong>espace</strong></li>
+          <li>Elle prévoit une <strong>contrepartie financière</strong> pour le salarié</li>
+        </ul>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;"><em>Si une condition manque → clause nulle de plein droit.</em></p>
+      </div>
+
+      <div class="majeure-card">
+        <div class="m-title">Validité du Contrat — Art. 1128 C.Civ.</div>
+        <p><strong>Règle :</strong> Pour être valablement formé, un contrat doit réunir trois conditions :</p>
+        <ul class="condition-list">
+          <li>Le <strong>consentement</strong> des parties (libre, éclairé — sans erreur, dol ni violence)</li>
+          <li>La <strong>capacité</strong> de contracter (être majeur ou mineur émancipé)</li>
+          <li>Un <strong>contenu licite et certain</strong> (objet possible et légal)</li>
+        </ul>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">Art. 1128 Code Civil</p>
+      </div>
+
+      <div class="majeure-card orange">
+        <div class="m-title" style="color:var(--orange)">Concurrence Déloyale — Art. 1240 C.Civ.</div>
+        <p><strong>Règle :</strong> L'action en concurrence déloyale sanctionne des comportements fautifs entre concurrents :</p>
+        <ul>
+          <li><strong>Dénigrement</strong> : discrédit public sur un concurrent</li>
+          <li><strong>Imitation / Confusion</strong> : risque de confusion dans l'esprit du consommateur</li>
+          <li><strong>Désorganisation</strong> : débauchage massif de personnel</li>
+          <li><strong>Parasitisme</strong> : exploitation du savoir-faire d'autrui sans effort propre</li>
+        </ul>
+      </div>
+
+      <div class="majeure-card purple">
+        <div class="m-title" style="color:var(--purple)">Lien de Subordination — Contrat de Travail</div>
+        <p><strong>Règle :</strong> Le contrat de travail est caractérisé par la réunion de trois éléments :</p>
+        <ul class="condition-list">
+          <li>Une <strong>prestation de travail</strong></li>
+          <li>Une <strong>rémunération</strong></li>
+          <li>Un <strong>lien de subordination juridique</strong> (pouvoir de donner des ordres, contrôler l'exécution et sanctionner)</li>
+        </ul>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">Cass. Soc., arrêt Société Générale</p>
+      </div>
+
+      <div class="majeure-card green">
+        <div class="m-title" style="color:var(--green)">Licenciement pour Faute Grave</div>
+        <p><strong>Règle :</strong> La faute grave est celle qui rend impossible le maintien du salarié dans l'entreprise. Elle prive le salarié de son préavis et de son indemnité de licenciement. La procédure impose :</p>
+        <ul class="condition-list">
+          <li>Convocation à un <strong>entretien préalable</strong> (avec délai de 5 jours ouvrables)</li>
+          <li>Tenue de l'entretien</li>
+          <li>Notification du licenciement par lettre motivée (délai de 2 jours ouvrables minimum)</li>
+        </ul>
+      </div>
+
+      <div class="majeure-card">
+        <div class="m-title">Protection des Données — RGPD Art. 4</div>
+        <p><strong>Règle :</strong> Le RGPD impose à tout responsable de traitement que le traitement de données personnelles repose sur :</p>
+        <ul class="condition-list">
+          <li>Une <strong>base légale</strong> (consentement, contrat, obligation légale, intérêt légitime…)</li>
+          <li>La <strong>finalité déterminée</strong> et légitime du traitement</li>
+          <li>La <strong>minimisation des données</strong> collectées</li>
+        </ul>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">RGPD — Règlement UE 2016/679</p>
+      </div>
+
+      <div class="majeure-card red">
+        <div class="m-title">Accès Frauduleux à un STAD — Art. 323-1 C.Pén.</div>
+        <p><strong>Règle :</strong> Le fait d'accéder ou de se maintenir, frauduleusement, dans tout ou partie d'un système de traitement automatisé de données est puni de <strong>2 ans d'emprisonnement et 60 000 €</strong> d'amende. Si des données ont été modifiées ou supprimées, les peines sont portées à <strong>3 ans et 100 000 €</strong>.</p>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">Art. 323-1 Code Pénal</p>
+      </div>
+
+      <div class="majeure-card orange">
+        <div class="m-title" style="color:var(--orange)">Modification du Contrat de Travail</div>
+        <p><strong>Règle :</strong> La modification d'un élément essentiel du contrat de travail (salaire, qualification, durée du travail, lieu si hors secteur géographique) nécessite l'<strong>accord exprès du salarié</strong>. En cas de refus, l'employeur doit soit maintenir le contrat initial, soit engager une procédure de licenciement.</p>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin:8px 0 0;">Cass. Soc., arrêts fondateurs</p>
+      </div>
+
+    </div><!-- /banque-grid -->
+
+
+    <!-- EXEMPLE COMPLET -->
+    <h2 class="section-title" style="margin-top:48px;"><span class="icon">✏️</span>Exemple complet rédigé</h2>
+
+    <div class="cas-card">
+      <div class="cas-header">
+        <div class="cas-num">Ex</div>
+        <div>
+          <div class="cas-title">Cybersurveillance des salariés — Accès à la messagerie professionnelle</div>
+          <div class="cas-sub">Droit du numérique · Contrat de travail</div>
+        </div>
+      </div>
+      <div class="cas-body">
+        <div class="cas-section-label">Faits</div>
+        <p>M. Bertrand, administrateur réseau dans l'entreprise TechServ SA, est absent. Son responsable accède à sa messagerie professionnelle et découvre dans un dossier nommé "PROJET BETA" des courriels révélant qu'il transmettait des données sensibles à un concurrent. M. Bertrand invoque la violation de sa vie privée.</p>
+
+        <div class="cas-section-label">Problème juridique</div>
+        <p><em>L'employeur de TechServ SA était-il en droit d'accéder à la messagerie professionnelle de M. Bertrand en son absence, et les preuves ainsi obtenues sont-elles recevables ?</em></p>
+
+        <div class="syllogisme-step">
+          <span class="step-label majeure">MAJEURE — La Règle de droit</span>
+          <p>En droit, d'après la jurisprudence de la Cour de cassation (arrêt Nikon, Cass. Soc. 2 octobre 2001, confirmé depuis), les fichiers créés par un salarié sur l'ordinateur professionnel sont présumés avoir un caractère professionnel. L'employeur peut donc y accéder librement, y compris en l'absence du salarié, sauf si ces fichiers sont <strong>explicitement identifiés comme personnels</strong> par le salarié (mention "PERSONNEL" ou "PRIVÉ"). Par ailleurs, l'employeur peut surveiller l'activité informatique de ses salariés à condition de les en avoir <strong>informés préalablement</strong> (charte informatique, règlement intérieur).</p>
+        </div>
+
+        <div class="syllogisme-step">
+          <span class="step-label mineure">MINEURE — Application aux faits</span>
+          <p>En l'espèce, le responsable a accédé à la messagerie professionnelle de M. Bertrand, outil de travail fourni par l'entreprise. Le dossier consulté s'intitulait <strong>"PROJET BETA"</strong> et non "PERSONNEL" ou "PRIVÉ". Il ne porte donc pas de mention personnelle explicite. On suppose que TechServ SA dispose d'une charte informatique informant les salariés de la possibilité de contrôle.</p>
+        </div>
+
+        <div class="syllogisme-step">
+          <span class="step-label conclusion">CONCLUSION</span>
+          <p>En conséquence, l'employeur était en droit d'accéder à la messagerie de M. Bertrand en son absence, le dossier ne portant pas de mention personnelle. La preuve est recevable. M. Bertrand ne peut pas invoquer la violation de sa vie privée pour des fichiers présumés professionnels. L'entreprise pourra utiliser ces éléments dans le cadre d'une procédure disciplinaire pouvant aller jusqu'au licenciement pour faute grave.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
+</body>
+</html>

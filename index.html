@@ -1,423 +1,171 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEJM Expert - BTS SIO SISR</title>
-    <style>
-        :root {
-            --bg-body: #fbfbfd;
-            --bg-card: #ffffff;
-            --text-main: #1d1d1f;
-            --text-muted: #86868b;
-            --accent: #0066cc;
-            --accent-light: #e3f2fd;
-            --border: #d2d2d7;
-            --radius: 12px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --code-bg: #f5f5f7;
-            --success: #34c759;
-            --danger: #ff3b30;
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CEJM — BTS SIO SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 40px auto 0;
+      max-width: 700px;
+      padding: 0 24px;
+    }
+    .stat-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-xs);
+    }
+    .stat-pill strong { color: var(--text); }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      max-width: 1120px;
+      margin: 0 auto;
+    }
 
-        body {
-            font-family: var(--font-stack);
-            background: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            font-size: 16px;
-        }
+    .section-intro {
+      text-align: center;
+      padding: 48px 24px 24px;
+    }
+    .section-intro h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 8px;
+    }
+    .section-intro p {
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto;
+    }
 
-        /* --- HEADER & NAV --- */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-            padding: 0 20px;
-        }
+    .tip-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      max-width: 1120px;
+      margin: 0 auto 80px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .tip-icon { font-size: 2rem; flex-shrink: 0; }
+    .tip-section h3 { margin: 0 0 6px; font-size: 1.0rem; }
+    .tip-section p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); }
+    .tip-section { margin: 0 24px 80px; }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-        }
-
-        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
-        .logo span { color: var(--accent); }
-
-        .nav-items { display: flex; gap: 10px; }
-        .nav-items button {
-            background: none; border: none; font-size: 0.9rem;
-            padding: 8px 12px; cursor: pointer; color: var(--text-muted); font-weight: 600;
-            transition: all 0.2s; border-radius: 6px;
-        }
-        .nav-items button:hover { color: var(--text-main); background: rgba(0,0,0,0.05); }
-        .nav-items button.active { color: #fff; background: var(--accent); }
-
-        /* --- LAYOUT --- */
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: none; }
-        .container.active { display: block; animation: fadeUp 0.4s ease-out; }
-
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        h1 { font-size: 2.2rem; margin-bottom: 10px; letter-spacing: -1px; }
-        h2 { font-size: 1.6rem; margin: 30px 0 15px; border-bottom: 2px solid var(--border); padding-bottom: 5px; }
-        h3 { font-size: 1.2rem; margin: 20px 0 10px; color: var(--accent); font-weight: 700; }
-        p { margin-bottom: 15px; text-align: justify; }
-
-        /* --- ACCORDIONS --- */
-        .accordion {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            margin-bottom: 15px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .accordion-header {
-            padding: 18px 25px;
-            cursor: pointer;
-            background: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 700;
-            font-size: 1.05rem;
-            transition: background 0.2s;
-        }
-        .accordion-header:hover { background: #f9f9f9; }
-        .accordion-header::after { content: '+'; font-size: 1.5rem; color: var(--accent); font-weight: 400; }
-        .accordion.open .accordion-header::after { content: '-'; }
-
-        .accordion-body {
-            padding: 0 25px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
-            background: #fafafa;
-        }
-        .accordion.open .accordion-body { padding: 25px; max-height: 3000px; }
-
-        /* --- ELEMENTS VISUELS --- */
-        ul { padding-left: 20px; margin-bottom: 15px; }
-        li { margin-bottom: 8px; }
-        strong { color: #000; font-weight: 700; }
-
-        .highlight-box {
-            background: var(--accent-light);
-            border-left: 4px solid var(--accent);
-            padding: 15px; margin: 20px 0;
-            border-radius: 0 var(--radius) var(--radius) 0;
-        }
-
-        .sisr-context {
-            background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32;
-            padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .sisr-context::before { content: "💻 SISR : "; font-weight: 800; }
-
-        /* --- SYLLOGISME --- */
-        .majeure-box {
-            background: #fff; border: 1px solid var(--accent);
-            padding: 20px; margin-bottom: 20px; border-radius: 8px;
-            position: relative; box-shadow: var(--shadow-sm);
-        }
-        .majeure-title {
-            position: absolute; top: -12px; left: 20px;
-            background: var(--accent); color: white;
-            padding: 2px 10px; font-size: 0.75rem; font-weight: bold;
-            border-radius: 4px; text-transform: uppercase;
-        }
-        .legal-ref { font-family: monospace; color: var(--text-muted); display: block; margin-top: 5px; font-size: 0.85rem; text-align: right; }
-        .condition-list li { list-style: none; }
-        .condition-list li::before { content: "✅ "; }
-
-        @media (max-width: 768px) {
-            .nav-items { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: center; overflow-x: auto; }
-            .container { margin-bottom: 80px; }
-            h1 { font-size: 1.8rem; }
-        }
-    </style>
+    @media (max-width: 768px) {
+      .tip-section { flex-direction: column; gap: 12px; margin: 0 16px 100px; }
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">CEJM <span>SISR</span></div>
-            <div class="nav-items">
-                <button onclick="showTab('annee1')" class="active">ANNÉE 1</button>
-                <button onclick="showTab('annee2')">ANNÉE 2</button>
-                <button onclick="showTab('syllogisme')">MÉTHODE (Syllogisme)</button>
-                <button onclick="showTab('entrainement')">CAS PRATIQUES</button>
-            </div>
-        </nav>
-    </header>
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html">Méthode</a></li>
+        <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <div id="annee1" class="container active">
-        <h1>Programme Première Année</h1>
-        <p>Les bases de l'économie, du droit et de l'organisation de l'entreprise.</p>
+  <nav class="mobile-nav">
+    <a href="index.html" class="active">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html">Méthode</a>
+    <a href="cas-pratiques.html">Cas Pratiques</a>
+  </nav>
 
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 2 : La Régulation de l'Activité Économique</div>
-            <div class="accordion-body">
-                <h3>1. L'Analyse PESTEL (Macro-environnement)</h3>
-                <p>L'entreprise subit des influences externes sur lesquelles elle ne peut pas agir directement.</p>
-                <ul>
-                    <li><strong>P</strong>olitique : Stabilité fiscale, aides de l'État.</li>
-                    <li><strong>É</strong>conomique : Inflation, taux d'intérêt (impact sur le coût du crédit).</li>
-                    <li><strong>S</strong>ocioculturel : Habitudes de consommation (télétravail).</li>
-                    <li><strong>T</strong>echnologique : Innovations, Brevets, 5G, Obsolescence. <span style="color:var(--accent)">(Critique pour SISR)</span>.</li>
-                    <li><strong>É</strong>cologique : RSE, normes environnementales.</li>
-                    <li><strong>L</strong>égal : Droit du travail, RGPD.</li>
-                </ul>
+  <!-- HERO -->
+  <section class="hero-section fade-up">
+    <div class="hero-eyebrow">BTS SIO option SISR</div>
+    <h1 class="hero-title">Révisez le CEJM,<br>sans vous perdre.</h1>
+    <p class="hero-subtitle">Fiches structurées, méthodes claires et cas pratiques pour maîtriser la culture économique, juridique et managériale.</p>
+  </section>
 
-                <h3>2. Le Rôle de l'État & Politiques</h3>
-                <p>L'État régule l'économie via deux leviers principaux :</p>
-                <ul>
-                    <li><strong>Politique Budgétaire :</strong> Joue sur les dépenses publiques et impôts (Relance vs Rigueur).</li>
-                    <li><strong>Politique Monétaire (BCE) :</strong> Joue sur les <em>Taux Directeurs</em>. Si la BCE monte les taux, emprunter pour acheter des serveurs coûte plus cher.</li>
-                </ul>
+  <!-- STATS -->
+  <div class="stats-row fade-up delay-1">
+    <div class="stat-pill"><strong>6</strong> thèmes de 1re année</div>
+    <div class="stat-pill"><strong>6</strong> thèmes de 2e année</div>
+    <div class="stat-pill"><strong>10+</strong> majeures juridiques</div>
+    <div class="stat-pill"><strong>8</strong> cas pratiques</div>
+  </div>
 
-                <h3>3. La Régulation par le Droit</h3>
-                <ul>
-                    <li><strong>Autorités (AAI) :</strong> ARCEP (Télécoms), CNIL (Données), Autorité de la Concurrence.</li>
-                    <li><strong>Propriété Industrielle (INPI) :</strong>
-                        <ul>
-                            <li><strong>Brevet :</strong> Protège une invention technique (20 ans).</li>
-                            <li><strong>Marque :</strong> Signe distinctif (10 ans renouvelable).</li>
-                        </ul>
-                    </li>
-                    <li><strong>Droit de la Concurrence :</strong> Interdiction des ententes illicites et abus de position dominante.</li>
-                </ul>
-            </div>
-        </div>
+  <!-- CARDS -->
+  <hr class="divider" style="margin: 48px auto 0;">
+  <div class="section-intro">
+    <h2>Choisissez votre section</h2>
+    <p>Toutes les fiches organisées par année et par thème.</p>
+  </div>
 
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 3 : L'Organisation de l'Activité</div>
-            <div class="accordion-body">
-                <h3>1. Structures Juridiques</h3>
-                <ul>
-                    <li><strong>EI (Entreprise Individuelle) :</strong> Pas de personnalité morale. Responsabilité du dirigeant. Patrimoine pro/perso séparés depuis 2022.</li>
-                    <li><strong>Sociétés (SARL, SAS, SA) :</strong> Création d'une <em>Personne Morale</em>. Responsabilité limitée aux apports. Le dirigeant est mandataire social.</li>
-                </ul>
+  <div class="cards-grid">
 
-                <h3>2. Responsabilité de l'Entreprise</h3>
-                <div class="highlight-box">
-                    <strong>Responsabilité Civile (Réparer) :</strong>
-                    <ul>
-                        <li><strong>Contractuelle :</strong> Dommage causé à un co-contractant (Client) lors de l'exécution du contrat. (Ex: Panne serveur violant le SLA).</li>
-                        <li><strong>Extracontractuelle (Délictuelle) :</strong> Dommage causé à un tiers avec qui on n'a pas de contrat. (Art 1240 Code Civil).</li>
-                    </ul>
-                    <strong>Responsabilité Pénale (Punir) :</strong> Infraction à la loi (Vol, Escroquerie, Intrusion STAD).
-                </div>
-                <div class="sisr-context">Obligation de <strong>Moyens</strong> (faire son possible) vs <strong>Résultat</strong> (s'engager à réussir). Un FAI a une obligation de résultat sur la connexion.</div>
+    <a href="annee1.html" class="home-card blue fade-up delay-1">
+      <div class="card-icon">📘</div>
+      <div class="card-eyebrow">Programme complet</div>
+      <div class="card-title">CEJM 1re Année</div>
+      <div class="card-desc">Financement, structures juridiques, gestion des risques, production, régulation économique, environnement de l'entreprise.</div>
+      <div class="card-arrow">Explorer les fiches →</div>
+    </a>
 
-                <h3>3. Financement & Production</h3>
-                <ul>
-                    <li><strong>Cycles :</strong> Investissement (Long terme, CAPEX) vs Exploitation (Court terme, BFR).</li>
-                    <li><strong>Externalisation :</strong> Confier une activité non-stratégique à un tiers (Ex: Une banque externalise son support IT à une ESN).</li>
-                </ul>
-            </div>
-        </div>
+    <a href="annee2.html" class="home-card indigo fade-up delay-2">
+      <div class="card-icon">💻</div>
+      <div class="card-eyebrow">Focus numérique & travail</div>
+      <div class="card-title">CEJM 2e Année</div>
+      <div class="card-desc">Révolution numérique, RGPD, cybersécurité, SI, mutations du travail, contrats, dialogue social, stratégie.</div>
+      <div class="card-arrow">Explorer les fiches →</div>
+    </a>
+
+    <a href="syllogisme.html" class="home-card emerald fade-up delay-3">
+      <div class="card-icon">⚖️</div>
+      <div class="card-eyebrow">Méthodologie juridique</div>
+      <div class="card-title">Méthode Syllogisme</div>
+      <div class="card-desc">Maîtrisez la structure Majeure / Mineure / Conclusion. Banque de règles de droit prêtes à l'emploi pour l'examen.</div>
+      <div class="card-arrow">Voir la méthode →</div>
+    </a>
+
+    <a href="cas-pratiques.html" class="home-card amber fade-up delay-4">
+      <div class="card-icon">📝</div>
+      <div class="card-eyebrow">Entraînement</div>
+      <div class="card-title">Cas Pratiques</div>
+      <div class="card-desc">Exercices corrigés pas à pas : responsabilité civile, clauses abusives, droit numérique, contrat de travail, RGPD.</div>
+      <div class="card-arrow">S'entraîner →</div>
+    </a>
+
+  </div>
+
+  <!-- TIP -->
+  <div class="tip-section fade-up">
+    <div class="tip-icon">💡</div>
+    <div>
+      <h3>Comment bien utiliser ce site ?</h3>
+      <p>Commencez par lire les fiches thématiques, puis entraînez-vous sur les cas pratiques. Pour l'examen, maîtrisez la méthode syllogisme — elle est systématiquement évaluée. Chaque fiche contient des liens SISR pour contextualiser dans votre spécialité.</p>
     </div>
+  </div>
 
-    <div id="annee2" class="container">
-        <h1>Programme Deuxième Année</h1>
-        <p>Focus : Numérique, Droit du Cyberespace et Droit du Travail.</p>
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
 
-        <div class="accordion open">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 4 : L'Impact du Numérique (Cœur SISR)</div>
-            <div class="accordion-body">
-                <h3>1. Économie du Numérique</h3>
-                <ul>
-                    <li><strong>3 Piliers :</strong> Technologique (Réseau), Économique (Nouveaux acteurs), Social (Usages).</li>
-                    <li><strong>Effets de Réseau :</strong> La valeur d'un service augmente avec le nombre d'utilisateurs.</li>
-                    <li><strong>Plateformisation :</strong> Désintermédiation (suppression des intermédiaires classiques) puis Ré-intermédiation (la plateforme devient le maître).</li>
-                </ul>
-
-                <h3>2. RGPD & Protection des Personnes</h3>
-                <p>Le <strong>Règlement Général sur la Protection des Données</strong> impose :</p>
-                <ul>
-                    <li><strong>Droits :</strong> Accès, Rectification, Oubli, Portabilité.</li>
-                    <li><strong>Obligations :</strong> Consentement explicite, Sécurité (Chiffrement), Registre des traitements.</li>
-                </ul>
-                <div class="sisr-context">
-                    <strong>Cybersurveillance :</strong> L'administrateur peut accéder aux fichiers du salarié (présumés professionnels) SAUF s'ils sont nommés "PERSONNEL".
-                    Condition : Informer le salarié AVANT de surveiller (Principe de transparence).
-                </div>
-
-                <h3>3. Contrats & Preuve Électronique</h3>
-                <ul>
-                    <li><strong>Preuve :</strong> L'écrit électronique a la même valeur que le papier si :
-                        1. La personne est dûment identifiée (Signature électronique).
-                        2. L'écrit est conservé dans des conditions garantissant son intégrité.
-                    </li>
-                    <li><strong>Clauses Contrats Cloud (B2B) :</strong>
-                        <ul>
-                            <li><strong>Réversibilité :</strong> Pouvoir récupérer ses données en fin de contrat.</li>
-                            <li><strong>SLA (Service Level Agreement) :</strong> Garantie de disponibilité (ex: 99.9%).</li>
-                            <li><strong>Confidentialité :</strong> Secret des données hébergées.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Thème 5 : Les Mutations du Travail</div>
-            <div class="accordion-body">
-                <h3>1. Le Contrat de Travail</h3>
-                <p>Il existe dès qu'il y a : Une prestation, Une rémunération, et un <strong>Lien de Subordination</strong>.</p>
-                <div class="highlight-box">
-                    <strong>Lien de Subordination :</strong> Pouvoir de l'employeur de donner des ordres, d'en contrôler l'exécution et de sanctionner les manquements. C'est ce qui distingue le Salarié du Freelance.
-                </div>
-
-                <h3>2. Les Clauses Spécifiques</h3>
-                <ul>
-                    <li><strong>Clause de Mobilité :</strong> Le salarié accepte à l'avance de changer de lieu de travail.</li>
-                    <li><strong>Clause de Non-Concurrence :</strong> Interdit de partir chez le concurrent. <span style="color:red">ATTENTION conditions strictes (voir onglet Méthode).</span></li>
-                </ul>
-
-                <h3>3. Le Marché du Travail</h3>
-                <ul>
-                    <li><strong>Offre de travail :</strong> Vient des ménages (Salariés).</li>
-                    <li><strong>Demande de travail :</strong> Vient des entreprises.</li>
-                    <li><strong>Politiques de l'emploi :</strong>
-                        <ul>
-                            <li><strong>Actives :</strong> Formation, aide à l'embauche (Favoriser le retour à l'emploi).</li>
-                            <li><strong>Passives :</strong> Indemnités chômage, préretraite (Rendre le chômage supportable).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div id="syllogisme" class="container">
-        <h1>La Méthode du Syllogisme Juridique</h1>
-        <p>Pour l'analyse de situation juridique, la structure de réponse est figée. Apprenez-la par cœur.</p>
-
-        <div class="highlight-box" style="background: white; border: 1px solid var(--accent);">
-            <h3>Structure "M.M.C"</h3>
-            <ol style="margin-left:20px;">
-                <li><strong>MAJEURE (La Règle) :</strong> "En droit, selon l'article X..." (Citer la règle générale).</li>
-                <li><strong>MINEURE (Les Faits) :</strong> "En l'espèce..." (Appliquer aux faits de l'exercice).</li>
-                <li><strong>CONCLUSION (Solution) :</strong> "En conséquence..." (Le résultat logique).</li>
-            </ol>
-        </div>
-
-        <h2>BANQUE DE MAJEURES (À copier sur votre copie)</h2>
-        
-        <div class="majeure-box">
-            <span class="majeure-title">RESPONSABILITÉ CIVILE (ART 1240)</span>
-            <p><strong>La Règle :</strong> Pour engager la responsabilité civile extracontractuelle, trois conditions cumulatives sont nécessaires :</p>
-            <ul class="condition-list">
-                <li>Une <strong>Faute</strong> (fait générateur).</li>
-                <li>Un <strong>Préjudice</strong> (certain, direct et personnel).</li>
-                <li>Un <strong>Lien de Causalité</strong> entre la faute et le dommage.</li>
-            </ul>
-        </div>
-
-        <div class="majeure-box" style="border-color: var(--danger);">
-            <span class="majeure-title" style="background:var(--danger);">CLAUSE DE NON-CONCURRENCE</span>
-            <p><strong>La Règle (Jurisprudence) :</strong> Une clause de non-concurrence n'est valide que si elle respecte <strong>4 conditions cumulatives</strong> :</p>
-            <ul class="condition-list">
-                <li>Elle est indispensable à la protection des <strong>intérêts légitimes</strong> de l'entreprise.</li>
-                <li>Elle est limitée dans le <strong>temps</strong> (ex: 2 ans).</li>
-                <li>Elle est limitée dans l'<strong>espace</strong> (ex: Région IDF).</li>
-                <li>Elle comporte une <strong>contrepartie financière</strong> (indemnité) pour le salarié.</li>
-            </ul>
-            <p style="font-size:0.9rem; margin-top:10px;"><em>Si une condition manque = Clause Nulle.</em></p>
-        </div>
-
-        <div class="majeure-box">
-            <span class="majeure-title">CONCURRENCE DÉLOYALE</span>
-            <p><strong>La Règle :</strong> L'action en concurrence déloyale sanctionne des fautes comme :</p>
-            <ul>
-                <li>Le <strong>Dénigrement</strong> (Critique publique).</li>
-                <li>L'<strong>Imitation</strong> (Risque de confusion).</li>
-                <li>La <strong>Désorganisation</strong> (Débauchage massif).</li>
-                <li>Le <strong>Parasitisme</strong> (Profiter du savoir-faire sans payer).</li>
-            </ul>
-        </div>
-
-        <div class="majeure-box">
-            <span class="majeure-title">VALIDITÉ CONTRAT (ART 1128)</span>
-            <p><strong>La Règle :</strong> Le contrat est valide si 3 conditions sont réunies :</p>
-            <ul class="condition-list">
-                <li>Consentement libre et éclairé (sans erreur, dol ou violence).</li>
-                <li>Capacité de contracter.</li>
-                <li>Contenu licite et certain.</li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="entrainement" class="container">
-        <h1>Cas Pratiques Types</h1>
-        
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Cas 1 : Clause de Non-Concurrence Abusive</div>
-            <div class="accordion-body">
-                <p><strong>Situation :</strong> Un développeur quitte son ESN. Son contrat lui interdit de travailler pour tout concurrent "dans le monde entier" pendant "10 ans", sans indemnité.</p>
-                <div class="highlight-box">
-                    <strong>Correction Syllogisme :</strong>
-                    <br>1. <strong>Majeure :</strong> Une clause de non-concurrence doit être limitée dans le temps, l'espace, proportionnée et rémunérée.
-                    <br>2. <strong>Mineure :</strong> Ici, "Monde entier" et "10 ans" sont excessifs. De plus, il n'y a pas de contrepartie financière.
-                    <br>3. <strong>Conclusion :</strong> La clause est nulle. Le développeur peut travailler où il veut.
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">Cas 2 : La Preuve par Email (Arrêt Nikon)</div>
-            <div class="accordion-body">
-                <p><strong>Situation :</strong> L'employeur accède à la boite mail d'un salarié absent et trouve des preuves de déloyauté dans un dossier nommé "PROJET X". Le salarié crie à la violation de vie privée.</p>
-                <div class="highlight-box">
-                    <strong>Correction Syllogisme :</strong>
-                    <br>1. <strong>Majeure :</strong> Les fichiers sur l'ordinateur pro sont présumés professionnels, sauf s'ils sont identifiés comme "PERSONNEL". L'employeur peut les ouvrir hors présence du salarié.
-                    <br>2. <strong>Mineure :</strong> Le dossier s'appelait "PROJET X", pas "PERSONNEL".
-                    <br>3. <strong>Conclusion :</strong> L'accès est licite, la preuve est recevable.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showTab(tabId) {
-            // Masquer tous les conteneurs
-            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
-            // Désactiver tous les boutons
-            document.querySelectorAll('.nav-items button').forEach(el => el.classList.remove('active'));
-            
-            // Afficher le bon conteneur
-            document.getElementById(tabId).classList.add('active');
-            
-            // Activer le bon bouton
-            const buttons = document.querySelectorAll('.nav-items button');
-            if(tabId === 'annee1') buttons[0].classList.add('active');
-            if(tabId === 'annee2') buttons[1].classList.add('active');
-            if(tabId === 'syllogisme') buttons[2].classList.add('active');
-            if(tabId === 'entrainement') buttons[3].classList.add('active');
-            
-            window.scrollTo(0,0);
-        }
-
-        function toggleAccordion(header) {
-            const item = header.parentElement;
-            item.classList.toggle('open');
-        }
-    </script>
-
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
 </body>
 </html>
