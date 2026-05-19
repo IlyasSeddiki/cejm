@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aide Examen — CEJM BTS SIO SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+
+    /* ——— FRÉQUENCE BADGE ——— */
+    .freq-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .freq-3 { background: #fff0f0; color: var(--red); }
+    .freq-2 { background: #fff4e5; color: var(--orange); }
+    .freq-1 { background: #f0fdf4; color: #16a34a; }
+
+    /* ——— FRÉQUENCE TABLE ——— */
+    .freq-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 20px 0;
+    }
+    .freq-table th {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+    .freq-table th:first-child { border-radius: 10px 0 0 0; }
+    .freq-table th:last-child  { border-radius: 0 10px 0 0; }
+    .freq-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+    .freq-table tr:last-child td { border-bottom: none; }
+    .freq-table tr:nth-child(even) td { background: var(--bg-section); }
+    .freq-dots { display: flex; gap: 4px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+    .dot.on-red  { background: var(--red); }
+    .dot.on-orange { background: var(--orange); }
+    .dot.on-green { background: var(--green); }
+
+    /* ——— PESTEL TABLE ——— */
+    .pestel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 20px 0;
+    }
+    .pestel-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--bg-section);
+      border-bottom: 2px solid var(--border);
+    }
+    .pestel-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .pestel-table tr:last-child td { border-bottom: none; }
+    .pestel-letter {
+      font-size: 1.4rem;
+      font-weight: 800;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .p-p  { background: #0071e3; }
+    .p-e  { background: #34c759; }
+    .p-s  { background: #ff9500; }
+    .p-t  { background: #af52de; }
+    .p-ec { background: #32ade6; }
+    .p-l  { background: #ff3b30; }
+    .pestel-row { display: flex; align-items: flex-start; gap: 12px; }
+    .pestel-content strong { display: block; font-size: 0.88rem; margin-bottom: 4px; color: var(--text); }
+    .pestel-content ul { margin: 4px 0 0 16px; color: var(--text-secondary); font-size: 0.82rem; }
+    .pestel-content ul li { margin-bottom: 2px; }
+
+    /* ——— TRIGGER CARD ——— */
+    .trigger-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .trigger-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-xs);
+    }
+    .trigger-card .tc-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .trigger-card .tc-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .trigger-card .tc-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .trigger-card .tc-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .kw {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      border: 1px solid #c3d9f7;
+    }
+    .kw-red { background: #fff0f0; color: #cc1111; border-color: #ffc5c5; }
+    .kw-orange { background: #fff4e5; color: #b45309; border-color: #fed7aa; }
+    .kw-green { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+    .kw-purple { background: #faf0ff; color: #7e22ce; border-color: #e9d5ff; }
+    .trigger-card .tc-answer {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .trigger-card .tc-answer strong { color: var(--text); }
+
+    /* ——— MÉTHODE STEP ——— */
+    .method-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .method-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-num.red { background: var(--red); }
+    .step-num.orange { background: var(--orange); }
+    .step-num.green { background: var(--green); }
+    .step-body { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
+    .step-body strong { color: var(--text); }
+
+    /* ——— FORMULE BOX ——— */
+    .formule-box {
+      background: #1d1d1f;
+      color: #f5f5f7;
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin: 12px 0;
+    }
+    .formule-box .f-label {
+      font-family: var(--font);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #a1a1a6;
+      margin-bottom: 6px;
+    }
+    .f-m { color: #60a5fa; }
+    .f-mi { color: #f97316; }
+    .f-c  { color: #34c759; }
+
+    /* ——— SCORE ROW ——— */
+    .score-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .score-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+      box-shadow: var(--shadow-xs);
+      flex: 1;
+    }
+    .score-pill .sp-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .score-pill .sp-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 4px;
+    }
+    .sp-red { color: var(--red); }
+    .sp-orange { color: var(--orange); }
+    .sp-blue { color: var(--accent); }
+    .sp-green { color: var(--green); }
+
+    @media (max-width: 768px) {
+      .trigger-grid { grid-template-columns: 1fr; }
+      .score-row { gap: 8px; }
+      .score-pill { min-width: 90px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html">Méthode</a></li>
+        <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+        <li><a href="fiches.html">Fiches</a></li>
+        <li><a href="aide-examen.html" class="active">Aide Examen</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html">Méthode</a>
+    <a href="cas-pratiques.html">Cas Prat.</a>
+    <a href="fiches.html">Fiches</a>
+    <a href="aide-examen.html" class="active">Examen</a>
+  </nav>
+
+  <main class="page">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="badge">Analyse des 4 derniers sujets</div>
+      <h1>Aide à l'Examen</h1>
+      <p>Les questions qui tombent à chaque session, comment les repérer dans le sujet, et quoi répondre. Basé sur l'analyse des sujets 2024 et 2025 (PURECONTROL, OVHcloud ×2, DIGIM).</p>
+    </div>
+
+
+    <!-- ═══════════════════════════════
+         TABLEAU DE FRÉQUENCE
+    ════════════════════════════════ -->
+    <h2 class="section-title"><span class="icon">📊</span>Ce qui tombe à chaque examen</h2>
+
+    <div class="score-row">
+      <div class="score-pill">
+        <span class="sp-num sp-red">4/4</span>
+        <span class="sp-label">Raisonnement<br>juridique</span>
+      </div>
+      <div class="score-pill">
+        <span class="sp-num sp-red">4/4</span>
+        <span class="sp-label">RSE /<br>Dev. durable</span>
+      </div>
+      <div class="score-pill">
+        <span class="sp-num sp-red">4/4</span>
+        <span class="sp-label">Stratégie<br>d'entreprise</span>
+      </div>
+      <div class="score-pill">
+        <span class="sp-num sp-orange">3/4</span>
+        <span class="sp-label">PESTEL /<br>Environnement</span>
+      </div>
+      <div class="score-pill">
+        <span class="sp-num sp-orange">3/4</span>
+        <span class="sp-label">Propriété<br>intellectuelle</span>
+      </div>
+      <div class="score-pill">
+        <span class="sp-num sp-blue">2/4</span>
+        <span class="sp-label">Financement</span>
+      </div>
+      <div class="score-pill">
+        <span class="sp-num sp-blue">2/4</span>
+        <span class="sp-label">Clause contrat<br>de travail</span>
+      </div>
+    </div>
+
+    <table class="freq-table">
+      <thead>
+        <tr>
+          <th>Question type</th>
+          <th>Fréquence</th>
+          <th>Mots-clés dans le sujet</th>
+          <th>Sujets concernés</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Raisonnement juridique (Syllogisme)</strong></td>
+          <td><span class="freq-badge freq-3">● Systématique</span></td>
+          <td><em>"à l'aide d'un raisonnement juridique"</em>, <em>"montrer que"</em>, <em>"expliquer pourquoi"</em></td>
+          <td>2024, 2025 ×3</td>
+        </tr>
+        <tr>
+          <td><strong>RSE / Développement durable</strong></td>
+          <td><span class="freq-badge freq-3">● Systématique</span></td>
+          <td><em>"RSE"</em>, <em>"charte éthique"</em>, <em>"attentes sociétales"</em>, <em>"développement durable"</em></td>
+          <td>2024, 2025 ×2</td>
+        </tr>
+        <tr>
+          <td><strong>Stratégie globale / croissance</strong></td>
+          <td><span class="freq-badge freq-3">● Systématique</span></td>
+          <td><em>"stratégie globale"</em>, <em>"stratégie choisie"</em>, <em>"modalités de croissance"</em>, <em>"justifier le choix"</em></td>
+          <td>2024, 2025 ×2</td>
+        </tr>
+        <tr>
+          <td><strong>PESTEL — Analyse de l'environnement</strong></td>
+          <td><span class="freq-badge freq-2">● Fréquent</span></td>
+          <td><em>"opportunités et menaces"</em>, <em>"macro-environnement"</em>, <em>"environnement de l'entreprise"</em>, <em>"PESTEL"</em></td>
+          <td>2025 DIGIM, 2025 OVH</td>
+        </tr>
+        <tr>
+          <td><strong>Propriété intellectuelle (brevet, marque, logiciel)</strong></td>
+          <td><span class="freq-badge freq-2">● Fréquent</span></td>
+          <td><em>"brevet"</em>, <em>"protéger ses inventions"</em>, <em>"marque"</em>, <em>"titulaire des droits"</em>, <em>"contrefaçon"</em></td>
+          <td>2025 OVH ×2, 2025 DIGIM</td>
+        </tr>
+        <tr>
+          <td><strong>Financement de l'entreprise</strong></td>
+          <td><span class="freq-badge freq-1">● Régulier</span></td>
+          <td><em>"solutions de financement"</em>, <em>"levée de fonds"</em>, <em>"accompagner le développement"</em></td>
+          <td>2024 PURECONTROL</td>
+        </tr>
+        <tr>
+          <td><strong>Clause de non-concurrence</strong></td>
+          <td><span class="freq-badge freq-1">● Régulier</span></td>
+          <td><em>"clause de non-concurrence"</em>, <em>"empêche de travailler"</em>, <em>"licite"</em></td>
+          <td>2025 OVH</td>
+        </tr>
+        <tr>
+          <td><strong>Clause spéciale (dédit-formation, etc.)</strong></td>
+          <td><span class="freq-badge freq-1">● Régulier</span></td>
+          <td><em>"clause de dédit-formation"</em>, <em>"vérifier la licéité"</em>, <em>"avenant"</em></td>
+          <td>2025 DIGIM</td>
+        </tr>
+        <tr>
+          <td><strong>RC contractuelle</strong></td>
+          <td><span class="freq-badge freq-1">● Régulier</span></td>
+          <td><em>"responsabilité civile contractuelle"</em>, <em>"manquement contractuel"</em>, <em>"indemnisation"</em></td>
+          <td>2025 OVH</td>
+        </tr>
+        <tr>
+          <td><strong>Caractéristiques du marché</strong></td>
+          <td><span class="freq-badge freq-1">● Régulier</span></td>
+          <td><em>"caractéristiques du marché"</em>, <em>"offre, demande, structure"</em>, <em>"parts de marché"</em></td>
+          <td>2025 OVH</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- ═══════════════════════════════
+         1. RAISONNEMENT JURIDIQUE
+    ════════════════════════════════ -->
+    <div class="accordion-group" style="margin-top:48px;">
+
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num" style="background:var(--red)">1</div>Raisonnement juridique — Syllogisme M-M-C</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-red">
+              <div class="callout-title">Tombé dans les 4 sujets — 2 à 3 fois par sujet</div>
+              Dès que vous voyez <strong>"à l'aide d'un raisonnement juridique"</strong>, <strong>"montrer que"</strong>, <strong>"expliquer pourquoi"</strong> ou <strong>"apprécier"</strong> dans la question → Syllogisme obligatoire. C'est 30 à 40 % de la note totale.
+            </div>
+
+            <h3>La structure à respecter absolument</h3>
+            <div class="formule-box">
+              <div class="f-label">Structure M — M — C</div>
+              <span class="f-m">MAJEURE (règle de droit)</span><br>
+              → "En droit, selon l'article X du Code Civil / Code du Travail..."<br>
+              → Énoncer la règle + ses conditions cumulatives<br><br>
+              <span class="f-mi">MINEURE (les faits)</span><br>
+              → "En l'espèce..." ou "Dans les faits qui nous sont soumis..."<br>
+              → Reprendre CHAQUE condition de la majeure et vérifier avec les faits<br><br>
+              <span class="f-c">CONCLUSION</span><br>
+              → "En conséquence..." / "Ainsi..." / "Par conséquent..."<br>
+              → Répondre directement OUI/NON + conséquences juridiques
+            </div>
+
+            <h3>Les sujets juridiques qui tombent le plus souvent</h3>
+            <div class="trigger-grid">
+
+              <div class="trigger-card">
+                <div class="tc-header">
+                  <span class="tc-icon">⛔</span>
+                  <span class="tc-title">Clause de non-concurrence</span>
+                </div>
+                <div class="tc-keywords">
+                  <span class="kw kw-red">"clause de non-concurrence"</span>
+                  <span class="kw kw-red">"empêche de travailler"</span>
+                  <span class="kw kw-red">"licite"</span>
+                </div>
+                <div class="tc-answer">
+                  <strong>Majeure :</strong> 4 conditions cumulatives (Cass. Soc.) — intérêt légitime de l'entreprise / limitée dans le temps / limitée dans l'espace / contrepartie financière.<br>
+                  <strong>Mineure :</strong> vérifier les 4 conditions dans le contrat fourni en annexe.<br>
+                  <strong>Conclusion :</strong> valide si les 4 conditions sont remplies → le salarié ne peut pas travailler chez le concurrent.
+                </div>
+              </div>
+
+              <div class="trigger-card">
+                <div class="tc-header">
+                  <span class="tc-icon">📝</span>
+                  <span class="tc-title">RC contractuelle</span>
+                </div>
+                <div class="tc-keywords">
+                  <span class="kw kw-orange">"manquement contractuel"</span>
+                  <span class="kw kw-orange">"responsabilité"</span>
+                  <span class="kw kw-orange">"indemnisation"</span>
+                </div>
+                <div class="tc-answer">
+                  <strong>Majeure :</strong> Art. 1231-1 C.Civ. — 3 conditions : contrat valide + inexécution ou mauvaise exécution + préjudice.<br>
+                  <strong>Mineure :</strong> identifier le contrat, ce qui n'a pas été exécuté, le préjudice subi.<br>
+                  <strong>Conclusion :</strong> RC contractuelle engagée → obligation de réparer.
+                </div>
+              </div>
+
+              <div class="trigger-card">
+                <div class="tc-header">
+                  <span class="tc-icon">💻</span>
+                  <span class="tc-title">Droits sur un logiciel</span>
+                </div>
+                <div class="tc-keywords">
+                  <span class="kw">"titulaire des droits"</span>
+                  <span class="kw">"logiciel développé"</span>
+                  <span class="kw">"dans l'exercice des fonctions"</span>
+                </div>
+                <div class="tc-answer">
+                  <strong>Majeure :</strong> Art. L113-9 CPI — si logiciel créé sur instruction de l'employeur ou dans le cadre des fonctions → droits patrimoniaux à l'employeur.<br>
+                  <strong>Mineure :</strong> le développeur a-t-il agi sur instruction / dans ses fonctions ?<br>
+                  <strong>Conclusion :</strong> si oui → l'entreprise est titulaire des droits, pas le salarié.
+                </div>
+              </div>
+
+              <div class="trigger-card">
+                <div class="tc-header">
+                  <span class="tc-icon">🏷️</span>
+                  <span class="tc-title">Contrefaçon / Concurrence déloyale</span>
+                </div>
+                <div class="tc-keywords">
+                  <span class="kw kw-red">"marque similaire"</span>
+                  <span class="kw kw-red">"concurrence déloyale"</span>
+                  <span class="kw kw-red">"contrefaçon"</span>
+                </div>
+                <div class="tc-answer">
+                  <strong>Contrefaçon :</strong> Art. L716-10 CPI — reproduction/imitation d'une marque enregistrée → 3 ans prison + 300 000 € amende.<br>
+                  <strong>Concurrence déloyale :</strong> Art. 1240 C.Civ. — imitation, parasitisme, dénigrement, désorganisation → dommages-intérêts.<br>
+                  <strong>Mineure :</strong> comparer les marques, vérifier les conditions.
+                </div>
+              </div>
+
+              <div class="trigger-card">
+                <div class="tc-header">
+                  <span class="tc-icon">📋</span>
+                  <span class="tc-title">Clause de dédit-formation</span>
+                </div>
+                <div class="tc-keywords">
+                  <span class="kw kw-purple">"dédit-formation"</span>
+                  <span class="kw kw-purple">"clause licite"</span>
+                  <span class="kw kw-purple">"avenant"</span>
+                </div>
+                <div class="tc-answer">
+                  <strong>Majeure :</strong> 4 conditions de validité — convention écrite avant la formation / coût réel (pas les salaires) / durée d'engagement non excessive / financement exclusif employeur supérieur à l'obligation légale.<br>
+                  <strong>Mineure :</strong> vérifier chaque condition dans l'annexe contrat.<br>
+                  <strong>Conclusion :</strong> clause valide si toutes les conditions remplies.
+                </div>
+              </div>
+
+              <div class="trigger-card">
+                <div class="tc-header">
+                  <span class="tc-icon">🤝</span>
+                  <span class="tc-title">Rupture de négociations</span>
+                </div>
+                <div class="tc-keywords">
+                  <span class="kw kw-green">"rompre les négociations"</span>
+                  <span class="kw kw-green">"rupture abusive"</span>
+                  <span class="kw kw-green">"bonne foi"</span>
+                </div>
+                <div class="tc-answer">
+                  <strong>Majeure :</strong> Art. 1112 C.Civ. — la rupture des négociations est libre MAIS doit respecter la bonne foi. En cas de faute → réparation du préjudice (hors perte du contrat espéré).<br>
+                  <strong>Mineure :</strong> y a-t-il une faute (mauvaise foi) dans la rupture ?<br>
+                  <strong>Conclusion :</strong> rupture de bonne foi = licite ; rupture abusive = responsabilité.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           2. PESTEL
+      ════════════════════════════════ -->
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num" style="background:var(--orange)">2</div>Analyse PESTEL — Tableau complet à connaître</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-orange">
+              <div class="callout-title">Tombé explicitement en 2025 (DIGIM) — implicite dans tous les autres</div>
+              Dès que vous voyez <strong>"opportunités et menaces"</strong>, <strong>"macro-environnement"</strong> ou <strong>"PESTEL"</strong> → faire le tableau en 2 colonnes : Opportunités / Menaces, organisé par lettre P-E-S-T-E-L. <strong>Toujours s'appuyer sur les annexes pour illustrer.</strong>
+            </div>
+
+            <h3>Structure de réponse attendue</h3>
+            <table class="pestel-table">
+              <thead>
+                <tr>
+                  <th style="width:200px">Facteur</th>
+                  <th>Ce qu'il faut chercher dans les annexes</th>
+                  <th>Opportunité ou Menace ?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="pestel-row">
+                      <div class="pestel-letter p-p">P</div>
+                      <div class="pestel-content"><strong>Politique</strong></div>
+                    </div>
+                  </td>
+                  <td>
+                    <ul style="margin:0;padding-left:16px;font-size:0.85rem;">
+                      <li>Lois, réglementations imposées</li>
+                      <li>Aides d'État, subventions, labels (ex: Greentech, France Num)</li>
+                      <li>Politiques publiques favorables au secteur</li>
+                      <li>Obligations légales à venir (ex : facturation électronique obligatoire)</li>
+                    </ul>
+                  </td>
+                  <td style="font-size:0.83rem;">
+                    <span style="color:var(--green)">✔ Opportunité</span> si l'État soutient<br>
+                    <span style="color:var(--red)">✘ Menace</span> si contrainte imposée
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="pestel-row">
+                      <div class="pestel-letter p-e">E</div>
+                      <div class="pestel-content"><strong>Économique</strong></div>
+                    </div>
+                  </td>
+                  <td>
+                    <ul style="margin:0;padding-left:16px;font-size:0.85rem;">
+                      <li>Croissance du marché (en milliards d'euros)</li>
+                      <li>Taux d'intérêt, coût du crédit</li>
+                      <li>Hausse des prix de l'énergie</li>
+                      <li>Mondialisation, concurrence internationale (GAFAM)</li>
+                      <li>Pouvoir d'achat des clients potentiels</li>
+                    </ul>
+                  </td>
+                  <td style="font-size:0.83rem;">
+                    <span style="color:var(--green)">✔ Opportunité</span> si marché en croissance<br>
+                    <span style="color:var(--red)">✘ Menace</span> si domination de grands acteurs
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="pestel-row">
+                      <div class="pestel-letter p-s">S</div>
+                      <div class="pestel-content"><strong>Socioculturel</strong></div>
+                    </div>
+                  </td>
+                  <td>
+                    <ul style="margin:0;padding-left:16px;font-size:0.85rem;">
+                      <li>Attentes des consommateurs (conscience environnementale)</li>
+                      <li>Évolutions des habitudes de travail (génération Z, télétravail)</li>
+                      <li>Besoin de sens au travail</li>
+                      <li>Pénurie de main d'œuvre dans le numérique</li>
+                    </ul>
+                  </td>
+                  <td style="font-size:0.83rem;">
+                    <span style="color:var(--green)">✔ Opportunité</span> si tendances favorables<br>
+                    <span style="color:var(--red)">✘ Menace</span> si pénurie de talents
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="pestel-row">
+                      <div class="pestel-letter p-t">T</div>
+                      <div class="pestel-content"><strong>Technologique</strong></div>
+                    </div>
+                  </td>
+                  <td>
+                    <ul style="margin:0;padding-left:16px;font-size:0.85rem;">
+                      <li>Innovation, R&D, IA, cloud, SAAS</li>
+                      <li>Numérisation des processus (dématérialisation)</li>
+                      <li>Obsolescence technologique</li>
+                      <li>Cybersécurité, normes ISO 27001, SecNumCloud, RGPD</li>
+                      <li>Brevets, protection des innovations</li>
+                    </ul>
+                  </td>
+                  <td style="font-size:0.83rem;">
+                    <span style="color:var(--green)">✔ Opportunité</span> si innovation à saisir<br>
+                    <span style="color:var(--red)">✘ Menace</span> si concurrents plus avancés
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="pestel-row">
+                      <div class="pestel-letter p-ec">E</div>
+                      <div class="pestel-content"><strong>Écologique</strong></div>
+                    </div>
+                  </td>
+                  <td>
+                    <ul style="margin:0;padding-left:16px;font-size:0.85rem;">
+                      <li>Normes environnementales, empreinte carbone</li>
+                      <li>Réduction de la consommation d'énergie</li>
+                      <li>Économie circulaire, recyclage</li>
+                      <li>Labels verts (Greentech Innovation)</li>
+                    </ul>
+                  </td>
+                  <td style="font-size:0.83rem;">
+                    <span style="color:var(--green)">✔ Opportunité</span> si l'entreprise est verte<br>
+                    <span style="color:var(--red)">✘ Menace</span> si contraintes environnementales
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="pestel-row">
+                      <div class="pestel-letter p-l">L</div>
+                      <div class="pestel-content"><strong>Légal</strong></div>
+                    </div>
+                  </td>
+                  <td>
+                    <ul style="margin:0;padding-left:16px;font-size:0.85rem;">
+                      <li>RGPD, protection des données</li>
+                      <li>Droit de la concurrence (Autorité de la concurrence)</li>
+                      <li>Propriété intellectuelle (brevets, marques, logiciels)</li>
+                      <li>Droit du travail (contrats, clauses)</li>
+                      <li>Obligations légales sectorielles</li>
+                    </ul>
+                  </td>
+                  <td style="font-size:0.83rem;">
+                    <span style="color:var(--green)">✔ Opportunité</span> si la loi protège l'entreprise<br>
+                    <span style="color:var(--red)">✘ Menace</span> si nouvelle réglementation coûteuse
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout callout-blue">
+              <div class="callout-title">Conseil de rédaction</div>
+              Ne pas lister tous les facteurs sans lien avec le sujet. Sélectionner <strong>3 opportunités et 3 menaces</strong> bien illustrées avec des données chiffrées des annexes. Qualité > quantité.
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           3. RSE
+      ════════════════════════════════ -->
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num" style="background:var(--green)">3</div>RSE — Ce qu'il faut toujours dire</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-green">
+              <div class="callout-title">Tombé dans les 4 sujets sous différentes formes</div>
+              <strong>"Démarche RSE"</strong>, <strong>"charte éthique"</strong>, <strong>"attentes sociétales"</strong>, <strong>"développement durable"</strong>, <strong>"attirer et fidéliser"</strong> → toujours structurer en 3 piliers.
+            </div>
+
+            <h3>Les 3 piliers à mentionner systématiquement</h3>
+            <table class="pestel-table">
+              <thead>
+                <tr>
+                  <th>Pilier</th>
+                  <th>Ce qu'il faut chercher dans les annexes</th>
+                  <th>Exemple de formulation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>🌱 Environnemental</strong></td>
+                  <td>Réduction empreinte CO2, économies d'énergie, recyclage, watercooling, réduction papier, labels verts</td>
+                  <td><em>"Sur le plan environnemental, [entreprise] réduit ses émissions de CO2 en [action de l'annexe]."</em></td>
+                </tr>
+                <tr>
+                  <td><strong>👥 Social</strong></td>
+                  <td>Conditions de travail, égalité H/F, formations, management participatif, salaires, CSE, bien-être</td>
+                  <td><em>"Sur le plan social, [entreprise] favorise [action] pour l'épanouissement de ses collaborateurs."</em></td>
+                </tr>
+                <tr>
+                  <td><strong>🏛️ Sociétal / Économique</strong></td>
+                  <td>Impact sur la société, souveraineté numérique, emploi local, innovation pour la société, partenariats</td>
+                  <td><em>"Sur le plan sociétal, [entreprise] contribue à [impact] pour ses parties prenantes."</em></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Quand la question porte sur "attirer et fidéliser des jeunes"</h3>
+            <div class="callout callout-blue">
+              Lier les actions RSE de l'entreprise aux attentes de la <strong>Génération Z</strong> (né·e·s 1995–2009) :<br>
+              — Sens au travail et valeurs de l'entreprise (87 % regardent les valeurs)<br>
+              — Équilibre vie pro / vie perso (96 % le recherchent)<br>
+              — Évolution de carrière, apprentissage, autonomie (70 % veulent apprendre)<br>
+              — Ambiance, management participatif, expression des idées (67 % veulent s'exprimer)<br>
+              — Impact environnemental positif de l'entreprise
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           4. STRATÉGIE
+      ════════════════════════════════ -->
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num" style="background:var(--purple)">4</div>Stratégie d'entreprise — Les 4 types à connaître</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-blue">
+              <div class="callout-title">Tombé dans les 4 sujets</div>
+              <strong>"Justifier la stratégie"</strong>, <strong>"identifier la stratégie globale"</strong>, <strong>"modalités de croissance"</strong> → identifier le bon type parmi les 4 ci-dessous + justifier avec des éléments du contexte.
+            </div>
+
+            <table class="pestel-table">
+              <thead>
+                <tr>
+                  <th>Type de stratégie</th>
+                  <th>Définition courte</th>
+                  <th>Mots-clés dans le sujet</th>
+                  <th>Exemple tiré des sujets</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Spécialisation</strong></td>
+                  <td>L'entreprise se concentre sur un seul domaine d'activité pour en devenir experte.</td>
+                  <td>"se concentre sur", "cœur de métier", "expert en"</td>
+                  <td>OVHcloud : spécialisé cloud</td>
+                </tr>
+                <tr>
+                  <td><strong>Diversification</strong></td>
+                  <td>L'entreprise se développe dans de nouveaux secteurs ou de nouveaux produits.</td>
+                  <td>"étendre son offre", "nouveaux marchés", "nouvelles activités"</td>
+                  <td>PURECONTROL : passe de l'eau à d'autres industries</td>
+                </tr>
+                <tr>
+                  <td><strong>Intégration verticale</strong></td>
+                  <td>L'entreprise maîtrise toute sa chaîne de production (amont et aval).</td>
+                  <td>"intégré verticalement", "conçoit, fabrique et exploite", "contrôle de la chaîne"</td>
+                  <td>OVHcloud : conçoit ses serveurs, data centers et réseaux</td>
+                </tr>
+                <tr>
+                  <td><strong>Différenciation</strong></td>
+                  <td>L'entreprise propose une offre unique ou supérieure pour se distinguer de la concurrence.</td>
+                  <td>"se différencier", "se distinguer", "avantage concurrentiel", "ressources"</td>
+                  <td>OVHcloud : brevets, prix bas, label ANSSI</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Modalités de croissance (tombé 2024)</h3>
+            <div class="def-list">
+              <div class="def-item">
+                <span class="def-term">Croissance interne</span>
+                <span class="def-desc">L'entreprise se développe par ses propres ressources : recrutements, R&D, ouverture de bureaux. Ex : PURECONTROL recrute 25 personnes, ouvre des bureaux à Paris et Montpellier.</span>
+              </div>
+              <div class="def-item">
+                <span class="def-term">Croissance externe</span>
+                <span class="def-desc">L'entreprise se développe par rachat, fusion ou prise de participation. Ex : rachat de DIGIM par Denis Fournier.</span>
+              </div>
+              <div class="def-item">
+                <span class="def-term">Croissance conjointe (partenariat)</span>
+                <span class="def-desc">Alliance, partenariat ou accord de coopération sans fusion. Ex : partenariat PURECONTROL / METRON pour partager leurs expertises.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           5. PROPRIÉTÉ INTELLECTUELLE
+      ════════════════════════════════ -->
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num" style="background:#ff9500">5</div>Propriété intellectuelle — Brevet, Marque, Logiciel</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-orange">
+              <div class="callout-title">Tombé en 2025 dans les 2 sujets OVHcloud et DIGIM</div>
+              <strong>"Avantages du brevet"</strong> → lister monopole + protection. <strong>"Marque similaire / contrefaçon"</strong> → syllogisme Art. L716-10 CPI. <strong>"Droits sur logiciel"</strong> → syllogisme Art. L113-9 CPI.
+            </div>
+
+            <h3>Tableau comparatif des 3 protections</h3>
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Brevet</th>
+                  <th>Marque</th>
+                  <th>Droit d'auteur (logiciel)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Durée</strong></td>
+                  <td>20 ans non renouvelable</td>
+                  <td>10 ans renouvelable indéfiniment</td>
+                  <td>Vie de l'auteur + 70 ans</td>
+                </tr>
+                <tr>
+                  <td><strong>Organisme</strong></td>
+                  <td>INPI (France), OEB (Europe)</td>
+                  <td>INPI (France)</td>
+                  <td>Automatique dès la création</td>
+                </tr>
+                <tr>
+                  <td><strong>Conditions</strong></td>
+                  <td>Nouveauté + activité inventive + application industrielle</td>
+                  <td>Disponibilité + distinctivité + licéité</td>
+                  <td>Création originale (pas de dépôt obligatoire)</td>
+                </tr>
+                <tr>
+                  <td><strong>Ce que ça protège</strong></td>
+                  <td>Invention technique (procédé, produit)</td>
+                  <td>Signe distinctif (nom, logo, couleur)</td>
+                  <td>Code source, logiciel (Art. L112-2 CPI)</td>
+                </tr>
+                <tr>
+                  <td><strong>Avantages</strong></td>
+                  <td>Monopole d'exploitation, revenu de licences, barrière à l'entrée, valorisation</td>
+                  <td>Identification unique, protection de la réputation</td>
+                  <td>Protection immédiate, droits moraux + patrimoniaux</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Quand c'est un logiciel développé par un salarié → Art. L113-9 CPI</h3>
+            <div class="formule-box">
+              <div class="f-label">Syllogisme à rédiger</div>
+              <span class="f-m">MAJEURE</span> : "En droit, selon l'Art. L113-9 du Code de la Propriété Intellectuelle, les droits patrimoniaux sur les logiciels créés par un salarié dans l'exercice de ses fonctions ou d'après les instructions de son employeur sont dévolus à l'employeur."<br><br>
+              <span class="f-mi">MINEURE</span> : "En l'espèce, [Prénom] a développé le logiciel [dans ses fonctions / sur instruction de son supérieur]..."<br><br>
+              <span class="f-c">CONCLUSION</span> : "En conséquence, [l'employeur] est titulaire des droits patrimoniaux sur ce logiciel. [Prénom] n'est pas en droit de l'utiliser ou de le présenter à un tiers."
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           6. FINANCEMENT
+      ════════════════════════════════ -->
+      <div class="accordion open">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num">6</div>Financement — Solutions à proposer</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-blue">
+              <div class="callout-title">Tombé en 2024 (PURECONTROL) — attendu de nouveau</div>
+              <strong>"Proposer d'autres solutions de financement"</strong> → lister plusieurs sources en distinguant interne / externe et en précisant avantages/inconvénients.
+            </div>
+
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Solution</th>
+                  <th>Type</th>
+                  <th>Avantage</th>
+                  <th>Inconvénient</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Autofinancement (CAF)</strong></td>
+                  <td>Interne</td>
+                  <td>Aucun coût, aucune dépendance</td>
+                  <td>Limité aux bénéfices dégagés</td>
+                </tr>
+                <tr>
+                  <td><strong>Emprunt bancaire</strong></td>
+                  <td>Externe / dettes</td>
+                  <td>Accès rapide à des fonds importants</td>
+                  <td>Coût (intérêts), remboursement</td>
+                </tr>
+                <tr>
+                  <td><strong>Crédit-bail (leasing)</strong></td>
+                  <td>Externe / dettes</td>
+                  <td>Pas d'immobilisation au bilan</td>
+                  <td>Coût total élevé</td>
+                </tr>
+                <tr>
+                  <td><strong>Levée de fonds / capital-risque</strong></td>
+                  <td>Externe / fonds propres</td>
+                  <td>Pas de remboursement, accompagnement</td>
+                  <td>Dilution du capital, perte de contrôle</td>
+                </tr>
+                <tr>
+                  <td><strong>Business angels</strong></td>
+                  <td>Externe / fonds propres</td>
+                  <td>Réseau et conseils + financement</td>
+                  <td>Prise de participation</td>
+                </tr>
+                <tr>
+                  <td><strong>Crowdfunding</strong></td>
+                  <td>Externe / fonds propres</td>
+                  <td>Communication + financement</td>
+                  <td>Incertain, public limité</td>
+                </tr>
+                <tr>
+                  <td><strong>Subventions publiques</strong></td>
+                  <td>Externe</td>
+                  <td>Non remboursable, aucun coût</td>
+                  <td>Conditions strictes, délais longs</td>
+                </tr>
+                <tr>
+                  <td><strong>Augmentation de capital</strong></td>
+                  <td>Externe / fonds propres</td>
+                  <td>Pas de remboursement</td>
+                  <td>Dilution des associés existants</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           7. CARACTÉRISTIQUES DU MARCHÉ
+      ════════════════════════════════ -->
+      <div class="accordion">
+        <div class="accordion-header">
+          <div class="acc-left"><div class="acc-num">7</div>Caractéristiques du marché — Offre / Demande / Structure</div>
+          <div class="acc-chevron">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+
+            <div class="callout callout-blue">
+              <div class="callout-title">Tombé en 2025 (OVHcloud Q1.1)</div>
+              <strong>"Présenter les caractéristiques du marché (offre, demande, structure, perspectives)"</strong> → répondre à chacun des 4 axes en s'appuyant sur les chiffres des annexes.
+            </div>
+
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Axe</th>
+                  <th>Ce qu'il faut décrire</th>
+                  <th>Indicateurs à chercher dans les annexes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Offre</strong></td>
+                  <td>Qui sont les acteurs qui proposent ? Combien sont-ils ? Qui domine ?</td>
+                  <td>Parts de marché (%), noms des acteurs, produits/services proposés</td>
+                </tr>
+                <tr>
+                  <td><strong>Demande</strong></td>
+                  <td>Qui achète ? Combien de clients ? Quels usages ?</td>
+                  <td>Nombre de clients, secteurs, taille des entreprises clientes, usages principaux</td>
+                </tr>
+                <tr>
+                  <td><strong>Structure</strong></td>
+                  <td>Marché oligopolistique ? Concentré ? Concurrentiel ? Fragmenté ?</td>
+                  <td>Concentration (ex : 71 % du marché pour 3 acteurs = oligopole)</td>
+                </tr>
+                <tr>
+                  <td><strong>Perspectives</strong></td>
+                  <td>Le marché est-il en croissance ? Quelles tendances futures ?</td>
+                  <td>Chiffres de croissance (%), projections, nouvelles obligations légales</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion-group -->
+
+
+    <!-- ═══════════════════════════════
+         RÉCAPITULATIF : MOTS-CLÉS
+    ════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:56px;"><span class="icon">🔍</span>Repérage rapide — Les mots-clés à surligner</h2>
+
+    <div class="trigger-grid">
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">⚖️</span><span class="tc-title">→ Faire un syllogisme</span></div>
+        <div class="tc-keywords">
+          <span class="kw kw-red">"à l'aide d'un raisonnement juridique"</span>
+          <span class="kw kw-red">"montrer que"</span>
+          <span class="kw kw-red">"expliquer pourquoi"</span>
+          <span class="kw kw-red">"apprécier"</span>
+          <span class="kw kw-red">"vérifier que"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">🌍</span><span class="tc-title">→ Faire un PESTEL</span></div>
+        <div class="tc-keywords">
+          <span class="kw kw-orange">"macro-environnement"</span>
+          <span class="kw kw-orange">"opportunités et menaces"</span>
+          <span class="kw kw-orange">"environnement de l'entreprise"</span>
+          <span class="kw kw-orange">"PESTEL"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">♻️</span><span class="tc-title">→ Parler de la RSE</span></div>
+        <div class="tc-keywords">
+          <span class="kw kw-green">"RSE"</span>
+          <span class="kw kw-green">"charte éthique"</span>
+          <span class="kw kw-green">"attentes sociétales"</span>
+          <span class="kw kw-green">"développement durable"</span>
+          <span class="kw kw-green">"parties prenantes"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">🎯</span><span class="tc-title">→ Identifier la stratégie</span></div>
+        <div class="tc-keywords">
+          <span class="kw kw-purple">"stratégie globale"</span>
+          <span class="kw kw-purple">"justifier le choix"</span>
+          <span class="kw kw-purple">"modalités de croissance"</span>
+          <span class="kw kw-purple">"se différencier"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">💡</span><span class="tc-title">→ Parler des brevets / PI</span></div>
+        <div class="tc-keywords">
+          <span class="kw">"brevet"</span>
+          <span class="kw">"protéger ses inventions"</span>
+          <span class="kw">"marque"</span>
+          <span class="kw">"titulaire des droits"</span>
+          <span class="kw">"contrefaçon"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">💰</span><span class="tc-title">→ Parler du financement</span></div>
+        <div class="tc-keywords">
+          <span class="kw">"solutions de financement"</span>
+          <span class="kw">"levée de fonds"</span>
+          <span class="kw">"accompagner le développement"</span>
+          <span class="kw">"autres sources"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">📊</span><span class="tc-title">→ Analyser le marché</span></div>
+        <div class="tc-keywords">
+          <span class="kw">"caractéristiques du marché"</span>
+          <span class="kw">"offre, demande, structure"</span>
+          <span class="kw">"perspectives"</span>
+          <span class="kw">"parts de marché"</span>
+        </div>
+      </div>
+      <div class="trigger-card">
+        <div class="tc-header"><span class="tc-icon">👥</span><span class="tc-title">→ Attirer des talents / Gen Z</span></div>
+        <div class="tc-keywords">
+          <span class="kw kw-green">"attirer et fidéliser"</span>
+          <span class="kw kw-green">"jeunes salariés"</span>
+          <span class="kw kw-green">"pénurie de main d'œuvre"</span>
+          <span class="kw kw-green">"génération Z"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-orange" style="margin-top:32px;">
+      <div class="callout-title">Astuce générale pour l'examen</div>
+      Lisez <strong>tout le sujet en 15 minutes</strong> avant d'écrire quoi que ce soit. Identifiez la mission juridique (celle avec "raisonnement juridique") et commencez par elle si vous êtes à l'aise — c'est souvent la mieux notée. <strong>Citez toujours les annexes et les articles de loi</strong> fournis dans le sujet.
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
+</body>
+</html>

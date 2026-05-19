@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\")",
+      "Bash(dir \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\\\\chapitre cejm premiere annee\")",
+      "Bash(dir \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\\\\chapitre cejm deuxieme annee\")",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\" | ForEach-Object { $_.Name })"
+    ]
+  }
+}
