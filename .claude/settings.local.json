@@ -15,7 +15,11 @@
       "Bash(py --version)",
       "Bash(py -3 -c \"import pdfplumber; print\\('ok'\\)\")",
       "Bash(\"C:\\\\Users\\\\Ilyas\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python3.exe\" -c \"import pdfplumber; print\\('ok'\\)\")",
-      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\Ilyas\\\\Pictures\\\\25sie4cej.pdf\" - 2>&1)"
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\Ilyas\\\\Pictures\\\\25sie4cej.pdf\" - 2>&1)",
+      "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/BLANCA-CORR.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/blanca_corr.txt\")",
+      "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/edc21mr-CMIN.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/cmin_sujet.txt\")",
+      "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/btsBlanc1_bloom_cor.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/bloom_cor.txt\")",
+      "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/Eval-bloom-support-nov2025.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/bloom_sujet.txt\")"
     ]
   }
 }
