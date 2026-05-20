@@ -4,7 +4,18 @@
       "Bash(dir \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\")",
       "Bash(dir \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\\\\chapitre cejm premiere annee\")",
       "Bash(dir \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\\\\chapitre cejm deuxieme annee\")",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\" | ForEach-Object { $_.Name })"
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Ilyas\\\\Documents\\\\cejm\" | ForEach-Object { $_.Name })",
+      "Skill(anthropic-skills:pdf)",
+      "Skill(anthropic-skills:pdf:*)",
+      "Read(//c/Users/Ilyas/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/71ed0e9a-ff4b-4636-850c-1fbe6c9d861a/5eb70936-8eea-4f17-a8a2-3fedbeb4d015/skills/pdf/**)",
+      "Bash(python -c ' *)",
+      "Bash(where py *)",
+      "Bash(where python3 *)",
+      "Bash(where python *)",
+      "Bash(py --version)",
+      "Bash(py -3 -c \"import pdfplumber; print\\('ok'\\)\")",
+      "Bash(\"C:\\\\Users\\\\Ilyas\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python3.exe\" -c \"import pdfplumber; print\\('ok'\\)\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\Ilyas\\\\Pictures\\\\25sie4cej.pdf\" - 2>&1)"
     ]
   }
 }
