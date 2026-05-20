@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sujets & Corrections — SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .sujets-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .sujet-row {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sujet-info {
+      flex: 1;
+    }
+    .sujet-year {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .sujet-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .sujet-desc {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .sujet-btns {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .pdf-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      cursor: pointer;
+    }
+    .pdf-btn:hover { opacity: 0.82; }
+
+    .btn-sujet {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-corr {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border-light);
+    }
+
+    .pdf-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .sujet-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+      }
+      .sujet-btns {
+        width: 100%;
+      }
+      .pdf-btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html">Méthode</a></li>
+        <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+        <li><a href="fiches.html">Fiches</a></li>
+        <li><a href="aide-examen.html">Aide Examen</a></li>
+        <li><a href="sisr.html">SISR</a></li>
+        <li><a href="sujets.html" class="active">Sujets</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html">Méthode</a>
+    <a href="cas-pratiques.html">Cas Prat.</a>
+    <a href="fiches.html">Fiches</a>
+    <a href="aide-examen.html">Examen</a>
+    <a href="sisr.html">SISR</a>
+    <a href="sujets.html" class="active">Sujets</a>
+  </nav>
+
+  <main class="page">
+
+    <div class="page-hero">
+      <div class="badge">U6 / U7 — Cybersécurité</div>
+      <h1>Sujets & Corrections</h1>
+      <p>Sujets d'examen avec leur corrigé. Ouvre le sujet, réponds aux questions, puis consulte la correction.</p>
+    </div>
+
+    <div class="sujets-grid">
+
+      <!-- BLANCA 2025 -->
+      <div class="sujet-row fade-up">
+        <div class="sujet-info">
+          <div class="sujet-year">U7 · Session 2025</div>
+          <div class="sujet-name">Cas SA Blanca</div>
+          <div class="sujet-desc">Gestion d'un incident réseau (MAC flooding) · Sécurisation WiFi & portail captif</div>
+        </div>
+        <div class="sujet-btns">
+          <a href="pdfs/blanca-2025-sujet.pdf" target="_blank" class="pdf-btn btn-sujet">
+            <span class="pdf-icon">📄</span> Sujet
+          </a>
+          <a href="pdfs/blanca-2025-correction.pdf" target="_blank" class="pdf-btn btn-corr">
+            <span class="pdf-icon">✅</span> Correction
+          </a>
+        </div>
+      </div>
+
+      <!-- BLOOM 2025 -->
+      <div class="sujet-row fade-up delay-1">
+        <div class="sujet-info">
+          <div class="sujet-year">BTS Blanc · 2025</div>
+          <div class="sujet-name">Cas Bloom</div>
+          <div class="sujet-desc">Évaluation BTS Blanc — sujet complet avec corrigé détaillé</div>
+        </div>
+        <div class="sujet-btns">
+          <a href="pdfs/bloom-2025-sujet.pdf" target="_blank" class="pdf-btn btn-sujet">
+            <span class="pdf-icon">📄</span> Sujet
+          </a>
+          <a href="pdfs/bloom-2025-correction.pdf" target="_blank" class="pdf-btn btn-corr">
+            <span class="pdf-icon">✅</span> Correction
+          </a>
+        </div>
+      </div>
+
+      <!-- CMIN 2021 -->
+      <div class="sujet-row fade-up delay-2">
+        <div class="sujet-info">
+          <div class="sujet-year">U6 · Session 2021</div>
+          <div class="sujet-name">Cas CMIN</div>
+          <div class="sujet-desc">Sujet d'examen session 2021 avec corrigé officiel</div>
+        </div>
+        <div class="sujet-btns">
+          <a href="pdfs/cmin-2021-sujet.pdf" target="_blank" class="pdf-btn btn-sujet">
+            <span class="pdf-icon">📄</span> Sujet
+          </a>
+          <a href="pdfs/cmin-2021-correction.pdf" target="_blank" class="pdf-btn btn-corr">
+            <span class="pdf-icon">✅</span> Correction
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
+</body>
+</html>

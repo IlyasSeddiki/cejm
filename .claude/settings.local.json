@@ -19,7 +19,12 @@
       "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/BLANCA-CORR.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/blanca_corr.txt\")",
       "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/edc21mr-CMIN.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/cmin_sujet.txt\")",
       "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/btsBlanc1_bloom_cor.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/bloom_cor.txt\")",
-      "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/Eval-bloom-support-nov2025.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/bloom_sujet.txt\")"
+      "Bash(\"/c/Program Files/Git/mingw64/bin/pdftotext\" \"/c/Users/Ilyas/Pictures/Eval-bloom-support-nov2025.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Pictures/bloom_sujet.txt\")",
+      "Bash(cp \"/c/Users/Ilyas/Pictures/25si7sisr_sujet.pdf\" \"/c/Users/Ilyas/Documents/cejm/pdfs/blanca-2025-sujet.pdf\")",
+      "Bash(cp \"/c/Users/Ilyas/Pictures/BLANCA-CORR.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Documents/cejm/pdfs/blanca-2025-correction.pdf\")",
+      "Bash(cp \"/c/Users/Ilyas/Pictures/edc21mr-CMIN.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Documents/cejm/pdfs/cmin-2021-sujet.pdf\")",
+      "Bash(cp \"/c/Users/Ilyas/Pictures/edc21mrCorr-CMIN.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Documents/cejm/pdfs/cmin-2021-correction.pdf\")",
+      "Bash(cp \"/c/Users/Ilyas/Pictures/Eval-bloom-support-nov2025.pdf - Cloud Lycée René Descartes.pdf\" \"/c/Users/Ilyas/Documents/cejm/pdfs/bloom-2025-sujet.pdf\")"
     ]
   }
 }
