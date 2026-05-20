@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Révision SISR — U6/U7 Cybersécurité</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .score-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 32px auto 0;
+      max-width: 900px;
+      padding: 0 24px;
+    }
+    .score-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-xs);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .score-pill .sp-badge {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .score-pill .sp-badge.red { background: var(--red); }
+    .score-pill .sp-badge.orange { background: var(--orange); }
+    .score-pill .sp-badge.green { background: var(--green); }
+    .score-pill .sp-badge.purple { background: var(--purple); }
+
+    .freq-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 20px 0;
+    }
+    .freq-table th {
+      background: var(--bg);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border-light);
+    }
+    .freq-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+    .freq-table tr:last-child td { border-bottom: none; }
+    .freq-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .freq-3 { background: #fff0f0; color: var(--red); border: 1px solid #ffd0d0; }
+    .freq-2 { background: #fff7e6; color: var(--orange); border: 1px solid #ffe0b0; }
+    .freq-1 { background: #f0faf0; color: var(--green); border: 1px solid #c0e8c0; }
+
+    .concept-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 16px 0;
+    }
+    .concept-table th {
+      background: var(--bg);
+      padding: 9px 14px;
+      text-align: left;
+      font-size: 0.77rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border-light);
+    }
+    .concept-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .concept-table tr:last-child td { border-bottom: none; }
+    .concept-table td:first-child {
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .raid-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 16px 0;
+    }
+    .raid-table th {
+      background: var(--bg);
+      padding: 9px 14px;
+      text-align: left;
+      font-size: 0.77rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border-light);
+    }
+    .raid-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+      text-align: center;
+    }
+    .raid-table td:first-child { text-align: left; font-weight: 700; }
+    .raid-table td:nth-child(2) { text-align: left; }
+    .raid-table tr:last-child td { border-bottom: none; }
+
+    .ok { color: var(--green); font-weight: 700; }
+    .no { color: var(--red); font-weight: 700; }
+
+    .formule-box {
+      background: #1a1a2e;
+      color: #e0e0ff;
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      font-family: 'SF Mono', 'Monaco', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin: 16px 0;
+    }
+    .formule-box .fb-comment { color: #6a8caf; }
+    .formule-box .fb-key { color: #79c0ff; font-weight: 700; }
+    .formule-box .fb-val { color: #a5d6ff; }
+
+    .kw {
+      display: inline-block;
+      background: #e8f0ff;
+      color: var(--accent);
+      border: 1px solid #c0d4ff;
+      border-radius: 8px;
+      padding: 2px 9px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin: 2px 3px;
+    }
+    .kw.red { background: #fff0f0; color: var(--red); border-color: #ffd0d0; }
+    .kw.orange { background: #fff7e6; color: var(--orange); border-color: #ffe0b0; }
+    .kw.green { background: #f0faf0; color: var(--green); border-color: #c0e8c0; }
+    .kw.purple { background: #f8f0ff; color: var(--purple); border-color: #e0c0ff; }
+
+    .prio-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    .prio-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .prio-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .prio-num.red { background: var(--red); }
+    .prio-num.orange { background: var(--orange); }
+    .prio-num.green { background: var(--green); }
+    .prio-title { font-size: 1.05rem; font-weight: 700; }
+    .prio-sub { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+
+    @media (max-width: 768px) {
+      .freq-table, .concept-table, .raid-table { font-size: 0.8rem; }
+      .freq-table td, .concept-table td, .raid-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="annee1.html">1ère Année</a></li>
+        <li><a href="annee2.html">2ème Année</a></li>
+        <li><a href="syllogisme.html">Méthode</a></li>
+        <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+        <li><a href="fiches.html">Fiches</a></li>
+        <li><a href="aide-examen.html">Aide Examen</a></li>
+        <li><a href="sisr.html" class="active">SISR</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re Année</a>
+    <a href="annee2.html">2e Année</a>
+    <a href="syllogisme.html">Méthode</a>
+    <a href="cas-pratiques.html">Cas Prat.</a>
+    <a href="fiches.html">Fiches</a>
+    <a href="aide-examen.html">Examen</a>
+    <a href="sisr.html" class="active">SISR</a>
+  </nav>
+
+  <main class="page">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="badge">U6 / U7 — Cybersécurité des services informatiques</div>
+      <h1>Révision SISR</h1>
+      <p>Les thèmes qui tombent systématiquement à l'examen U6/U7, dans l'ordre de priorité. Basé sur l'analyse de 6 sujets (2022→2025).</p>
+    </div>
+
+    <!-- SCORE PILLS -->
+    <div class="score-row">
+      <div class="score-pill"><span class="sp-badge red">6/6</span> Analyse de risques</div>
+      <div class="score-pill"><span class="sp-badge red">6/6</span> VLAN</div>
+      <div class="score-pill"><span class="sp-badge red">6/6</span> Pare-feu / Filtrage</div>
+      <div class="score-pill"><span class="sp-badge red">6/6</span> Types d'attaques</div>
+      <div class="score-pill"><span class="sp-badge red">6/6</span> ITIL / Incidents</div>
+      <div class="score-pill"><span class="sp-badge orange">5/6</span> Chiffrement / PKI</div>
+      <div class="score-pill"><span class="sp-badge orange">5/6</span> WiFi sécurité</div>
+      <div class="score-pill"><span class="sp-badge orange">4/6</span> Supervision / Logs</div>
+      <div class="score-pill"><span class="sp-badge orange">4/6</span> RAID</div>
+      <div class="score-pill"><span class="sp-badge green">3/6</span> IDS / Snort</div>
+      <div class="score-pill"><span class="sp-badge green">3/6</span> Active Directory</div>
+      <div class="score-pill"><span class="sp-badge green">2/6</span> RGPD</div>
+    </div>
+
+    <!-- TABLEAU DE FRÉQUENCE -->
+    <div style="max-width:1120px; margin:48px auto 0; padding:0 24px;">
+      <h2 class="section-title"><span class="icon">📊</span>Tableau des thèmes par fréquence</h2>
+      <table class="freq-table">
+        <thead>
+          <tr>
+            <th>Thème</th>
+            <th>Fréquence</th>
+            <th>Mots-clés déclencheurs</th>
+            <th>Sujets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Analyse de risques (EBIOS)</strong></td>
+            <td><span class="freq-badge freq-3">6/6 — Systématique</span></td>
+            <td>gravité, vraisemblance, événements redoutés, risque</td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td><strong>VLAN</strong></td>
+            <td><span class="freq-badge freq-3">6/6 — Systématique</span></td>
+            <td>segmentation, trunk, access, isolation, réseau virtuel</td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td><strong>Pare-feu / Firewall</strong></td>
+            <td><span class="freq-badge freq-3">6/6 — Systématique</span></td>
+            <td>règles NAT, filtrage, DMZ, flux, WAN</td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td><strong>Types d'attaques</strong></td>
+            <td><span class="freq-badge freq-3">6/6 — Systématique</span></td>
+            <td>ransomware, force brute, ARP spoofing, MAC flooding, phishing</td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td><strong>ITIL / Gestion incidents</strong></td>
+            <td><span class="freq-badge freq-3">6/6 — Systématique</span></td>
+            <td>incident, priorité P1/P2/P3, gravité, fiche incident</td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td><strong>Chiffrement / PKI / TLS</strong></td>
+            <td><span class="freq-badge freq-2">5/6 — Fréquent</span></td>
+            <td>certificat, SSL/TLS, HTTPS, signature électronique, clé</td>
+            <td>MYON, CALEDOBANK, MARTIN, BLANCA, CMIN</td>
+          </tr>
+          <tr>
+            <td><strong>WiFi sécurité</strong></td>
+            <td><span class="freq-badge freq-2">5/6 — Fréquent</span></td>
+            <td>WPA2, WPA3, portail captif, authentification WiFi, SSID</td>
+            <td>MYON, BLANCA, CALEDOBANK, SAINT-JACQUES, VILLE DU PARC</td>
+          </tr>
+          <tr>
+            <td><strong>Supervision / Logs / SIEM</strong></td>
+            <td><span class="freq-badge freq-2">4/6 — Fréquent</span></td>
+            <td>SNMP, journaux, centralisation logs, monitoring, trap</td>
+            <td>CALEDOBANK, BLANCA, MARTIN, MYON</td>
+          </tr>
+          <tr>
+            <td><strong>RAID</strong></td>
+            <td><span class="freq-badge freq-2">4/6 — Fréquent</span></td>
+            <td>disponibilité, redondance, tolérance, RAID 0/1/5/6/10</td>
+            <td>MYON, MARTIN, CALEDOBANK, SAINT-JACQUES</td>
+          </tr>
+          <tr>
+            <td><strong>IDS / Snort</strong></td>
+            <td><span class="freq-badge freq-1">3/6 — Régulier</span></td>
+            <td>détection intrusion, Snort, mode promiscuité, IPS</td>
+            <td>MYON, CALEDOBANK, VILLE DU PARC</td>
+          </tr>
+          <tr>
+            <td><strong>Active Directory</strong></td>
+            <td><span class="freq-badge freq-1">3/6 — Régulier</span></td>
+            <td>AD, politique de mots de passe, GPO, audit, PingCastle</td>
+            <td>MARTIN, SAINT-JACQUES, CMIN</td>
+          </tr>
+          <tr>
+            <td><strong>RGPD</strong></td>
+            <td><span class="freq-badge freq-1">2/6 — Régulier</span></td>
+            <td>données personnelles, DPD, droits utilisateurs, conformité</td>
+            <td>CALEDOBANK, MARTIN</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PRIORITÉ 1 : THÈMES SYSTÉMATIQUES -->
+    <div style="max-width:1120px; margin:48px auto 0; padding:0 24px;">
+      <h2 class="section-title"><span class="icon">🔴</span>Priorité 1 — Tombe dans TOUS les sujets</h2>
+
+      <div class="accordion-group">
+
+        <!-- ANALYSE DE RISQUES -->
+        <div class="accordion open">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">1</div>Analyse de risques — EBIOS RM</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p>La méthode <strong>EBIOS Risk Manager</strong> (publiée par l'ANSSI) est la méthode française de référence pour l'analyse des risques de sécurité informatique.</p>
+
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Définition</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Événement redouté</td>
+                    <td>Scénario négatif que l'on cherche à éviter (ex : vol de données, interruption de service)</td>
+                  </tr>
+                  <tr>
+                    <td>Gravité</td>
+                    <td>Impact si l'événement se produit — de 1 (mineur) à 4 (critique). <strong>Ce qui se passe si ça arrive.</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Vraisemblance</td>
+                    <td>Probabilité que l'événement survienne — de 1 (minimal) à 4 (maximal). <strong>À quel point c'est probable.</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Niveau de risque</td>
+                    <td>Résulte de la combinaison gravité × vraisemblance — détermine la priorité de traitement</td>
+                  </tr>
+                  <tr>
+                    <td>Mesures de sécurité</td>
+                    <td>Actions pour réduire la gravité ou la vraisemblance d'un risque</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="callout callout-blue">
+                <div class="callout-title">Ce qu'on te demande à l'exam</div>
+                <ul>
+                  <li>Identifier les événements redoutés à partir des annexes</li>
+                  <li>Évaluer la gravité et la vraisemblance (justifier avec les docs)</li>
+                  <li>Proposer des mesures de sécurité adaptées</li>
+                  <li>Réévaluer le niveau de risque après mesures</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VLAN -->
+        <div class="accordion open">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">2</div>VLAN — Segmentation réseau</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p>Un <strong>VLAN (Virtual Local Area Network)</strong> est un réseau local virtuel qui permet de segmenter logiquement un réseau physique en plusieurs réseaux isolés.</p>
+
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Définition</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Port Access</td>
+                    <td>Port de commutateur rattaché à un seul VLAN — pour les postes utilisateurs</td>
+                  </tr>
+                  <tr>
+                    <td>Port Trunk</td>
+                    <td>Port qui transporte plusieurs VLANs — pour les liaisons entre commutateurs ou vers le routeur</td>
+                  </tr>
+                  <tr>
+                    <td>VLAN natif</td>
+                    <td>VLAN non taggé sur un port trunk — à changer pour éviter les attaques</td>
+                  </tr>
+                  <tr>
+                    <td>Inter-VLAN routing</td>
+                    <td>Communication entre VLANs via un routeur ou un commutateur L3 — contrôlé par le pare-feu</td>
+                  </tr>
+                  <tr>
+                    <td>Intérêt sécurité</td>
+                    <td>Isoler les services (DMZ, serveurs, utilisateurs, IoT) pour limiter la propagation d'attaques</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="callout callout-orange">
+                <div class="callout-title">Ce qu'on te demande à l'exam</div>
+                <ul>
+                  <li>Attribuer les bons VLANs aux bons ports à partir d'un schéma réseau</li>
+                  <li>Justifier pourquoi on sépare tel service dans un VLAN dédié</li>
+                  <li>Identifier si un port doit être en access ou trunk</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PARE-FEU -->
+        <div class="accordion open">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">3</div>Pare-feu / Firewall / NAT</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p>Le <strong>pare-feu (firewall)</strong> filtre les flux réseau selon des règles définies. Il protège les zones réseau (LAN, DMZ, WAN).</p>
+
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Définition</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Règle de filtrage</td>
+                    <td>Autorise ou bloque un flux selon : IP source, IP destination, port, protocole (TCP/UDP)</td>
+                  </tr>
+                  <tr>
+                    <td>NAT (Source)</td>
+                    <td>Traduit l'IP privée en IP publique pour sortir sur Internet (masquage)</td>
+                  </tr>
+                  <tr>
+                    <td>PAT / Port Forwarding</td>
+                    <td>Redirige un port public vers un serveur interne (ex : port 443 → serveur web interne)</td>
+                  </tr>
+                  <tr>
+                    <td>DMZ</td>
+                    <td>Zone démilitarisée — réseau intermédiaire entre Internet et le LAN, pour les serveurs accessibles depuis l'extérieur</td>
+                  </tr>
+                  <tr>
+                    <td>Politique par défaut</td>
+                    <td>Tout ce qui n'est pas explicitement autorisé est bloqué (politique de liste blanche)</td>
+                  </tr>
+                  <tr>
+                    <td>UTM / NGFW</td>
+                    <td>Pare-feu nouvelle génération : inspection SSL, antivirus, IPS intégré</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="callout callout-blue">
+                <div class="callout-title">Ce qu'on te demande à l'exam</div>
+                <ul>
+                  <li>Lire et compléter une table de règles de filtrage</li>
+                  <li>Ajouter des règles pour bloquer une attaque (force brute, IP malveillante)</li>
+                  <li>Configurer le port forwarding pour un nouveau service</li>
+                  <li>Expliquer l'intérêt d'une DMZ</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TYPES D'ATTAQUES -->
+        <div class="accordion open">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">4</div>Types d'attaques à connaître</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Attaque</th><th>Principe</th><th>Contre-mesure</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Force brute</td>
+                    <td>Tester tous les mots de passe possibles</td>
+                    <td>Fail2Ban, limitation tentatives, MFA</td>
+                  </tr>
+                  <tr>
+                    <td>Ransomware</td>
+                    <td>Chiffre les fichiers et demande une rançon</td>
+                    <td>Sauvegardes hors ligne, filtrage emails, MàJ, segmentation VLAN</td>
+                  </tr>
+                  <tr>
+                    <td>Phishing</td>
+                    <td>Email frauduleux pour voler des identifiants</td>
+                    <td>Sensibilisation, filtrage emails, antispam</td>
+                  </tr>
+                  <tr>
+                    <td>ARP Spoofing</td>
+                    <td>Falsifie les tables ARP pour intercepter le trafic</td>
+                    <td>DAI (Dynamic ARP Inspection), VLAN</td>
+                  </tr>
+                  <tr>
+                    <td>MAC Flooding</td>
+                    <td>Sature la table MAC du switch → fonctionne comme un hub</td>
+                    <td>Port Security sur les commutateurs, SNMP trap</td>
+                  </tr>
+                  <tr>
+                    <td>Man in the Middle</td>
+                    <td>S'intercale entre deux parties pour espionner/modifier</td>
+                    <td>Chiffrement TLS, certificats, VPN</td>
+                  </tr>
+                  <tr>
+                    <td>DoS / DDoS</td>
+                    <td>Inonder un serveur de requêtes pour le rendre indisponible</td>
+                    <td>Pare-feu, rate limiting, CDN, blackholing</td>
+                  </tr>
+                  <tr>
+                    <td>Cheval de Troie</td>
+                    <td>Logiciel malveillant dissimulé dans un programme légitime</td>
+                    <td>Antivirus, MàJ, cloisonnement réseau</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITIL -->
+        <div class="accordion open">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">5</div>ITIL — Gestion des incidents</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p><strong>ITIL (Information Technology Infrastructure Library)</strong> est un cadre de bonnes pratiques pour la gestion des services informatiques.</p>
+
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Définition</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Incident</td>
+                    <td>Toute interruption non planifiée ou dégradation d'un service informatique</td>
+                  </tr>
+                  <tr>
+                    <td>Priorité P1</td>
+                    <td><strong>Critique</strong> — impact majeur, tous les utilisateurs touchés, résolution immédiate</td>
+                  </tr>
+                  <tr>
+                    <td>Priorité P2</td>
+                    <td><strong>Élevée</strong> — impact important, une partie des utilisateurs touchés</td>
+                  </tr>
+                  <tr>
+                    <td>Priorité P3</td>
+                    <td><strong>Normale</strong> — impact limité, peu d'utilisateurs touchés, résolution dans les délais standard</td>
+                  </tr>
+                  <tr>
+                    <td>Fiche incident</td>
+                    <td>Document traçant : date, description, gravité, actions correctives, personnes impliquées</td>
+                  </tr>
+                  <tr>
+                    <td>Escalade</td>
+                    <td>Remonter l'incident à un niveau supérieur si la priorité augmente ou si non résolu</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="callout callout-orange">
+                <div class="callout-title">Ce qu'on te demande à l'exam</div>
+                <ul>
+                  <li>Qualifier la priorité d'un incident (P1/P2/P3) et <strong>justifier</strong></li>
+                  <li>Réévaluer si la situation évolue (ex : P2 → P1 si tout le réseau tombe)</li>
+                  <li>Compléter une fiche incident ITIL</li>
+                  <li>Proposer des actions correctives et préventives</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /accordion-group priorité 1 -->
+
+
+      <!-- PRIORITÉ 2 : THÈMES FRÉQUENTS -->
+      <h2 class="section-title" style="margin-top:48px;"><span class="icon">🟠</span>Priorité 2 — Tombe très souvent (4-5/6 sujets)</h2>
+
+      <div class="accordion-group">
+
+        <!-- CHIFFREMENT / PKI -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">6</div>Chiffrement / PKI / Certificats TLS</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Définition</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Chiffrement symétrique</td>
+                    <td>Une seule clé pour chiffrer et déchiffrer — rapide mais problème de partage de clé (ex : AES)</td>
+                  </tr>
+                  <tr>
+                    <td>Chiffrement asymétrique</td>
+                    <td>Paire clé publique / clé privée — la publique chiffre, la privée déchiffre (ex : RSA)</td>
+                  </tr>
+                  <tr>
+                    <td>Certificat TLS/SSL</td>
+                    <td>Document numérique signé par une AC qui associe une identité à une clé publique</td>
+                  </tr>
+                  <tr>
+                    <td>AC (Autorité de Certification)</td>
+                    <td>Tiers de confiance qui signe les certificats et garantit leur authenticité</td>
+                  </tr>
+                  <tr>
+                    <td>TLS (HTTPS)</td>
+                    <td>Protocole qui chiffre les communications web — garantit confidentialité + intégrité + authentification</td>
+                  </tr>
+                  <tr>
+                    <td>Signature électronique</td>
+                    <td>Hachage du document chiffré avec la clé privée — garantit l'intégrité et l'authenticité</td>
+                  </tr>
+                  <tr>
+                    <td>Inspection SSL</td>
+                    <td>Le pare-feu déchiffre le trafic HTTPS pour l'analyser — nécessite un certificat racine installé sur les clients</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIFI -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">7</div>WiFi — Sécurisation</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Mécanisme</th><th>Explication</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>WPA2 / WPA3</td>
+                    <td>Protocoles de sécurité WiFi — WPA3 est plus récent et plus sûr (chiffrement individualisé)</td>
+                  </tr>
+                  <tr>
+                    <td>WPA2-Enterprise (802.1X)</td>
+                    <td>Authentification par identifiant/mot de passe via serveur RADIUS — pour les entreprises</td>
+                  </tr>
+                  <tr>
+                    <td>Portail captif</td>
+                    <td>Page web d'authentification avant accès au réseau WiFi — pour les invités</td>
+                  </tr>
+                  <tr>
+                    <td>SSID masqué</td>
+                    <td>Masquer le nom du réseau — sécurité faible, ne suffit pas seul</td>
+                  </tr>
+                  <tr>
+                    <td>Filtrage MAC</td>
+                    <td>Autoriser uniquement les adresses MAC connues — contournable par spoofing</td>
+                  </tr>
+                  <tr>
+                    <td>VLAN WiFi invité</td>
+                    <td>Isoler les invités WiFi dans un VLAN séparé pour ne pas accéder au réseau interne</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUPERVISION / LOGS -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">8</div>Supervision — SNMP / Logs / SIEM</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Outil / Notion</th><th>Explication</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>SNMP v3</td>
+                    <td>Protocole de supervision réseau — v3 ajoute authentification + chiffrement (contrairement à v1/v2)</td>
+                  </tr>
+                  <tr>
+                    <td>Trap SNMP</td>
+                    <td>Alerte envoyée automatiquement par un équipement vers le serveur de supervision en cas d'événement — plus réactif que le polling</td>
+                  </tr>
+                  <tr>
+                    <td>Logs / Journaux</td>
+                    <td>Fichiers enregistrant les événements système (connexions, erreurs, accès) — essentiels pour l'analyse forensique</td>
+                  </tr>
+                  <tr>
+                    <td>SIEM</td>
+                    <td>Système centralisant et corrélant les logs de plusieurs sources pour détecter les incidents</td>
+                  </tr>
+                  <tr>
+                    <td>WEF (Windows Event Forwarding)</td>
+                    <td>Centralisation des journaux Windows d'événements vers un collecteur central</td>
+                  </tr>
+                  <tr>
+                    <td>Syslog</td>
+                    <td>Protocole standard de centralisation des logs sur les systèmes Linux/réseaux</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAID -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">9</div>RAID — Niveaux et comparaison</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p><strong>RAID (Redundant Array of Independent Disks)</strong> permet d'améliorer les performances et/ou la tolérance aux pannes d'un système de stockage.</p>
+
+              <table class="raid-table">
+                <thead>
+                  <tr>
+                    <th>Niveau</th>
+                    <th>Principe</th>
+                    <th>Tolérance panne</th>
+                    <th>Perfs lecture</th>
+                    <th>Disques min.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>RAID 0</td>
+                    <td>Striping — données réparties sur tous les disques</td>
+                    <td><span class="no">Aucune</span></td>
+                    <td><span class="ok">Excellentes</span></td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>RAID 1</td>
+                    <td>Mirroring — copie identique sur 2 disques</td>
+                    <td><span class="ok">1 disque</span></td>
+                    <td>Bonnes</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>RAID 5</td>
+                    <td>Striping + parité répartie sur tous les disques</td>
+                    <td><span class="ok">1 disque</span></td>
+                    <td>Bonnes</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>RAID 6</td>
+                    <td>Striping + double parité</td>
+                    <td><span class="ok">2 disques</span></td>
+                    <td>Bonnes</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <td>RAID 10</td>
+                    <td>RAID 1 + RAID 0 (mirroring + striping)</td>
+                    <td><span class="ok">1 disque/paire</span></td>
+                    <td><span class="ok">Excellentes</span></td>
+                    <td>4</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="callout callout-green">
+                <div class="callout-title">À retenir pour l'exam</div>
+                Le RAID ne remplace pas une sauvegarde (backup). Si les données sont corrompues ou chiffrées par ransomware, le RAID est aussi touché. Il protège contre la défaillance matérielle, pas contre la perte logique de données.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /accordion-group priorité 2 -->
+
+
+      <!-- PRIORITÉ 3 : THÈMES RÉGULIERS -->
+      <h2 class="section-title" style="margin-top:48px;"><span class="icon">🟢</span>Priorité 3 — Tombe régulièrement</h2>
+
+      <div class="accordion-group">
+
+        <!-- IDS / SNORT -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">10</div>IDS / IPS — Snort</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Explication</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>IDS</td>
+                    <td>Intrusion Detection System — surveille et <strong>alerte</strong> en cas d'activité suspecte (passif)</td>
+                  </tr>
+                  <tr>
+                    <td>IPS</td>
+                    <td>Intrusion Prevention System — détecte ET <strong>bloque</strong> automatiquement (actif)</td>
+                  </tr>
+                  <tr>
+                    <td>Mode promiscuité</td>
+                    <td>Interface réseau qui capture TOUT le trafic (pas seulement celui qui lui est destiné) — nécessaire pour l'IDS</td>
+                  </tr>
+                  <tr>
+                    <td>Port miroir (SPAN)</td>
+                    <td>Copie le trafic d'un port vers un autre — permet à l'IDS de tout analyser sans être dans le flux</td>
+                  </tr>
+                  <tr>
+                    <td>Règle Snort</td>
+                    <td>Format : <code>action protocole IP_src port → IP_dst port (options)</code></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="formule-box">
+                <span class="fb-comment"># Exemple règle Snort — alerte si ping vers serveur web</span><br>
+                <span class="fb-key">alert</span> <span class="fb-val">icmp any any -&gt; 192.168.1.10 any</span><br>
+                <span class="fb-val">(msg:"Ping vers serveur web"; sid:1000001; rev:1;)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE DIRECTORY -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">11</div>Active Directory — Sécurité</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Explication</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>GPO (Group Policy Object)</td>
+                    <td>Stratégies appliquées automatiquement aux utilisateurs/machines — mots de passe, droits, verrouillage</td>
+                  </tr>
+                  <tr>
+                    <td>Politique de mdp</td>
+                    <td>Longueur minimale, complexité, durée de validité, historique — à auditer régulièrement</td>
+                  </tr>
+                  <tr>
+                    <td>Comptes administrateurs</td>
+                    <td>Ne jamais utiliser pour des tâches courantes — risque si mise en cache des identifiants</td>
+                  </tr>
+                  <tr>
+                    <td>PingCastle</td>
+                    <td>Outil d'audit AD qui identifie les vulnérabilités (mots de passe faibles, OS obsolètes, comptes inactifs)</td>
+                  </tr>
+                  <tr>
+                    <td>OS obsolètes</td>
+                    <td>Machines avec Windows 7/XP → plus de mises à jour → vulnérabilités non corrigées</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- RGPD -->
+        <div class="accordion">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">12</div>RGPD — Conformité</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Notion</th><th>Explication</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Données personnelles</td>
+                    <td>Toute info permettant d'identifier une personne physique (nom, email, IP, localisation...)</td>
+                  </tr>
+                  <tr>
+                    <td>DPD / DPO</td>
+                    <td>Délégué à la Protection des Données — obligatoire pour certaines organisations</td>
+                  </tr>
+                  <tr>
+                    <td>Droits des personnes</td>
+                    <td>Droit d'accès, rectification, effacement (droit à l'oubli), portabilité, opposition</td>
+                  </tr>
+                  <tr>
+                    <td>Minimisation</td>
+                    <td>Ne collecter que les données strictement nécessaires à la finalité</td>
+                  </tr>
+                  <tr>
+                    <td>Base légale</td>
+                    <td>Consentement, contrat, obligation légale ou intérêt légitime — obligatoire pour tout traitement</td>
+                  </tr>
+                  <tr>
+                    <td>Inspection SSL / CNIL</td>
+                    <td>L'employeur doit informer les salariés de l'inspection du trafic HTTPS (vie privée au travail)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /accordion-group priorité 3 -->
+
+
+      <!-- FICHE MÉMO RAPIDE -->
+      <h2 class="section-title" style="margin-top:48px;"><span class="icon">⚡</span>Mémo rapide — Ce que tu lis dans le sujet → ce que tu fais</h2>
+
+      <div class="accordion-group">
+        <div class="accordion open">
+          <div class="accordion-header">
+            <div class="acc-left"><div class="acc-num">→</div>Mots-clés → Réponse attendue</div>
+            <div class="acc-chevron">▾</div>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <table class="concept-table">
+                <thead><tr><th>Tu vois dans la question...</th><th>Tu fais...</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><span class="kw">gravité</span> <span class="kw">vraisemblance</span> <span class="kw">risque</span></td>
+                    <td>Tableau EBIOS RM — évalues gravité (1→4) et vraisemblance (1→4), proposes des mesures</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw">VLAN</span> <span class="kw">segmentation</span> <span class="kw">isolation</span></td>
+                    <td>Attribues les VLANs, identifies les ports trunk/access, justifies l'isolation</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw">règle pare-feu</span> <span class="kw">filtrage</span> <span class="kw">bloquer</span></td>
+                    <td>Complètes ou rédiges les règles : IP source / destination / port / action</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw">priorité</span> <span class="kw">incident</span> <span class="kw">ITIL</span></td>
+                    <td>Qualifies P1/P2/P3 selon le nombre d'utilisateurs touchés et l'impact, remplis fiche incident</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw red">ransomware</span> <span class="kw red">chiffrement malveillant</span></td>
+                    <td>Identifies les vecteurs d'entrée, proposes sauvegarde hors ligne + segmentation + MàJ</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw red">force brute</span> <span class="kw red">tentatives connexion</span></td>
+                    <td>Proposes Fail2Ban ou règle firewall bloquant l'IP source + limitation tentatives</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw orange">certificat</span> <span class="kw orange">HTTPS</span> <span class="kw orange">TLS</span></td>
+                    <td>Expliques la PKI, le rôle de l'AC, l'échange de clés, la signature</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw orange">WiFi</span> <span class="kw orange">invités</span> <span class="kw orange">portail captif</span></td>
+                    <td>Proposes VLAN dédié invités + portail captif + WPA2-Enterprise pour les employés</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw purple">SNMP</span> <span class="kw purple">supervision</span> <span class="kw purple">alerte</span></td>
+                    <td>Expliques SNMP v3 (auth+chiffrement), trap vs polling, port miroir pour IDS</td>
+                  </tr>
+                  <tr>
+                    <td><span class="kw green">RAID</span> <span class="kw green">disponibilité</span> <span class="kw green">tolérance panne</span></td>
+                    <td>Tableau comparatif RAID 0/1/5/6/10, choix selon le besoin (perfs vs redondance)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALLOUT FINAL -->
+      <div class="callout callout-blue" style="margin: 48px 0 80px;">
+        <div class="callout-title">💡 Stratégie pour l'exam U6/U7</div>
+        <p>Le sujet est toujours structuré en 2-3 dossiers avec des missions. <strong>Lis d'abord tous les documents</strong> (schéma réseau, tableaux de règles, descriptions) avant de répondre — 90% des réponses sont dans les annexes. Pour les justifications, cite toujours l'impact sur la <strong>disponibilité, l'intégrité ou la confidentialité</strong> (les 3 piliers de la sécurité).</p>
+      </div>
+
+    </div><!-- /container -->
+
+  </main>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
+</body>
+</html>
