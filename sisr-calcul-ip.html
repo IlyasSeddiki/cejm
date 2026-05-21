@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcul d'adresses IP — SISR</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .ip-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-xs);
+    }
+    .ip-section h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.82rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Formule box */
+    .formule {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      font-family: 'Courier New', monospace;
+      line-height: 1.8;
+      margin: 12px 0;
+    }
+    .dark .formule { background: #0c1e3c; border-color: #1e3a5f; }
+
+    /* Exemple résolu */
+    .exemple-box {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-top: 12px;
+    }
+    .dark .exemple-box { background: #052e16; border-color: #166534; }
+    .exemple-box .ex-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #15803d;
+      margin-bottom: 10px;
+    }
+    .dark .exemple-box .ex-title { color: #86efac; }
+    .exemple-box code {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 2;
+      color: var(--text);
+    }
+    .highlight { color: var(--accent); font-weight: 700; }
+    .highlight-green { color: #16a34a; font-weight: 700; }
+    .highlight-red { color: #dc2626; font-weight: 700; }
+
+    /* Tableau masques */
+    .t-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .t-table th {
+      background: var(--bg);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--border-light);
+    }
+    .t-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border-light);
+      font-family: 'Courier New', monospace;
+    }
+    .t-table tr:last-child td { border-bottom: none; }
+    .t-table tr:hover td { background: var(--bg); }
+    .t-table td:first-child { font-weight: 700; color: var(--accent); font-family: inherit; }
+    .t-table td:last-child { font-family: inherit; color: var(--text-secondary); }
+
+    /* Astuce */
+    .astuce {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+    .dark .astuce { background: #2c1503; border-color: #9a3412; }
+    .astuce::before { content: "💡 Astuce : "; font-weight: 700; }
+
+    /* Bits display */
+    .bits-row {
+      display: flex;
+      gap: 2px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+    }
+    .bit-net {
+      background: var(--accent);
+      color: #fff;
+      padding: 4px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .bit-host {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 4px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .dark .bit-host { background: #052e16; color: #86efac; }
+    .bit-sep {
+      padding: 4px 5px;
+      color: var(--text-secondary);
+      font-weight: 700;
+    }
+
+    /* VLSM section */
+    .vlsm-step {
+      border-left: 3px solid var(--accent);
+      padding-left: 16px;
+      margin-bottom: 14px;
+    }
+    .vlsm-step strong { color: var(--accent); }
+
+    @media (max-width: 640px) {
+      .ip-section { padding: 18px; }
+      .t-table { font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">CEJM</a></li>
+        <li><a href="sisr-menu.html" class="active">SISR</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <div class="page-hero">
+      <div class="badge">Réseau</div>
+      <h1>Calcul d'adresses IP</h1>
+      <p>Méthode complète : lire un masque, calculer l'adresse réseau, le broadcast, la plage d'hôtes, et découper en sous-réseaux.</p>
+    </div>
+
+    <!-- ══ 1. RAPPELS DE BASE ══ -->
+    <div class="ip-section">
+      <h2>📌 Rappels essentiels</h2>
+
+      <p style="margin-bottom:14px; font-size:0.9rem; line-height:1.7">Une adresse IP est composée de <strong>4 octets</strong> (32 bits). Elle se note en décimal pointé : <code style="font-size:0.88rem">192.168.1.0</code>. Le masque de sous-réseau définit la partie <span class="highlight">réseau</span> (bits à 1) et la partie <span class="highlight-green">hôte</span> (bits à 0).</p>
+
+      <div style="font-size:0.88rem; font-weight:600; margin-bottom:8px">Exemple — IP : 192.168.1.0 / Masque : /24 = 255.255.255.0</div>
+      <div class="bits-row">
+        <span class="bit-net">11000000</span><span class="bit-sep">.</span>
+        <span class="bit-net">10101000</span><span class="bit-sep">.</span>
+        <span class="bit-net">00000001</span><span class="bit-sep">.</span>
+        <span class="bit-host">00000000</span>
+      </div>
+      <div style="font-size:0.82rem; color:var(--text-secondary); margin-top:4px">
+        <span style="display:inline-block; width:12px; height:12px; background:var(--accent); border-radius:2px; vertical-align:middle; margin-right:4px"></span> Bits réseau (24 bits)
+        &nbsp;&nbsp;
+        <span style="display:inline-block; width:12px; height:12px; background:#d1fae5; border:1px solid #86efac; border-radius:2px; vertical-align:middle; margin-right:4px"></span> Bits hôte (8 bits)
+      </div>
+
+      <div class="formule" style="margin-top:16px">
+        Nombre d'hôtes utilisables = 2<sup>n</sup> − 2
+        &nbsp;&nbsp;&nbsp;(n = nb de bits hôte)
+        <br>
+        − 2 car : adresse réseau (tous bits hôte à 0) + broadcast (tous bits hôte à 1)
+      </div>
+    </div>
+
+    <!-- ══ 2. MÉTHODE 5 ÉTAPES ══ -->
+    <div class="ip-section">
+      <h2>🔢 Méthode en 5 étapes — À partir d'une IP + masque</h2>
+
+      <div style="font-size:0.9rem; line-height:1.8">
+
+        <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:16px">
+          <span class="step-num">1</span>
+          <div>
+            <strong>Identifier le nombre de bits hôte</strong><br>
+            <span style="color:var(--text-secondary)">Masque /24 → 32 − 24 = <strong>8 bits hôte</strong>. Masque /26 → 32 − 26 = <strong>6 bits hôte</strong>.</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:16px">
+          <span class="step-num">2</span>
+          <div>
+            <strong>Calculer l'adresse réseau</strong> (AND bit à bit entre l'IP et le masque)<br>
+            <span style="color:var(--text-secondary)">Méthode rapide : les octets couverts par des 255 restent identiques. L'octet partiel se calcule. Les octets à 0 deviennent 0.</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:16px">
+          <span class="step-num">3</span>
+          <div>
+            <strong>Calculer le broadcast</strong><br>
+            <span style="color:var(--text-secondary)">Reprendre l'adresse réseau, mettre tous les bits hôte à 1 (= remplacer les 0 du masque par des 255 dans l'adresse réseau).</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:16px">
+          <span class="step-num">4</span>
+          <div>
+            <strong>Calculer la plage d'hôtes utilisables</strong><br>
+            <span style="color:var(--text-secondary)">Premier hôte = adresse réseau + 1. Dernier hôte = broadcast − 1.</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span class="step-num">5</span>
+          <div>
+            <strong>Calculer le nombre d'hôtes</strong><br>
+            <span style="color:var(--text-secondary)">2<sup>n</sup> − 2 (n = bits hôte)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Exemple A -->
+      <div class="exemple-box" style="margin-top:20px">
+        <div class="ex-title">Exemple A — IP : 192.168.10.50 / Masque : /24 (255.255.255.0)</div>
+        <code>
+          Bits hôte : 32 − 24 = <span class="highlight">8 bits</span><br>
+          Adresse réseau &nbsp;: 192.168.10.<span class="highlight-green">0</span><br>
+          Broadcast &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 192.168.10.<span class="highlight-red">255</span><br>
+          Premier hôte &nbsp;&nbsp;&nbsp;: 192.168.10.<span class="highlight-green">1</span><br>
+          Dernier hôte &nbsp;&nbsp;&nbsp;: 192.168.10.<span class="highlight-red">254</span><br>
+          Nb d'hôtes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 2<sup>8</sup> − 2 = <span class="highlight">254 hôtes</span>
+        </code>
+      </div>
+
+      <!-- Exemple B -->
+      <div class="exemple-box" style="margin-top:12px">
+        <div class="ex-title">Exemple B — IP : 10.0.5.130 / Masque : /26 (255.255.255.192)</div>
+        <code>
+          Bits hôte : 32 − 26 = <span class="highlight">6 bits</span><br>
+          Masque dernier octet : 11000000 = 192<br>
+          &nbsp;&nbsp;→ Bloc de taille 2<sup>6</sup> = 64. Les blocs sont : 0, 64, <span class="highlight-green">128</span>, 192...<br>
+          &nbsp;&nbsp;→ 130 est dans le bloc qui commence à 128<br>
+          Adresse réseau &nbsp;: 10.0.5.<span class="highlight-green">128</span><br>
+          Broadcast &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 10.0.5.<span class="highlight-red">191</span> (128 + 64 − 1)<br>
+          Premier hôte &nbsp;&nbsp;&nbsp;: 10.0.5.<span class="highlight-green">129</span><br>
+          Dernier hôte &nbsp;&nbsp;&nbsp;: 10.0.5.<span class="highlight-red">190</span><br>
+          Nb d'hôtes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 2<sup>6</sup> − 2 = <span class="highlight">62 hôtes</span>
+        </code>
+      </div>
+
+      <div class="astuce">Pour un /26, la taille du bloc est 64. Pour /27 → 32. Pour /28 → 16. Pour /29 → 8. Pour /30 → 4 (2 hôtes utilisables — lien point à point).</div>
+    </div>
+
+    <!-- ══ 3. CALCUL DE TAILLE DE BLOC ══ -->
+    <div class="ip-section">
+      <h2>⚡ Astuce — Taille de bloc (méthode rapide)</h2>
+      <p style="font-size:0.9rem; margin-bottom:14px">La <strong>taille de bloc</strong> = 256 − valeur du dernier octet du masque.</p>
+      <div class="formule">
+        Masque 255.255.255.0 &nbsp;&nbsp;→ bloc = 256 − 0 = <strong>256</strong> (tout un /24)<br>
+        Masque 255.255.255.128 → bloc = 256 − 128 = <strong>128</strong> (/25)<br>
+        Masque 255.255.255.192 → bloc = 256 − 192 = <strong>64</strong> &nbsp;(/26)<br>
+        Masque 255.255.255.224 → bloc = 256 − 224 = <strong>32</strong> &nbsp;(/27)<br>
+        Masque 255.255.255.240 → bloc = 256 − 240 = <strong>16</strong> &nbsp;(/28)<br>
+        Masque 255.255.255.248 → bloc = 256 − 248 = <strong>8</strong> &nbsp;&nbsp;(/29)<br>
+        Masque 255.255.255.252 → bloc = 256 − 252 = <strong>4</strong> &nbsp;&nbsp;(/30)
+      </div>
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin-top:10px">Ensuite les blocs se succèdent : 0, 64, 128, 192... (pour /26). L'adresse IP appartient au bloc dont le début est le multiple de la taille de bloc immédiatement inférieur ou égal à l'IP.</p>
+    </div>
+
+    <!-- ══ 4. TABLEAU MASQUES ══ -->
+    <div class="ip-section">
+      <h2>📊 Tableau des masques courants</h2>
+      <div style="overflow-x:auto">
+        <table class="t-table">
+          <thead>
+            <tr>
+              <th>CIDR</th>
+              <th>Masque décimal</th>
+              <th>Bits hôte</th>
+              <th>Nb hôtes utiles</th>
+              <th>Taille bloc</th>
+              <th>Usage typique</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>/8</td><td>255.0.0.0</td><td>24</td><td>16 777 214</td><td>—</td><td>Grande entreprise (classe A)</td></tr>
+            <tr><td>/16</td><td>255.255.0.0</td><td>16</td><td>65 534</td><td>—</td><td>Réseau de site</td></tr>
+            <tr><td>/24</td><td>255.255.255.0</td><td>8</td><td>254</td><td>256</td><td>VLAN standard</td></tr>
+            <tr><td>/25</td><td>255.255.255.128</td><td>7</td><td>126</td><td>128</td><td>Découpe /24 en 2</td></tr>
+            <tr><td>/26</td><td>255.255.255.192</td><td>6</td><td>62</td><td>64</td><td>Découpe /24 en 4</td></tr>
+            <tr><td>/27</td><td>255.255.255.224</td><td>5</td><td>30</td><td>32</td><td>Petit VLAN</td></tr>
+            <tr><td>/28</td><td>255.255.255.240</td><td>4</td><td>14</td><td>16</td><td>Très petit réseau</td></tr>
+            <tr><td>/29</td><td>255.255.255.248</td><td>3</td><td>6</td><td>8</td><td>Routeurs, services</td></tr>
+            <tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>2</td><td>4</td><td>Lien point à point</td></tr>
+            <tr><td>/32</td><td>255.255.255.255</td><td>0</td><td>1</td><td>—</td><td>Route hôte unique</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ 5. DÉCOUPAGE EN SOUS-RÉSEAUX ══ -->
+    <div class="ip-section">
+      <h2>✂️ Découper un réseau en sous-réseaux (VLSM)</h2>
+
+      <p style="font-size:0.9rem; line-height:1.7; margin-bottom:14px">Le <strong>VLSM</strong> (Variable Length Subnet Mask) permet de créer des sous-réseaux de tailles différentes depuis un réseau de départ. Méthode :</p>
+
+      <div class="vlsm-step">
+        <strong>Étape 1 — Trier les besoins du plus grand au plus petit</strong><br>
+        <span style="font-size:0.87rem; color:var(--text-secondary)">Toujours allouer d'abord le plus grand sous-réseau pour éviter le gaspillage d'adresses.</span>
+      </div>
+
+      <div class="vlsm-step">
+        <strong>Étape 2 — Trouver le masque adapté à chaque besoin</strong><br>
+        <span style="font-size:0.87rem; color:var(--text-secondary)">Besoin de 50 hôtes → 2<sup>n</sup> ≥ 52 (50+2) → n=6 → /26. Besoin de 10 hôtes → 2<sup>n</sup> ≥ 12 → n=4 → /28.</span>
+      </div>
+
+      <div class="vlsm-step">
+        <strong>Étape 3 — Allouer en séquence à partir de l'adresse de départ</strong><br>
+        <span style="font-size:0.87rem; color:var(--text-secondary)">Chaque sous-réseau commence là où le précédent s'arrête (broadcast + 1).</span>
+      </div>
+
+      <div class="exemple-box" style="margin-top:16px">
+        <div class="ex-title">Exemple VLSM — Réseau de départ : 192.168.1.0/24 — Besoins : 60 hôtes, 28 hôtes, 12 hôtes, lien P2P</div>
+        <code>
+          Sous-réseau 1 : 60 hôtes → /26 (62 utiles)<br>
+          &nbsp;&nbsp;Réseau : 192.168.1.<span class="highlight-green">0</span>/26 — Hôtes : .1 → .62 — Broadcast : .<span class="highlight-red">63</span><br><br>
+          Sous-réseau 2 : 28 hôtes → /27 (30 utiles)<br>
+          &nbsp;&nbsp;Réseau : 192.168.1.<span class="highlight-green">64</span>/27 — Hôtes : .65 → .94 — Broadcast : .<span class="highlight-red">95</span><br><br>
+          Sous-réseau 3 : 12 hôtes → /28 (14 utiles)<br>
+          &nbsp;&nbsp;Réseau : 192.168.1.<span class="highlight-green">96</span>/28 — Hôtes : .97 → .110 — Broadcast : .<span class="highlight-red">111</span><br><br>
+          Lien P2P : 2 hôtes → /30 (2 utiles)<br>
+          &nbsp;&nbsp;Réseau : 192.168.1.<span class="highlight-green">112</span>/30 — Hôtes : .113 → .114 — Broadcast : .<span class="highlight-red">115</span>
+        </code>
+      </div>
+    </div>
+
+    <!-- ══ 6. CONVERSIONS BINAIRE/DÉCIMAL ══ -->
+    <div class="ip-section">
+      <h2>🔄 Conversion rapide — Binaire ↔ Décimal</h2>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:14px">Valeurs des 8 bits d'un octet (de gauche à droite) :</p>
+
+      <div class="formule">
+        Bit 7 : 128 &nbsp;&nbsp; Bit 6 : 64 &nbsp;&nbsp; Bit 5 : 32 &nbsp;&nbsp; Bit 4 : 16<br>
+        Bit 3 : 8 &nbsp;&nbsp;&nbsp;&nbsp; Bit 2 : 4 &nbsp;&nbsp;&nbsp; Bit 1 : 2 &nbsp;&nbsp;&nbsp; Bit 0 : 1
+      </div>
+
+      <div class="exemple-box" style="margin-top:12px">
+        <div class="ex-title">Exemples</div>
+        <code>
+          11111111 = 128+64+32+16+8+4+2+1 = <span class="highlight">255</span> (masque complet)<br>
+          11000000 = 128+64 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = <span class="highlight">192</span> (masque /26)<br>
+          11100000 = 128+64+32 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = <span class="highlight">224</span> (masque /27)<br>
+          10000010 = 128+2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = <span class="highlight">130</span> (adresse hôte)
+        </code>
+      </div>
+
+      <div class="astuce">Pour convertir un décimal en binaire : diviser par 2 et noter les restes de bas en haut. Ou : soustraire les puissances de 2 (128, 64, 32…) dans l'ordre, mettre 1 si possible, 0 sinon.</div>
+    </div>
+
+    <!-- ══ 7. RÉCAP FICHE ══ -->
+    <div class="ip-section" style="background: var(--accent); color:#fff; border-color: var(--accent)">
+      <h2 style="color:#fff">📌 Récap à mémoriser</h2>
+      <div style="font-size:0.9rem; line-height:2; font-family:'Courier New', monospace;">
+        Adresse réseau &nbsp;&nbsp; = IP AND Masque<br>
+        Broadcast &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = Réseau + (taille bloc − 1)<br>
+        Premier hôte &nbsp;&nbsp;&nbsp;&nbsp; = Réseau + 1<br>
+        Dernier hôte &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = Broadcast − 1<br>
+        Nb hôtes utiles &nbsp;&nbsp; = 2<sup>n</sup> − 2 &nbsp;(n = bits hôte)<br>
+        Taille de bloc &nbsp;&nbsp;&nbsp; = 256 − dernier octet du masque<br>
+        Nb de sous-réseaux = 2<sup>s</sup> &nbsp;&nbsp;&nbsp;(s = bits empruntés)
+      </div>
+    </div>
+
+  </main>
+
+  <footer style="text-align:center; padding: 40px 20px; font-size:0.83rem; color:var(--text-secondary); border-top: 1px solid var(--border-light); margin-top: 48px;">
+    BTS SIO SISR — Calcul d'adresses IP
+  </footer>
+
+</body>
+</html>
