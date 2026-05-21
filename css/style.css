@@ -102,6 +102,67 @@ body {
 .nav-links a.active { color: #fff; background: var(--accent); }
 
 /* ——————————————————————————————————————
+   DROPDOWN NAV
+—————————————————————————————————————— */
+.nav-dropdown { position: relative; list-style: none; }
+
+.nav-dropdown > a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.nav-dropdown > a .dd-arrow {
+  font-size: 0.6rem;
+  opacity: 0.6;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.nav-dropdown:hover > a .dd-arrow { transform: rotate(180deg); }
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  min-width: 180px;
+  padding: 8px;
+  z-index: 500;
+  list-style: none;
+}
+
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown:focus-within .dropdown-menu { display: block; }
+
+.dropdown-menu li a {
+  display: block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.dropdown-menu li a:hover { background: var(--bg); color: var(--text); }
+.dropdown-menu li a.active { color: var(--accent); font-weight: 600; }
+
+.dropdown-menu .dd-separator {
+  height: 1px;
+  background: var(--border-light);
+  margin: 6px 0;
+}
+
+/* ——————————————————————————————————————
    LAYOUT
 —————————————————————————————————————— */
 .page { max-width: 1120px; margin: 0 auto; padding: 0 24px 80px; }

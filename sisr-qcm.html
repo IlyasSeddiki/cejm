@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QCM SISR — Révision Cybersécurité</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .qcm-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 24px 0 32px;
+    }
+    .qcm-filter-btn {
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+    .qcm-filter-btn:hover, .qcm-filter-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .qcm-progress {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .progress-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: var(--border-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .progress-text {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .score-display {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .qcm-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-xs);
+      transition: border-color 0.2s;
+    }
+    .qcm-card.correct { border-color: var(--green); background: #f0faf0; }
+    .qcm-card.wrong { border-color: var(--red); background: #fff5f5; }
+
+    .qcm-theme-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 9px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .qcm-theme-tag.vlan { color: #0071e3; background: #e8f0ff; }
+    .qcm-theme-tag.firewall { color: #ff6b00; background: #fff3e0; }
+    .qcm-theme-tag.raid { color: #6a35c2; background: #f3eaff; }
+    .qcm-theme-tag.attaque { color: #cc0000; background: #ffe8e8; }
+    .qcm-theme-tag.itil { color: #008060; background: #e0f7f0; }
+    .qcm-theme-tag.chiffrement { color: #005099; background: #e0eeff; }
+    .qcm-theme-tag.wifi { color: #b35c00; background: #fff0d9; }
+    .qcm-theme-tag.supervision { color: #5c3d9e; background: #ede8ff; }
+    .qcm-theme-tag.ebios { color: #c07000; background: #fff6e0; }
+    .qcm-theme-tag.ad { color: #1a6b3a; background: #e6f7ed; }
+    .qcm-theme-tag.ids { color: #7a2c00; background: #ffe8d6; }
+    .qcm-theme-tag.rgpd { color: #3a3a9e; background: #ebebff; }
+
+    .qcm-question {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .qcm-choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    @media (max-width: 600px) { .qcm-choices { grid-template-columns: 1fr; } }
+
+    .qcm-choice {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: all 0.15s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .qcm-choice:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+    .qcm-choice.selected-correct { border-color: var(--green); background: #dcf5e4; color: #1a6b3a; font-weight: 600; }
+    .qcm-choice.selected-wrong { border-color: var(--red); background: #ffe0e0; color: #cc0000; font-weight: 600; }
+    .qcm-choice.show-correct { border-color: var(--green); background: #dcf5e4; }
+    .qcm-choice:disabled { cursor: default; }
+
+    .choice-letter {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--border-light);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .selected-correct .choice-letter { background: var(--green); color: #fff; }
+    .selected-wrong .choice-letter { background: var(--red); color: #fff; }
+    .show-correct .choice-letter { background: var(--green); color: #fff; }
+
+    .qcm-explication {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .qcm-explication.visible { display: block; }
+    .qcm-explication strong { color: var(--text); }
+
+    .qcm-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    #resetBtn {
+      display: none;
+      margin: 20px auto 0;
+      padding: 12px 28px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #resetBtn:hover { opacity: 0.88; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">CEJM <span>SISR</span></a>
+      <ul class="nav-links">
+        <li class="nav-dropdown">
+          <a href="index.html">CEJM <span class="dd-arrow">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="annee1.html">1ère Année</a></li>
+            <li><a href="annee2.html">2ème Année</a></li>
+            <div class="dd-separator"></div>
+            <li><a href="syllogisme.html">Méthode Syllogisme</a></li>
+            <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+            <li><a href="fiches.html">Fiches</a></li>
+            <li><a href="aide-examen.html">Aide Examen</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <a href="sisr.html">SISR <span class="dd-arrow">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="sisr.html">Révision</a></li>
+            <li><a href="sujets.html">Sujets & Corrections</a></li>
+            <div class="dd-separator"></div>
+            <li><a href="sisr-qcm.html" class="active">QCM</a></li>
+            <li><a href="sisr-methode.html">Méthode</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re An</a>
+    <a href="sisr.html">SISR</a>
+    <a href="sisr-qcm.html" class="active">QCM</a>
+    <a href="sisr-methode.html">Méthode</a>
+    <a href="sujets.html">Sujets</a>
+  </nav>
+
+  <main class="page">
+
+    <div class="page-hero">
+      <div class="badge">Révision interactive</div>
+      <h1>QCM — Cybersécurité SISR</h1>
+      <p>Questions à choix multiples couvrant tous les thèmes de l'U6/U7. Clique sur une réponse pour voir l'explication.</p>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="qcm-filters">
+      <button class="qcm-filter-btn active" data-theme="all">Tous</button>
+      <button class="qcm-filter-btn" data-theme="vlan">VLAN</button>
+      <button class="qcm-filter-btn" data-theme="firewall">Pare-feu</button>
+      <button class="qcm-filter-btn" data-theme="raid">RAID</button>
+      <button class="qcm-filter-btn" data-theme="attaque">Attaques</button>
+      <button class="qcm-filter-btn" data-theme="itil">ITIL</button>
+      <button class="qcm-filter-btn" data-theme="chiffrement">Chiffrement</button>
+      <button class="qcm-filter-btn" data-theme="wifi">WiFi</button>
+      <button class="qcm-filter-btn" data-theme="supervision">Supervision</button>
+      <button class="qcm-filter-btn" data-theme="ebios">EBIOS</button>
+      <button class="qcm-filter-btn" data-theme="ad">Active Directory</button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="qcm-progress">
+      <span class="progress-text" id="progressText">0 / 0 répondues</span>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+      <span class="score-display" id="scoreDisplay">Score : 0%</span>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div id="qcmContainer">
+
+      <!-- ===== VLAN ===== -->
+      <div class="qcm-card" data-theme="vlan">
+        <div class="qcm-num">Q1</div>
+        <span class="qcm-theme-tag vlan">VLAN</span>
+        <div class="qcm-question">Qu'est-ce qu'un port en mode ACCESS sur un commutateur ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un port qui transporte plusieurs VLANs simultanément</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un port rattaché à un seul VLAN, pour les postes utilisateurs</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un port réservé aux connexions entre commutateurs</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un port sans VLAN assigné</button>
+        </div>
+        <div class="qcm-explication">Un port <strong>Access</strong> appartient à un seul VLAN et connecte les équipements terminaux (PC, imprimante). Les trames y circulent sans tag VLAN. À l'opposé, un port <strong>Trunk</strong> transporte plusieurs VLANs taggés — utilisé entre commutateurs ou vers un routeur.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="vlan">
+        <div class="qcm-num">Q2</div>
+        <span class="qcm-theme-tag vlan">VLAN</span>
+        <div class="qcm-question">Pourquoi segmente-t-on un réseau en VLANs ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Pour augmenter la vitesse de connexion des utilisateurs</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> Pour réduire le nombre de commutateurs nécessaires</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> Pour isoler les flux et limiter la propagation des attaques</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Pour augmenter la bande passante totale du réseau</button>
+        </div>
+        <div class="qcm-explication">La segmentation en VLANs sert à <strong>isoler les services</strong> (serveurs, DMZ, utilisateurs, invités, IoT). Si un équipement est compromis, l'attaque reste confinée dans son VLAN et ne peut pas se propager aux autres sans passer par le pare-feu.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="vlan">
+        <div class="qcm-num">Q3</div>
+        <span class="qcm-theme-tag vlan">VLAN</span>
+        <div class="qcm-question">Qu'est-ce qu'un port TRUNK ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un port bloqué pour des raisons de sécurité</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un port qui transporte plusieurs VLANs avec des trames taggées</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un port réservé aux connexions Internet WAN</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un port configuré pour un seul utilisateur</button>
+        </div>
+        <div class="qcm-explication">Un port <strong>Trunk</strong> transporte plusieurs VLANs simultanément grâce au protocole <strong>802.1Q</strong> qui ajoute un tag (identifiant du VLAN) dans chaque trame. On l'utilise entre deux commutateurs ou entre un commutateur et un routeur (router-on-a-stick).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="vlan">
+        <div class="qcm-num">Q4</div>
+        <span class="qcm-theme-tag vlan">VLAN</span>
+        <div class="qcm-question">Qu'est-ce que l'inter-VLAN routing ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> La suppression des VLANs inutilisés</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> Le fait de changer le numéro d'un VLAN</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> La communication entre différents VLANs via un équipement de niveau 3</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> La duplication du trafic d'un VLAN vers un autre</button>
+        </div>
+        <div class="qcm-explication">Les VLANs sont isolés par défaut. Pour qu'ils communiquent, il faut un <strong>routeur ou un commutateur de niveau 3</strong>. Ce trafic inter-VLAN passe par le pare-feu, ce qui permet de le filtrer et de le contrôler.</div>
+      </div>
+
+      <!-- ===== PARE-FEU ===== -->
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q5</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Qu'est-ce que le NAT (Network Address Translation) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un protocole de chiffrement des communications réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> La traduction d'adresses IP privées en adresses IP publiques</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un système de détection d'intrusions</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un protocole de routage entre VLANs</button>
+        </div>
+        <div class="qcm-explication">Le <strong>NAT</strong> traduit les adresses IP privées (192.168.x.x) en adresse IP publique pour sortir sur Internet. Il masque la topologie interne du réseau, ce qui est un avantage de sécurité. Le <strong>PAT/Port Forwarding</strong> redirige un port public vers un serveur interne spécifique.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q6</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Qu'est-ce qu'une DMZ (zone démilitarisée) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Une zone réseau totalement isolée d'Internet</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> Un VLAN réservé aux administrateurs réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> Un réseau intermédiaire entre Internet et le LAN interne pour les serveurs accessibles depuis l'extérieur</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un segment réseau sans pare-feu</button>
+        </div>
+        <div class="qcm-explication">La <strong>DMZ</strong> héberge les serveurs accessibles depuis Internet (serveur web, mail, FTP). Elle est séparée du LAN interne par un pare-feu. Si un serveur DMZ est compromis, l'attaquant n'a pas directement accès au réseau interne.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q7</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Quelle est la politique de sécurité recommandée pour un pare-feu ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Tout autoriser par défaut, bloquer ce qui est dangereux</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Tout bloquer par défaut, autoriser uniquement ce qui est nécessaire</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Bloquer uniquement les ports inférieurs à 1024</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Autoriser tout le trafic interne et bloquer l'externe</button>
+        </div>
+        <div class="qcm-explication">La politique <strong>"tout refuser par défaut"</strong> (liste blanche) est la règle d'or. On n'autorise que les flux explicitement identifiés comme nécessaires. C'est l'opposé de la liste noire qui ne bloque que ce qui est connu comme dangereux.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q8</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Dans une règle de pare-feu, que signifie une règle "DENY any any" en dernière position ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Elle autorise tout le trafic non correspondant aux règles précédentes</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Elle bloque tout le trafic qui n'a pas été explicitement autorisé</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Elle supprime toutes les règles précédentes</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Elle s'applique uniquement au trafic entrant</button>
+        </div>
+        <div class="qcm-explication">La règle <strong>DENY any any</strong> en dernière position est la règle implicite de rejet. Elle garantit que tout trafic non autorisé par les règles précédentes est bloqué. C'est l'implémentation de la politique "tout refuser par défaut".</div>
+      </div>
+
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q9</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Qu'est-ce qu'un UTM (Unified Threat Management) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un protocole de supervision réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un pare-feu nouvelle génération intégrant antivirus, IPS, filtrage URL et inspection SSL</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un système de sauvegarde automatique</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un outil d'analyse de logs</button>
+        </div>
+        <div class="qcm-explication">Un <strong>UTM (ou NGFW - Next Generation Firewall)</strong> combine dans un seul équipement : pare-feu classique, IDS/IPS, antivirus, filtrage de contenu web, inspection SSL, et VPN. Il offre une protection multicouche en un seul dispositif.</div>
+      </div>
+
+      <!-- ===== RAID ===== -->
+      <div class="qcm-card" data-theme="raid">
+        <div class="qcm-num">Q10</div>
+        <span class="qcm-theme-tag raid">RAID</span>
+        <div class="qcm-question">Quel niveau de RAID offre de la redondance mais aucune amélioration des performances en lecture ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> RAID 0</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> RAID 1</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> RAID 5</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> RAID 10</button>
+        </div>
+        <div class="qcm-explication">Le <strong>RAID 1</strong> (mirroring) duplique exactement les données sur 2 disques. Il tolère la panne d'un disque mais utilise 50% de l'espace total. Il améliore légèrement les lectures mais pas les écritures. Minimum 2 disques.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="raid">
+        <div class="qcm-num">Q11</div>
+        <span class="qcm-theme-tag raid">RAID</span>
+        <div class="qcm-question">Quel niveau de RAID n'offre aucune tolérance aux pannes mais maximise les performances ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">A</span> RAID 0</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> RAID 1</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> RAID 5</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> RAID 6</button>
+        </div>
+        <div class="qcm-explication">Le <strong>RAID 0</strong> (striping) répartit les données sur plusieurs disques pour maximiser les performances. Si un seul disque tombe en panne, <strong>toutes les données sont perdues</strong>. Il est utilisé pour les performances uniquement, jamais pour des données critiques.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="raid">
+        <div class="qcm-num">Q12</div>
+        <span class="qcm-theme-tag raid">RAID</span>
+        <div class="qcm-question">Le RAID remplace-t-il une solution de sauvegarde (backup) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Oui, le RAID 5 assure une protection totale des données</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> Oui, si on utilise RAID 6 ou RAID 10</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> Non, le RAID protège contre la panne matérielle mais pas contre la perte logique</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Oui, mais uniquement pour les serveurs critiques</button>
+        </div>
+        <div class="qcm-explication">Le <strong>RAID ne remplace pas un backup</strong>. Si des données sont corrompues, chiffrées par un ransomware ou supprimées accidentellement, le RAID subit la même modification simultanément sur tous ses disques. Il faut des sauvegardes externes et hors ligne en complément.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="raid">
+        <div class="qcm-num">Q13</div>
+        <span class="qcm-theme-tag raid">RAID</span>
+        <div class="qcm-question">Combien de disques peut perdre simultanément un RAID 6 sans perte de données ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> 1 disque</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> 2 disques</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> 3 disques</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Aucun</button>
+        </div>
+        <div class="qcm-explication">Le <strong>RAID 6</strong> utilise une <strong>double parité</strong> (deux blocs de parité répartis). Il peut supporter la perte simultanée de 2 disques sans perte de données. Il nécessite au minimum 4 disques. C'est plus robuste que le RAID 5 (1 disque max).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="raid">
+        <div class="qcm-num">Q14</div>
+        <span class="qcm-theme-tag raid">RAID</span>
+        <div class="qcm-question">Qu'est-ce que le RAID 10 ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un RAID avec 10 disques obligatoires</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Une combinaison de RAID 1 (mirroring) et RAID 0 (striping)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un RAID avec 10 blocs de parité</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> La 10ème version du protocole RAID</button>
+        </div>
+        <div class="qcm-explication">Le <strong>RAID 10</strong> combine le RAID 1 (miroir) et le RAID 0 (striping). Il offre à la fois <strong>hautes performances et redondance</strong>. Chaque paire de disques est en miroir, et les paires sont en striping. Nécessite 4 disques minimum. C'est le niveau recommandé pour les bases de données critiques.</div>
+      </div>
+
+      <!-- ===== ATTAQUES ===== -->
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q15</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce qu'une attaque par ransomware ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un vol de données sans chiffrement</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un logiciel malveillant qui chiffre les fichiers et exige une rançon pour les déchiffrer</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Une attaque par déni de service qui sature le réseau</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un programme espion qui enregistre les frappes clavier</button>
+        </div>
+        <div class="qcm-explication">Un <strong>ransomware</strong> chiffre les fichiers de la victime et demande une rançon (souvent en cryptomonnaie) pour fournir la clé de déchiffrement. Les vecteurs d'entrée principaux : phishing, vulnérabilité non corrigée, RDP exposé. Contre-mesures : sauvegardes hors ligne, segmentation réseau, MàJ régulières.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q16</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce qu'une attaque par force brute ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Une attaque physique sur les serveurs</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> L'essai systématique de toutes les combinaisons de mots de passe possibles</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'envoi massif d'emails frauduleux</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> La falsification des tables ARP</button>
+        </div>
+        <div class="qcm-explication">La <strong>force brute</strong> consiste à tester automatiquement un maximum de mots de passe jusqu'à trouver le bon. Contre-mesures : <strong>Fail2Ban</strong> (bloque les IP après X tentatives), limitation du nombre de tentatives, MFA, mots de passe longs et complexes.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q17</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce que le MAC flooding ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> L'envoi massif d'emails avec des adresses MAC falsifiées</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> La saturation de la table MAC d'un commutateur pour le forcer à diffuser tout le trafic</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> La modification des adresses MAC des cartes réseau</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> L'inondation d'un serveur avec des requêtes ICMP</button>
+        </div>
+        <div class="qcm-explication">Le <strong>MAC flooding</strong> envoie des milliers de trames avec des adresses MAC aléatoires pour saturer la table CAM du commutateur. Quand la table est pleine, le switch envoie toutes les trames sur tous les ports (comportement de hub), permettant l'interception du trafic. Contre-mesure : <strong>Port Security</strong>.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q18</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce que l'ARP Spoofing ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> La création de faux points d'accès WiFi</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> L'envoi de réponses ARP falsifiées pour associer une IP à une fausse adresse MAC</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'usurpation d'un nom de domaine DNS</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> L'interception des requêtes HTTP</button>
+        </div>
+        <div class="qcm-explication">L'<strong>ARP Spoofing</strong> consiste à envoyer des réponses ARP falsifiées pour associer l'adresse IP d'une victime à la MAC de l'attaquant. Cela permet une attaque <strong>Man in the Middle</strong> (interception du trafic). Contre-mesure : DAI (Dynamic ARP Inspection) sur les commutateurs.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q19</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Quel outil peut automatiquement bloquer une IP après plusieurs tentatives de connexion échouées ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Wireshark</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> Snort</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> Fail2Ban</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Nmap</button>
+        </div>
+        <div class="qcm-explication"><strong>Fail2Ban</strong> surveille les journaux système et bloque automatiquement les adresses IP qui tentent trop souvent de s'authentifier (force brute). Il crée des règles iptables temporaires pour bannir l'IP pendant une durée configurable.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q20</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce qu'un Man in the Middle (MitM) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un attaquant qui prend le contrôle physique d'un serveur</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un attaquant qui s'intercale entre deux parties pour intercepter ou modifier les communications</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un logiciel malveillant qui chiffre les fichiers</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Une attaque par déni de service distribué</button>
+        </div>
+        <div class="qcm-explication">Dans une attaque <strong>MitM</strong>, l'attaquant se positionne entre la victime et sa destination. Il peut lire, modifier ou injecter des données dans les communications. Souvent réalisée via ARP Spoofing ou rogue WiFi. Contre-mesure principale : <strong>chiffrement TLS</strong>.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q21</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Quel est le principal vecteur d'entrée d'un ransomware dans une organisation ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">A</span> Email de phishing avec pièce jointe malveillante</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> Connexion physique à un serveur</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Attaque DDOS sur le pare-feu</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Interception des trames réseau</button>
+        </div>
+        <div class="qcm-explication">Le <strong>phishing</strong> est le vecteur d'entrée numéro 1 des ransomwares (environ 90% des attaques). Un email piégé avec une pièce jointe malveillante ou un lien vers un site frauduleux suffit. La sensibilisation des utilisateurs est donc aussi importante que les solutions techniques.</div>
+      </div>
+
+      <!-- ===== ITIL ===== -->
+      <div class="qcm-card" data-theme="itil">
+        <div class="qcm-num">Q22</div>
+        <span class="qcm-theme-tag itil">ITIL</span>
+        <div class="qcm-question">Quelle priorité ITIL correspond à un incident critique touchant tous les utilisateurs ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">A</span> P1 — Critique</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> P2 — Élevée</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> P3 — Normale</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> P4 — Faible</button>
+        </div>
+        <div class="qcm-explication"><strong>P1 (Critique)</strong> : impact majeur sur l'activité, tous les utilisateurs ou services critiques sont touchés, résolution immédiate requise. <strong>P2 (Élevée)</strong> : impact important mais partiel. <strong>P3 (Normale)</strong> : impact limité, quelques utilisateurs touchés.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="itil">
+        <div class="qcm-num">Q23</div>
+        <span class="qcm-theme-tag itil">ITIL</span>
+        <div class="qcm-question">Un réseau d'une clinique est totalement inaccessible. Initialement classé P2, cela doit-il évoluer ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Non, la classification initiale est définitive</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Oui, si l'impact s'étend à tous les services, on escalade vers P1</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Non, on réouvre un nouveau ticket P1</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Oui, mais uniquement si le directeur l'autorise</button>
+        </div>
+        <div class="qcm-explication">La priorité ITIL est <strong>réévaluée en temps réel</strong> selon l'évolution de la situation. Si un incident P2 s'aggrave et touche tous les utilisateurs, il faut <strong>escalader vers P1</strong>. C'est exactement ce type de question qui tombe à l'exam (cas BLANCA 2025).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="itil">
+        <div class="qcm-num">Q24</div>
+        <span class="qcm-theme-tag itil">ITIL</span>
+        <div class="qcm-question">Que contient une fiche d'incident ITIL ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Uniquement la description technique de la panne</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Date, description, impact, priorité, actions correctives et personnes impliquées</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Seulement les coordonnées de l'utilisateur affecté</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Uniquement le coût de la résolution</button>
+        </div>
+        <div class="qcm-explication">Une fiche d'incident ITIL documente : <strong>date/heure</strong>, nature et description de l'incident, services impactés, niveau de priorité, actions correctives mises en place, personnes impliquées, et statut de résolution. Cette traçabilité est essentielle pour l'analyse post-incident.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="itil">
+        <div class="qcm-num">Q25</div>
+        <span class="qcm-theme-tag itil">ITIL</span>
+        <div class="qcm-question">Quelle est la différence entre un incident et un problème selon ITIL ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Il n'y a aucune différence</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un incident est une interruption, un problème est la cause racine à identifier</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un problème est plus urgent qu'un incident</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un incident est permanent, un problème est temporaire</button>
+        </div>
+        <div class="qcm-explication">Selon ITIL : un <strong>incident</strong> est toute interruption ou dégradation d'un service (on le résout le plus vite possible). Un <strong>problème</strong> est la cause racine d'un ou plusieurs incidents (on l'analyse pour éviter la récurrence). La gestion des problèmes est proactive.</div>
+      </div>
+
+      <!-- ===== CHIFFREMENT ===== -->
+      <div class="qcm-card" data-theme="chiffrement">
+        <div class="qcm-num">Q26</div>
+        <span class="qcm-theme-tag chiffrement">Chiffrement</span>
+        <div class="qcm-question">Quelle est la différence entre chiffrement symétrique et asymétrique ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le symétrique est plus lent que l'asymétrique</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Le symétrique utilise une seule clé, l'asymétrique utilise une paire clé publique/privée</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'asymétrique chiffre mieux que le symétrique</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le symétrique est utilisé pour les signatures, l'asymétrique pour le stockage</button>
+        </div>
+        <div class="qcm-explication"><strong>Symétrique (AES)</strong> : une seule clé partagée pour chiffrer/déchiffrer → rapide, mais problème de distribution de clé. <strong>Asymétrique (RSA)</strong> : clé publique (chiffre) + clé privée (déchiffre) → lent mais résout le problème de distribution. En pratique, TLS utilise les deux : asymétrique pour l'échange de clé, symétrique pour les données.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="chiffrement">
+        <div class="qcm-num">Q27</div>
+        <span class="qcm-theme-tag chiffrement">Chiffrement</span>
+        <div class="qcm-question">Quel est le rôle d'une Autorité de Certification (AC) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Chiffrer les communications entre deux parties</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Signer et garantir l'authenticité des certificats numériques</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Stocker les mots de passe des utilisateurs</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Distribuer les adresses IP du réseau</button>
+        </div>
+        <div class="qcm-explication">Une <strong>AC (Autorité de Certification)</strong> est un tiers de confiance qui signe numériquement les certificats pour attester qu'une clé publique appartient bien à une entité identifiée. Quand ton navigateur voit le cadenas HTTPS, c'est qu'il fait confiance à l'AC qui a signé le certificat du site.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="chiffrement">
+        <div class="qcm-num">Q28</div>
+        <span class="qcm-theme-tag chiffrement">Chiffrement</span>
+        <div class="qcm-question">Que garantit le protocole TLS ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Uniquement la confidentialité des données</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Confidentialité, intégrité et authentification</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Uniquement l'authentification du serveur</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Disponibilité et intégrité uniquement</button>
+        </div>
+        <div class="qcm-explication"><strong>TLS</strong> garantit les 3 piliers : <strong>Confidentialité</strong> (les données sont chiffrées → personne ne peut lire), <strong>Intégrité</strong> (les données ne peuvent pas être modifiées sans détection), <strong>Authentification</strong> (le certificat prouve l'identité du serveur). C'est ce qu'on appelle les critères CID (Confidentialité, Intégrité, Disponibilité).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="chiffrement">
+        <div class="qcm-num">Q29</div>
+        <span class="qcm-theme-tag chiffrement">Chiffrement</span>
+        <div class="qcm-question">Qu'est-ce que l'inspection SSL (ou TLS Inspection) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> La vérification que les certificats SSL sont valides</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Le déchiffrement du trafic HTTPS par le pare-feu pour analyser son contenu</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'activation du protocole TLS 1.3 sur les serveurs</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> La suppression automatique des certificats expirés</button>
+        </div>
+        <div class="qcm-explication">L'<strong>inspection SSL</strong> permet au pare-feu de déchiffrer le trafic HTTPS, de l'analyser (recherche de malwares, DLP), puis de le re-chiffrer. Pour que ça fonctionne, un <strong>certificat racine de l'entreprise doit être installé</strong> sur tous les postes clients. La CNIL impose d'en informer les employés.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="chiffrement">
+        <div class="qcm-num">Q30</div>
+        <span class="qcm-theme-tag chiffrement">Chiffrement</span>
+        <div class="qcm-question">À quoi sert une signature électronique ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> À chiffrer le contenu d'un document</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> À garantir l'intégrité et l'authenticité d'un document</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> À compresser les fichiers avant envoi</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> À distribuer les certificats aux utilisateurs</button>
+        </div>
+        <div class="qcm-explication">La <strong>signature électronique</strong> = hachage du document + chiffrement du hash avec la clé privée de l'émetteur. Elle prouve que : 1) le document vient bien de l'expéditeur (authentification), 2) il n'a pas été modifié (intégrité). Elle ne chiffre pas le contenu.</div>
+      </div>
+
+      <!-- ===== WIFI ===== -->
+      <div class="qcm-card" data-theme="wifi">
+        <div class="qcm-num">Q31</div>
+        <span class="qcm-theme-tag wifi">WiFi</span>
+        <div class="qcm-question">Quelle est la différence entre WPA2-Personal et WPA2-Enterprise ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> WPA2-Enterprise est moins sécurisé</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> WPA2-Enterprise utilise un serveur RADIUS pour l'authentification par identifiants</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> WPA2-Personal utilise des certificats, WPA2-Enterprise une clé partagée</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Il n'y a aucune différence de sécurité</button>
+        </div>
+        <div class="qcm-explication"><strong>WPA2-Personal</strong> : clé pré-partagée (PSK) identique pour tous → si quelqu'un quitte l'entreprise, il faut changer la clé partout. <strong>WPA2-Enterprise (802.1X)</strong> : chaque utilisateur s'authentifie avec son propre identifiant/mot de passe via un serveur <strong>RADIUS</strong>. Recommandé pour les entreprises.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="wifi">
+        <div class="qcm-num">Q32</div>
+        <span class="qcm-theme-tag wifi">WiFi</span>
+        <div class="qcm-question">Qu'est-ce qu'un portail captif ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un pare-feu dédié au trafic WiFi</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Une page web d'authentification affichée avant d'accéder au réseau WiFi</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un protocole de chiffrement des communications sans fil</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un filtre MAC automatique</button>
+        </div>
+        <div class="qcm-explication">Un <strong>portail captif</strong> intercepte le trafic d'un utilisateur et le redirige vers une page d'authentification avant de lui donner accès au réseau. C'est la solution typique pour les WiFi invités (hôtels, écoles). Il peut être combiné avec un VLAN dédié aux invités pour les isoler du réseau interne.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="wifi">
+        <div class="qcm-num">Q33</div>
+        <span class="qcm-theme-tag wifi">WiFi</span>
+        <div class="qcm-question">Pourquoi faut-il mettre les WiFi invités dans un VLAN séparé ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Pour améliorer leur débit</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Pour les isoler du réseau interne de l'entreprise</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Pour leur attribuer des adresses IP publiques</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Pour réduire la consommation de la batterie</button>
+        </div>
+        <div class="qcm-explication">Un <strong>VLAN dédié aux invités</strong> les isole totalement du réseau interne (serveurs, postes de travail). Même si un invité a une intention malveillante ou un appareil infecté, il ne peut pas atteindre les ressources internes. Tout son trafic sort directement sur Internet sans passer par le LAN.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="wifi">
+        <div class="qcm-num">Q34</div>
+        <span class="qcm-theme-tag wifi">WiFi</span>
+        <div class="qcm-question">Le masquage du SSID est-il une mesure de sécurité suffisante ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Oui, c'est la mesure la plus efficace</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Non, un attaquant peut facilement détecter un réseau même avec SSID masqué</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Oui, combiné avec WPA2 c'est suffisant</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Non, mais ça empêche les connexions accidentelles</button>
+        </div>
+        <div class="qcm-explication">Masquer le SSID est une <strong>sécurité par l'obscurité</strong> très faible. Les appareils qui s'y connectent diffusent quand même des probe requests visibles avec Wireshark ou aircrack-ng. Ce n'est pas une mesure de sécurité réelle. WPA2/WPA3 + RADIUS est bien plus efficace.</div>
+      </div>
+
+      <!-- ===== SUPERVISION ===== -->
+      <div class="qcm-card" data-theme="supervision">
+        <div class="qcm-num">Q35</div>
+        <span class="qcm-theme-tag supervision">Supervision</span>
+        <div class="qcm-question">Quelle est la différence entre un trap SNMP et une requête SNMP (polling) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le trap est plus lent que le polling</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Le trap est envoyé automatiquement par l'équipement lors d'un événement, le polling interroge régulièrement</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Le polling est plus sécurisé que le trap</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le trap utilise TCP, le polling utilise UDP</button>
+        </div>
+        <div class="qcm-explication"><strong>Polling (actif)</strong> : le serveur de supervision interroge les équipements à intervalle régulier → peut rater un événement entre deux interrogations. <strong>Trap (passif)</strong> : l'équipement envoie une alerte immédiatement quand un événement survient → plus réactif. Pour la détection d'incidents, le trap est préférable.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="supervision">
+        <div class="qcm-num">Q36</div>
+        <span class="qcm-theme-tag supervision">Supervision</span>
+        <div class="qcm-question">Pourquoi préférer SNMP v3 à SNMP v1/v2 ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> SNMP v3 est plus rapide</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> SNMP v3 ajoute l'authentification et le chiffrement des données</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> SNMP v3 supporte plus d'équipements</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> SNMP v1/v2 sont trop récents</button>
+        </div>
+        <div class="qcm-explication">SNMP v1/v2 transmettent les données en clair, y compris les <strong>community strings</strong> (mot de passe) — facilement interceptables. <strong>SNMP v3</strong> ajoute l'<strong>authentification</strong> (vérification de l'identité) et le <strong>chiffrement</strong> (confidentialité des échanges). C'est la seule version recommandée en production.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="supervision">
+        <div class="qcm-num">Q37</div>
+        <span class="qcm-theme-tag supervision">Supervision</span>
+        <div class="qcm-question">Qu'est-ce qu'un SIEM ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un outil de sauvegarde des serveurs</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un système centralisant et corrélant les logs de plusieurs sources pour détecter des incidents</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un protocole de supervision réseau</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un antivirus de nouvelle génération</button>
+        </div>
+        <div class="qcm-explication">Un <strong>SIEM (Security Information and Event Management)</strong> collecte les logs de tous les équipements (pare-feu, AD, serveurs...), les corrèle pour détecter des comportements suspects, et génère des alertes. Exemple : détecter 50 tentatives de connexion échouées depuis une même IP sur 10 serveurs différents.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="supervision">
+        <div class="qcm-num">Q38</div>
+        <span class="qcm-theme-tag supervision">Supervision</span>
+        <div class="qcm-question">Qu'est-ce que le WEF (Windows Event Forwarding) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un service de redirection des emails Windows</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un mécanisme centralisant les journaux d'événements Windows de plusieurs machines vers un collecteur</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un protocole de synchronisation de l'heure Windows</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un outil de déploiement de mises à jour</button>
+        </div>
+        <div class="qcm-explication">Le <strong>WEF</strong> permet de centraliser les journaux d'événements Windows (connexions, erreurs, modifications GPO...) depuis plusieurs machines vers un serveur collecteur. Avantage : analyse centralisée, détection d'incidents multi-postes. Limite : ne collecte que les événements Windows (pas Linux, pas réseau).</div>
+      </div>
+
+      <!-- ===== EBIOS ===== -->
+      <div class="qcm-card" data-theme="ebios">
+        <div class="qcm-num">Q39</div>
+        <span class="qcm-theme-tag ebios">EBIOS</span>
+        <div class="qcm-question">Dans EBIOS RM, que représente la "gravité" d'un risque ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> La probabilité que l'événement se produise</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> L'impact sur l'organisation si l'événement se réalise</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Le coût de la contre-mesure</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le nombre de personnes concernées</button>
+        </div>
+        <div class="qcm-explication">La <strong>gravité</strong> mesure l'<strong>impact</strong> si l'événement se produit (de 1 Mineur à 4 Critique). La <strong>vraisemblance</strong> mesure la <strong>probabilité</strong> d'occurrence (de 1 Minimal à 4 Maximal). Le niveau de risque combine les deux. Moyen mémo : <strong>G</strong>ravité = <strong>G</strong>rosses conséquences.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ebios">
+        <div class="qcm-num">Q40</div>
+        <span class="qcm-theme-tag ebios">EBIOS</span>
+        <div class="qcm-question">Qu'est-ce qu'un "événement redouté" dans EBIOS RM ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un incident déjà survenu qu'on veut éviter à l'avenir</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un scénario négatif qu'on cherche à prévenir (ex : vol de données, indisponibilité)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Une liste de règles de pare-feu à appliquer</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le nom de l'attaquant potentiel</button>
+        </div>
+        <div class="qcm-explication">Un <strong>événement redouté</strong> est un scénario hypothétique qu'on veut éviter. Exemples : "vol de données clients", "indisponibilité du système de production", "destruction des sauvegardes". À chaque événement redouté, on associe une gravité et on identifie des mesures de sécurité.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ebios">
+        <div class="qcm-num">Q41</div>
+        <span class="qcm-theme-tag ebios">EBIOS</span>
+        <div class="qcm-question">Comment réduire la vraisemblance d'une attaque par ransomware ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> En augmentant la capacité des serveurs</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Filtrage des emails, MàJ régulières, sensibilisation, segmentation réseau</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> En sauvegardant les données plus fréquemment</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> En achetant une cyberassurance</button>
+        </div>
+        <div class="qcm-explication">Pour réduire la <strong>vraisemblance</strong> (probabilité), on agit sur les <strong>vecteurs d'entrée</strong> : filtrage antispam, MàJ des systèmes (patch des vulnérabilités), sensibilisation anti-phishing, segmentation VLAN. Les sauvegardes réduisent la <strong>gravité</strong> (impact) mais pas la vraisemblance.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ebios">
+        <div class="qcm-num">Q42</div>
+        <span class="qcm-theme-tag ebios">EBIOS</span>
+        <div class="qcm-question">Que signifie EBIOS RM ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Evaluation des Bases Informatiques Organisationnelles des Systèmes — Risk Management</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Expression des Besoins et Identification des Objectifs de Sécurité — Risk Manager</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Evaluation des Besoins Informatiques et des Objectifs Sécurité — Réseau et Management</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Espace de Base d'Identification des Objectifs de Sécurité — Risk Model</button>
+        </div>
+        <div class="qcm-explication"><strong>EBIOS RM</strong> = Expression des Besoins et Identification des Objectifs de Sécurité — Risk Manager. C'est la méthode française d'analyse de risques publiée par l'<strong>ANSSI</strong> (Agence Nationale de la Sécurité des Systèmes d'Information). Elle est la référence nationale en gestion des risques cyber.</div>
+      </div>
+
+      <!-- ===== ACTIVE DIRECTORY ===== -->
+      <div class="qcm-card" data-theme="ad">
+        <div class="qcm-num">Q43</div>
+        <span class="qcm-theme-tag ad">Active Directory</span>
+        <div class="qcm-question">Qu'est-ce qu'une GPO (Group Policy Object) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un compte utilisateur avec des droits administrateurs</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un ensemble de règles appliquées automatiquement aux utilisateurs et machines du domaine</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un protocole de synchronisation de l'AD</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un outil d'audit des mots de passe</button>
+        </div>
+        <div class="qcm-explication">Une <strong>GPO</strong> permet d'appliquer des configurations centralisées : politique de mots de passe, verrouillage d'écran, restrictions logicielles, pare-feu Windows, scripts de démarrage... Elle s'applique automatiquement à tous les utilisateurs/machines d'une OU (Unité d'Organisation) ou du domaine.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ad">
+        <div class="qcm-num">Q44</div>
+        <span class="qcm-theme-tag ad">Active Directory</span>
+        <div class="qcm-question">Pourquoi les OS obsolètes (Windows XP, 7) dans un domaine AD posent-ils un risque ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Ils consomment trop de ressources réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Ils ne reçoivent plus de mises à jour de sécurité et contiennent des vulnérabilités non corrigées</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Ils ne sont pas compatibles avec les GPO modernes</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Ils ralentissent l'ensemble du réseau</button>
+        </div>
+        <div class="qcm-explication">Les OS obsolètes ne reçoivent plus de <strong>correctifs de sécurité (patches)</strong> de Microsoft. Leurs vulnérabilités connues restent donc exploitables indéfiniment. Un attaquant peut facilement compromettre une machine Windows XP via des exploits publics et l'utiliser comme pivot pour attaquer le reste du réseau.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ad">
+        <div class="qcm-num">Q45</div>
+        <span class="qcm-theme-tag ad">Active Directory</span>
+        <div class="qcm-question">Quel est le danger d'utiliser le même mot de passe sur plusieurs services ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le mot de passe s'oublie plus facilement</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Si un service est compromis, tous les autres comptes utilisant ce mot de passe sont vulnérables</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Le compte AD peut se verrouiller automatiquement</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le chiffrement des données devient impossible</button>
+        </div>
+        <div class="qcm-explication">C'est l'attaque par <strong>credential stuffing</strong> : si ton mot de passe fuite sur un site compromis, les attaquants le testent automatiquement sur des centaines d'autres services (Gmail, LinkedIn, VPN d'entreprise...). Solution : <strong>un mot de passe unique par service</strong> + gestionnaire de mots de passe (Bitwarden, KeePass...).</div>
+      </div>
+
+      <!-- SUPPLÉMENTAIRES -->
+      <div class="qcm-card" data-theme="chiffrement">
+        <div class="qcm-num">Q46</div>
+        <span class="qcm-theme-tag chiffrement">Chiffrement</span>
+        <div class="qcm-question">Qu'indique une erreur de certificat SSL dans un navigateur ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le site est trop lent à charger</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Le certificat est expiré, auto-signé ou l'AC émettrice n'est pas reconnue</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> La connexion n'est pas chiffrée</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le serveur est compromis</button>
+        </div>
+        <div class="qcm-explication">Un message d'erreur certificat peut indiquer : certificat <strong>expiré</strong> (date dépassée), <strong>auto-signé</strong> (pas signé par une AC de confiance), ou AC émettrice <strong>non reconnue</strong> par le navigateur. Dans un contexte d'inspection SSL, c'est souvent que le certificat racine de l'entreprise n'est pas installé sur le poste client.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="vlan">
+        <div class="qcm-num">Q47</div>
+        <span class="qcm-theme-tag vlan">VLAN</span>
+        <div class="qcm-question">Qu'est-ce que le "VLAN natif" sur un port trunk ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le VLAN dédié aux administrateurs réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Le VLAN dont les trames circulent sans tag sur le trunk (VLAN non taggé)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Le premier VLAN créé sur un commutateur</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le VLAN de management du commutateur</button>
+        </div>
+        <div class="qcm-explication">Le <strong>VLAN natif</strong> (par défaut VLAN 1) est le seul VLAN dont les trames traversent un trunk sans tag 802.1Q. Il est conseillé de le changer pour un VLAN inutilisé — laisser VLAN 1 en natif est une vulnérabilité (attaque de VLAN hopping).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q48</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce qu'une attaque DoS (Denial of Service) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> L'interception des communications réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> L'envoi massif de requêtes pour rendre un service indisponible</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'effacement des journaux système</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> L'usurpation d'identité d'un administrateur</button>
+        </div>
+        <div class="qcm-explication">Une attaque <strong>DoS</strong> sature un serveur ou un réseau de requêtes jusqu'à le rendre inaccessible aux utilisateurs légitimes. Quand l'attaque est distribuée depuis des milliers de machines (botnet), on parle de <strong>DDoS</strong>. Contre-mesures : rate limiting, CDN, scrubbing center, blackholing BGP.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="supervision">
+        <div class="qcm-num">Q49</div>
+        <span class="qcm-theme-tag supervision">Supervision</span>
+        <div class="qcm-question">Qu'est-ce que le mode promiscuité d'une interface réseau ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Un mode qui bloque tout le trafic entrant</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un mode qui capture toutes les trames réseau, même celles non destinées à l'interface</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Un mode qui double la vitesse de transmission</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un mode qui filtre les paquets selon leur VLAN</button>
+        </div>
+        <div class="qcm-explication">En mode <strong>promiscuité</strong>, une interface réseau accepte et traite TOUTES les trames qui passent sur le segment, même celles destinées à d'autres machines. C'est nécessaire pour un <strong>IDS (Snort)</strong> ou un analyseur de réseau (Wireshark) pour capturer tout le trafic. Utilisé avec un port miroir (SPAN).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q50</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Quel protocole utilise le port 443 ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> FTP</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> HTTP</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> HTTPS</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> SMTP</button>
+        </div>
+        <div class="qcm-explication">Les ports à connaître absolument : <strong>80 = HTTP</strong>, <strong>443 = HTTPS</strong>, 22 = SSH, 21 = FTP, 25 = SMTP (mail envoi), 110 = POP3, 143 = IMAP, 53 = DNS, 3389 = RDP, 389 = LDAP (AD). Ces ports apparaissent systématiquement dans les tables de règles pare-feu des sujets.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ebios">
+        <div class="qcm-num">Q51</div>
+        <span class="qcm-theme-tag ebios">EBIOS</span>
+        <div class="qcm-question">Un événement redouté a une gravité de 3 et une vraisemblance de 1. Quel est le niveau de risque ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Critique — traiter en priorité</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Modéré — à surveiller mais pas prioritaire</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Nul — à ignorer</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Élevé — traiter rapidement</button>
+        </div>
+        <div class="qcm-explication">Gravité 3 (impact fort) mais vraisemblance 1 (très peu probable) → risque <strong>modéré</strong>. Ce n'est pas prioritaire. Un risque devient critique quand les deux niveaux sont élevés. Par exemple : gravité 4 + vraisemblance 4 = risque critique à traiter immédiatement.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="wifi">
+        <div class="qcm-num">Q52</div>
+        <span class="qcm-theme-tag wifi">WiFi</span>
+        <div class="qcm-question">Qu'est-ce que le standard 802.1X ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le standard de chiffrement WPA3</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Un standard d'authentification pour contrôler l'accès au réseau (filaire ou WiFi)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Le protocole de routage inter-VLAN</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Le standard de supervision SNMP</button>
+        </div>
+        <div class="qcm-explication"><strong>802.1X</strong> est un standard IEEE de contrôle d'accès réseau par port. Il nécessite 3 acteurs : le <strong>supplicant</strong> (client), l'<strong>authenticator</strong> (switch/AP) et le <strong>serveur RADIUS</strong> (authentification). Utilisé en WPA2/WPA3-Enterprise pour forcer l'authentification avant tout accès réseau.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q53</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Quelle contre-mesure empêche le MAC flooding ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Le chiffrement TLS sur les connexions</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> La sécurité des ports (Port Security) sur les commutateurs</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'activation de SNMP v3</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> La mise en place d'un portail captif</button>
+        </div>
+        <div class="qcm-explication">La <strong>sécurité des ports (Port Security)</strong> limite le nombre d'adresses MAC autorisées par port de commutateur. Si une machine inconnue tente de se connecter ou si trop de MACs sont détectées, le port se bloque automatiquement. On peut configurer la réaction : shutdown, restrict ou protect.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ids">
+        <div class="qcm-num">Q54</div>
+        <span class="qcm-theme-tag ids">IDS/IPS</span>
+        <div class="qcm-question">Quelle est la différence entre un IDS et un IPS ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> L'IDS est plus récent que l'IPS</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> L'IDS détecte et alerte (passif), l'IPS détecte et bloque automatiquement (actif)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> L'IPS analyse uniquement le trafic WiFi</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> L'IDS analyse les logs, l'IPS analyse le trafic réseau</button>
+        </div>
+        <div class="qcm-explication"><strong>IDS (Intrusion Detection System)</strong> : surveille passivement et envoie des alertes. Ne bloque rien. Bon pour ne pas perturber le trafic légitime. <strong>IPS (Intrusion Prevention System)</strong> : est dans le flux du trafic, détecte ET bloque en temps réel. Risque de faux positifs qui bloquent du trafic légitime.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="ids">
+        <div class="qcm-num">Q55</div>
+        <span class="qcm-theme-tag ids">IDS/IPS</span>
+        <div class="qcm-question">Quelle est la structure d'une règle Snort ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> protocole source destination (options)</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> action protocole IP_src port → IP_dst port (options)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> IP_src IP_dst protocole action (options)</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> port protocole IP_src IP_dst</button>
+        </div>
+        <div class="qcm-explication">Format d'une règle Snort : <strong>alert tcp any any → 192.168.1.0/24 80 (msg:"HTTP détecté"; sid:1001; rev:1;)</strong>. Décomposé : action (alert/drop/log), protocole (tcp/udp/icmp), IP source + port source, flèche de direction, IP destination + port destination, options entre parenthèses.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="rgpd">
+        <div class="qcm-num">Q56</div>
+        <span class="qcm-theme-tag rgpd">RGPD</span>
+        <div class="qcm-question">Qu'est-ce qu'une donnée personnelle selon le RGPD ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Uniquement le nom et le prénom d'une personne</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Toute information permettant d'identifier directement ou indirectement une personne physique</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Les données financières d'une entreprise</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Les fichiers stockés sur les serveurs d'une entreprise</button>
+        </div>
+        <div class="qcm-explication">Une <strong>donnée personnelle</strong> est toute info permettant d'identifier une personne : nom, prénom, email, numéro de téléphone, adresse IP, cookies, données de localisation, photo... Même une adresse IP est une donnée personnelle car elle peut identifier indirectement une personne.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="rgpd">
+        <div class="qcm-num">Q57</div>
+        <span class="qcm-theme-tag rgpd">RGPD</span>
+        <div class="qcm-question">Qu'est-ce que le principe de minimisation des données selon le RGPD ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Supprimer toutes les données personnelles après 1 an</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Ne collecter que les données strictement nécessaires à la finalité du traitement</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Chiffrer toutes les données personnelles stockées</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Limiter l'accès aux données aux seuls administrateurs</button>
+        </div>
+        <div class="qcm-explication">La <strong>minimisation</strong> est un principe fondamental du RGPD : on ne collecte que ce qui est strictement nécessaire pour l'objectif visé. Par exemple, pour livrer un colis, on a besoin de l'adresse mais pas de la date de naissance. Collecter plus que nécessaire est une violation du RGPD.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="firewall">
+        <div class="qcm-num">Q58</div>
+        <span class="qcm-theme-tag firewall">Pare-feu</span>
+        <div class="qcm-question">Quel port est utilisé par défaut pour le RDP (Remote Desktop Protocol) ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> 22</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">B</span> 443</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">C</span> 3389</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> 8080</button>
+        </div>
+        <div class="qcm-explication">Le port <strong>3389</strong> est le port par défaut de RDP (Bureau à distance Windows). C'est l'un des vecteurs d'entrée les plus ciblés pour les ransomwares et les brute force. Bonne pratique : ne jamais exposer RDP directement sur Internet, utiliser un VPN ou changer le port par défaut.</div>
+      </div>
+
+      <div class="qcm-card" data-theme="attaque">
+        <div class="qcm-num">Q59</div>
+        <span class="qcm-theme-tag attaque">Attaque</span>
+        <div class="qcm-question">Qu'est-ce que le phishing ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Une technique d'analyse du trafic réseau</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Une tentative de fraude via email ou site web frauduleux pour voler des identifiants</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Une attaque qui sature la bande passante</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Un logiciel qui scanne les ports ouverts</button>
+        </div>
+        <div class="qcm-explication">Le <strong>phishing</strong> (hameçonnage) utilise de faux emails ou sites web imitant des services légitimes (banque, Microsoft...) pour tromper l'utilisateur et lui voler ses identifiants ou lui faire exécuter un malware. Contre-mesures : sensibilisation, filtre antispam, MFA (même si le mot de passe est volé, le compte reste protégé).</div>
+      </div>
+
+      <div class="qcm-card" data-theme="vlan">
+        <div class="qcm-num">Q60</div>
+        <span class="qcm-theme-tag vlan">VLAN</span>
+        <div class="qcm-question">Dans quel VLAN place-t-on typiquement les serveurs accessibles depuis Internet ?</div>
+        <div class="qcm-choices">
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">A</span> Dans le VLAN utilisateurs</button>
+          <button class="qcm-choice" data-correct="true"><span class="choice-letter">B</span> Dans le VLAN DMZ</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">C</span> Dans le VLAN management</button>
+          <button class="qcm-choice" data-correct="false"><span class="choice-letter">D</span> Dans le VLAN invités</button>
+        </div>
+        <div class="qcm-explication">Les serveurs accessibles depuis Internet (serveur web, mail, FTP) sont placés dans le <strong>VLAN DMZ</strong>. Cette zone est isolée du LAN interne par le pare-feu. Si un serveur DMZ est compromis, l'attaquant ne peut pas directement accéder aux postes utilisateurs ou aux serveurs internes.</div>
+      </div>
+
+    </div><!-- /qcmContainer -->
+
+    <button id="resetBtn">🔄 Recommencer</button>
+
+  </main>
+
+  <footer class="site-footer">
+    CEJM SISR · BTS Services Informatiques aux Organisations · Lycée René Descartes
+  </footer>
+
+  <button id="scrollTop" title="Retour en haut">↑</button>
+  <script src="js/script.js"></script>
+  <script>
+    // ===== QCM LOGIC =====
+    let answered = 0;
+    let correct = 0;
+    const total = document.querySelectorAll('.qcm-card').length;
+
+    function updateProgress() {
+      const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+      const scorePct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+      document.getElementById('progressText').textContent = `${answered} / ${total} répondues`;
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('scoreDisplay').textContent = `Score : ${scorePct}%`;
+      if (answered === total) document.getElementById('resetBtn').style.display = 'block';
+    }
+
+    document.querySelectorAll('.qcm-card').forEach(card => {
+      const choices = card.querySelectorAll('.qcm-choice');
+      const expl = card.querySelector('.qcm-explication');
+
+      choices.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (card.dataset.done) return;
+          card.dataset.done = '1';
+          answered++;
+
+          const isCorrect = this.dataset.correct === 'true';
+          if (isCorrect) {
+            this.classList.add('selected-correct');
+            card.classList.add('correct');
+            correct++;
+          } else {
+            this.classList.add('selected-wrong');
+            card.classList.add('wrong');
+            // show correct
+            choices.forEach(b => {
+              if (b.dataset.correct === 'true') b.classList.add('show-correct');
+            });
+          }
+
+          choices.forEach(b => b.disabled = true);
+          expl.classList.add('visible');
+          updateProgress();
+        });
+      });
+    });
+
+    // ===== FILTER =====
+    document.querySelectorAll('.qcm-filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.qcm-filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const theme = this.dataset.theme;
+        document.querySelectorAll('.qcm-card').forEach(card => {
+          if (theme === 'all' || card.dataset.theme === theme) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // ===== RESET =====
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      answered = 0; correct = 0;
+      document.querySelectorAll('.qcm-card').forEach(card => {
+        delete card.dataset.done;
+        card.classList.remove('correct', 'wrong');
+        card.querySelectorAll('.qcm-choice').forEach(b => {
+          b.classList.remove('selected-correct', 'selected-wrong', 'show-correct');
+          b.disabled = false;
+        });
+        card.querySelector('.qcm-explication').classList.remove('visible');
+      });
+      updateProgress();
+      this.style.display = 'none';
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>

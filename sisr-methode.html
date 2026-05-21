@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Méthode SISR — Comment répondre aux questions d'examen</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Thème cards ── */
+    .theme-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-xs);
+    }
+    .theme-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .theme-icon {
+      font-size: 1.5rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    .theme-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .theme-freq {
+      margin-left: auto;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--accent);
+      color: #fff;
+    }
+    .theme-freq.high { background: #ef4444; }
+    .theme-freq.med  { background: #f97316; }
+    .theme-freq.low  { background: #6366f1; }
+    .theme-body { display: block; }
+    .theme-body.collapsed { display: none; }
+
+    /* ── Mots-clés déclencheurs ── */
+    .trigger-box {
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.88rem;
+    }
+    .trigger-box strong { color: var(--accent); }
+    .trigger-tag {
+      display: inline-block;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin: 2px 3px;
+    }
+    .dark .trigger-tag { background: #1e3a5f; color: #93c5fd; }
+
+    /* ── Sous-question types ── */
+    .q-type {
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .q-type-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--bg);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .q-type-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: #f0f9ff;
+      color: #0369a1;
+    }
+    .dark .q-type-label { background: #0c2d42; color: #7dd3fc; }
+    .q-type-body {
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .phrase-modele {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 10px;
+      font-style: italic;
+      color: #15803d;
+      font-size: 0.87rem;
+    }
+    .dark .phrase-modele { background: #052e16; border-color: #166534; color: #86efac; }
+    .phrase-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #15803d;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .dark .phrase-label { color: #86efac; }
+
+    /* ── Piège ── */
+    .piege-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.84rem;
+      margin-top: 10px;
+      color: #9a3412;
+    }
+    .dark .piege-box { background: #2c1503; border-color: #9a3412; color: #fed7aa; }
+    .piege-box::before { content: "⚠️ Piège : "; font-weight: 700; }
+
+    /* ── Séparateur section tableau ── */
+    .section-tableaux {
+      margin-top: 48px;
+    }
+    .section-tableaux h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .section-tableaux .sub {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      margin-bottom: 32px;
+    }
+
+    /* ── Tableaux ── */
+    .tableau-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-xs);
+    }
+    .tableau-block h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tableau-block .desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .t-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .t-table th {
+      background: var(--bg);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--border-light);
+      white-space: nowrap;
+    }
+    .t-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .t-table tr:last-child td { border-bottom: none; }
+    .t-table tr:hover td { background: var(--bg); }
+
+    /* EBIOS matrix */
+    .ebios-matrix {
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+    .ebios-matrix th, .ebios-matrix td {
+      border: 1px solid var(--border-light);
+      padding: 10px 16px;
+      font-weight: 600;
+    }
+    .ebios-matrix th { background: var(--bg); }
+    .risk-1 { background: #d1fae5; color: #065f46; }
+    .risk-2 { background: #fef9c3; color: #713f12; }
+    .risk-3 { background: #fed7aa; color: #9a3412; }
+    .risk-4 { background: #fecaca; color: #991b1b; }
+    .dark .risk-1 { background: #052e16; color: #86efac; }
+    .dark .risk-2 { background: #1c1400; color: #fde047; }
+    .dark .risk-3 { background: #2c1503; color: #fed7aa; }
+    .dark .risk-4 { background: #2d0707; color: #fca5a5; }
+
+    /* Badge tags */
+    .badge-green { display: inline-block; background: #d1fae5; color: #065f46; border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; }
+    .badge-red   { display: inline-block; background: #fee2e2; color: #991b1b; border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; }
+    .badge-blue  { display: inline-block; background: #dbeafe; color: #1d4ed8; border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; }
+    .badge-orange{ display: inline-block; background: #ffedd5; color: #9a3412; border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; }
+    .dark .badge-green { background: #052e16; color: #86efac; }
+    .dark .badge-red   { background: #2d0707; color: #fca5a5; }
+    .dark .badge-blue  { background: #0c2d42; color: #7dd3fc; }
+    .dark .badge-orange{ background: #2c1503; color: #fed7aa; }
+
+    /* Quick nav */
+    .quick-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .quick-nav a {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .quick-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Expand all toggle */
+    .expand-all-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 24px;
+    }
+    .expand-all-btn:hover { background: var(--accent); color: #fff; }
+
+    @media (max-width: 640px) {
+      .theme-section { padding: 18px; }
+      .t-table { font-size: 0.78rem; }
+      .t-table th, .t-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-container">
+      <a href="index.html" class="nav-logo">CEJM / SISR</a>
+      <ul class="nav-links">
+        <li class="nav-dropdown">
+          <a href="index.html">CEJM <span class="dd-arrow">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="annee1.html">1ère Année</a></li>
+            <li><a href="annee2.html">2ème Année</a></li>
+            <div class="dd-separator"></div>
+            <li><a href="syllogisme.html">Méthode Syllogisme</a></li>
+            <li><a href="cas-pratiques.html">Cas Pratiques</a></li>
+            <li><a href="fiches.html">Fiches</a></li>
+            <li><a href="aide-examen.html">Aide Examen</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <a href="sisr.html">SISR <span class="dd-arrow">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="sisr.html">Révision</a></li>
+            <li><a href="sujets.html">Sujets & Corrections</a></li>
+            <div class="dd-separator"></div>
+            <li><a href="sisr-qcm.html">QCM</a></li>
+            <li><a href="sisr-methode.html" class="active">Méthode</a></li>
+          </ul>
+        </li>
+      </ul>
+      <button class="theme-toggle" onclick="document.body.classList.toggle('dark')" title="Mode sombre">🌙</button>
+    </nav>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="annee1.html">1re An</a>
+    <a href="sisr.html">SISR</a>
+    <a href="sisr-qcm.html">QCM</a>
+    <a href="sisr-methode.html" class="active">Méthode</a>
+    <a href="sujets.html">Sujets</a>
+  </nav>
+
+  <main class="page">
+
+    <div class="page-hero">
+      <div class="badge">Guide d'examen</div>
+      <h1>Méthode SISR — Comment répondre</h1>
+      <p>Pour chaque thème : comment reconnaître la question, quelle structure utiliser, et les phrases-types à reproduire.</p>
+    </div>
+
+    <!-- Navigation rapide -->
+    <div class="quick-nav">
+      <a href="#vlan">VLAN</a>
+      <a href="#firewall">Pare-feu / NAT</a>
+      <a href="#raid">RAID</a>
+      <a href="#attaques">Attaques</a>
+      <a href="#itil">ITIL</a>
+      <a href="#chiffrement">Chiffrement / PKI</a>
+      <a href="#wifi">WiFi</a>
+      <a href="#supervision">Supervision</a>
+      <a href="#ebios">EBIOS RM</a>
+      <a href="#ad">Active Directory</a>
+      <a href="#ids">IDS / Snort</a>
+      <a href="#rgpd">RGPD</a>
+      <a href="#tableaux">📊 Tableaux</a>
+    </div>
+
+    <button class="expand-all-btn" id="expandAll" onclick="toggleAll()">Tout déplier ▼</button>
+
+    <!-- ══════════════════════ VLAN ══════════════════════ -->
+    <div class="theme-section" id="vlan">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">🔀</div>
+        <div>
+          <div class="theme-title">VLAN — Segmentation réseau</div>
+        </div>
+        <span class="theme-freq high">★★★ Très fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">VLAN</span>
+          <span class="trigger-tag">segmenter</span>
+          <span class="trigger-tag">isoler</span>
+          <span class="trigger-tag">commutateur</span>
+          <span class="trigger-tag">802.1Q</span>
+          <span class="trigger-tag">trunk / access</span>
+          <span class="trigger-tag">plan d'adressage</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Justifier la segmentation en VLANs
+          </div>
+          <div class="q-type-body">
+            <strong>Structure :</strong> Définition → Avantages (3 axes : sécurité, performance, gestion) → Application au cas
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « La segmentation en VLANs permet d'<strong>isoler les flux réseau</strong> par service (administration, production, invités). Cela limite la propagation d'une attaque, réduit le domaine de diffusion et facilite l'application de règles de filtrage ciblées au niveau du pare-feu. »
+            </div>
+            <div class="piege-box">Ne pas confondre VLAN (couche 2) et sous-réseau IP (couche 3). Un VLAN est une séparation logique sur commutateur ; la communication inter-VLAN nécessite un routeur ou pare-feu.</div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Attribuer des VLANs (tableau)
+          </div>
+          <div class="q-type-body">
+            <strong>Structure :</strong> Remplir le tableau avec VLAN ID, Nom, Réseau IP, Plage DHCP, Passerelle
+            <div class="phrase-modele">
+              <span class="phrase-label">Conseil</span>
+              Associer 1 service = 1 VLAN = 1 sous-réseau. Ex : VLAN 10 – Admin – 192.168.10.0/24 – GW 192.168.10.1. Garder VLAN 1 inutilisé (défaut = risque). → <a href="#tab-vlan">Voir tableau modèle ↓</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 3</span>
+            Configurer un port Access / Trunk
+          </div>
+          <div class="q-type-body">
+            <strong>Access</strong> = 1 VLAN, équipement terminal (PC, imprimante)<br>
+            <strong>Trunk</strong> = plusieurs VLANs taggés (802.1Q), entre commutateurs ou vers routeur/pare-feu
+            <div class="phrase-modele">
+              <span class="phrase-label">Commandes Cisco type</span>
+              Access : <code>switchport mode access / switchport access vlan 10</code><br>
+              Trunk : <code>switchport mode trunk / switchport trunk allowed vlan 10,20,30</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ PARE-FEU / NAT ══════════════════════ -->
+    <div class="theme-section" id="firewall">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">🛡️</div>
+        <div>
+          <div class="theme-title">Pare-feu / NAT / Table de filtrage</div>
+        </div>
+        <span class="theme-freq high">★★★ Très fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">pare-feu</span>
+          <span class="trigger-tag">firewall</span>
+          <span class="trigger-tag">NAT</span>
+          <span class="trigger-tag">DMZ</span>
+          <span class="trigger-tag">règle de filtrage</span>
+          <span class="trigger-tag">ACCEPT / DROP</span>
+          <span class="trigger-tag">iptables</span>
+          <span class="trigger-tag">politique de sécurité</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Expliquer le rôle du pare-feu
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le pare-feu contrôle les flux réseau entrants et sortants en appliquant des règles de filtrage basées sur l'adresse IP source/destination, le port et le protocole. Il protège les ressources internes contre les accès non autorisés en appliquant le <strong>principe du moindre privilège</strong> : tout ce qui n'est pas explicitement autorisé est refusé. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Remplir / compléter une table de filtrage
+          </div>
+          <div class="q-type-body">
+            <strong>Colonnes à connaître :</strong> N° | IP Source | IP Destination | Protocole | Port Dest. | Action (ACCEPT/DROP) | Commentaire
+            <br><br>
+            <strong>Méthode de lecture de l'énoncé :</strong>
+            <ol style="margin-top:8px; padding-left:1.2em; line-height:2">
+              <li>Identifier <strong>qui communique avec qui</strong> (source → destination)</li>
+              <li>Identifier <strong>quel service</strong> (port 80=HTTP, 443=HTTPS, 22=SSH, 25=SMTP, 53=DNS, 3389=RDP...)</li>
+              <li>Appliquer le principe <strong>default DENY</strong> en dernière règle</li>
+              <li>Pour le trafic de retour : ajouter une règle RELATED/ESTABLISHED ou stateful</li>
+            </ol>
+            <div class="phrase-modele">
+              <span class="phrase-label">Exemple de règle</span>
+              | 1 | LAN (192.168.1.0/24) | Serveur Web (10.0.1.10) | TCP | 443 | ACCEPT | Accès HTTPS interne<br>
+              | 2 | Internet (0.0.0.0/0) | Serveur Web (10.0.1.10) | TCP | 443 | ACCEPT | Accès HTTPS public<br>
+              | 99 | * | * | * | * | DROP | Règle par défaut
+            </div>
+            <div class="piege-box">La règle par défaut (DEFAULT DENY) doit TOUJOURS être la dernière. Sans elle, tout traffic non listé serait autorisé.</div>
+            <p style="margin-top:10px">→ <a href="#tab-filtrage">Voir tableau modèle complet ↓</a></p>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 3</span>
+            Expliquer le NAT / PAT
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le NAT (Network Address Translation) traduit les adresses IP privées en adresse publique. Le PAT (Port Address Translation) permet à plusieurs machines internes de partager une seule IP publique en différenciant les connexions par le numéro de port source. Cela <strong>masque la topologie interne</strong> et économise les adresses IPv4. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 4</span>
+            Justifier la mise en place d'une DMZ
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « La DMZ (Zone Démilitarisée) est un réseau intermédiaire entre Internet et le LAN interne. Les serveurs accessibles depuis Internet (web, mail, DNS) y sont placés. Ainsi, si un serveur est compromis, l'attaquant ne peut pas accéder directement au réseau interne : il doit franchir un second pare-feu. »
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ RAID ══════════════════════ -->
+    <div class="theme-section" id="raid">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">💾</div>
+        <div>
+          <div class="theme-title">RAID — Tolérance aux pannes stockage</div>
+        </div>
+        <span class="theme-freq med">★★☆ Fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">RAID</span>
+          <span class="trigger-tag">tolérance aux pannes</span>
+          <span class="trigger-tag">disque dur</span>
+          <span class="trigger-tag">sauvegarde</span>
+          <span class="trigger-tag">disponibilité données</span>
+          <span class="trigger-tag">redondance</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Choisir et justifier un niveau RAID
+          </div>
+          <div class="q-type-body">
+            <strong>Structure :</strong> Besoin (performance / tolérance / coût) → Niveau adapté → Justification
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type — Recommandation RAID 5</span>
+              « Pour un serveur de fichiers nécessitant un bon équilibre entre performance, disponibilité et espace utilisable, je recommande le RAID 5 : il tolère la panne d'un disque et offre (N-1) × capacité d'un disque en espace utile. En cas de panne, les données sont reconstituées grâce à la parité répartie. »
+            </div>
+            <div class="piege-box">RAID ≠ sauvegarde ! Le RAID protège contre la panne matérielle, pas contre la suppression accidentelle ou le ransomware. Toujours coupler RAID + sauvegarde externe.</div>
+            <p style="margin-top:10px">→ <a href="#tab-raid">Voir tableau comparatif RAID ↓</a></p>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Calculer l'espace utile
+          </div>
+          <div class="q-type-body">
+            <strong>Formules :</strong><br>
+            RAID 0 : N × capacité disque (aucune tolérance)<br>
+            RAID 1 : 1 × capacité disque (miroir sur 2)<br>
+            RAID 5 : (N−1) × capacité (parité répartie, N ≥ 3)<br>
+            RAID 6 : (N−2) × capacité (double parité, N ≥ 4)<br>
+            RAID 10 : (N/2) × capacité (miroir + stripe)
+            <div class="phrase-modele">
+              <span class="phrase-label">Exemple</span>
+              4 disques de 2 To en RAID 5 → (4-1) × 2 = <strong>6 To</strong> utiles. Tolérance : 1 disque en panne.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ ATTAQUES ══════════════════════ -->
+    <div class="theme-section" id="attaques">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">⚔️</div>
+        <div>
+          <div class="theme-title">Attaques & Contre-mesures</div>
+        </div>
+        <span class="theme-freq high">★★★ Très fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">attaque</span>
+          <span class="trigger-tag">menace</span>
+          <span class="trigger-tag">vulnérabilité</span>
+          <span class="trigger-tag">phishing</span>
+          <span class="trigger-tag">DDoS</span>
+          <span class="trigger-tag">ransomware</span>
+          <span class="trigger-tag">SQL injection</span>
+          <span class="trigger-tag">MITM</span>
+          <span class="trigger-tag">contre-mesure</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Identifier et décrire une attaque
+          </div>
+          <div class="q-type-body">
+            <strong>Structure :</strong> Nom → Principe → Impact → Exemple concret
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type — Phishing</span>
+              « Le phishing est une attaque par ingénierie sociale où l'attaquant usurpe l'identité d'un organisme de confiance (banque, DSI) par e-mail pour récupérer des identifiants. Contre-mesure : sensibilisation des utilisateurs, filtre anti-spam, authentification MFA. »
+            </div>
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type — Ransomware</span>
+              « Un ransomware chiffre les fichiers de la victime et exige une rançon. Il se propage souvent via une pièce jointe malveillante. Contre-mesures : sauvegardes hors ligne (règle 3-2-1), antivirus à jour, segmentation réseau pour limiter la propagation. »
+            </div>
+            <p style="margin-top:10px">→ <a href="#tab-attaques">Voir tableau attaques / contre-mesures ↓</a></p>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Proposer un plan de contre-mesures
+          </div>
+          <div class="q-type-body">
+            <strong>Structure :</strong> Prévention → Détection → Réaction (les 3 axes de la sécurité)
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Pour se protéger contre cette menace, il convient d'agir sur trois axes : <strong>prévention</strong> (mise à jour des correctifs, durcissement OS, sensibilisation), <strong>détection</strong> (IDS/SIEM, supervision des logs), et <strong>réaction</strong> (plan de reprise d'activité, isolation du poste infecté, restauration depuis sauvegarde saine). »
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ ITIL ══════════════════════ -->
+    <div class="theme-section" id="itil">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">📋</div>
+        <div>
+          <div class="theme-title">ITIL — Gestion des services informatiques</div>
+        </div>
+        <span class="theme-freq med">★★☆ Fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">ITIL</span>
+          <span class="trigger-tag">incident</span>
+          <span class="trigger-tag">problème</span>
+          <span class="trigger-tag">changement</span>
+          <span class="trigger-tag">GLPI</span>
+          <span class="trigger-tag">ticket</span>
+          <span class="trigger-tag">SLA</span>
+          <span class="trigger-tag">helpdesk</span>
+          <span class="trigger-tag">service desk</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Différencier Incident / Problème / Changement
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Définitions ITIL</span>
+              <strong>Incident :</strong> interruption ou dégradation non planifiée d'un service. Objectif : restaurer le service le plus vite possible (workaround acceptable).<br><br>
+              <strong>Problème :</strong> cause inconnue d'un ou plusieurs incidents récurrents. Objectif : identifier la cause racine (Root Cause Analysis) et éliminer le problème.<br><br>
+              <strong>Changement :</strong> modification planifiée de l'infrastructure. Doit passer par un processus de validation (CAB – Change Advisory Board).
+            </div>
+            <div class="piege-box">Un incident se traite VITE (workaround). Un problème se traite bien (analyse de fond). Ne pas les confondre.</div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Expliquer un SLA
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le SLA (Service Level Agreement) est un accord entre le prestataire IT et le client qui définit le niveau de service garanti : temps de réponse, taux de disponibilité (ex : 99,9 %), plages horaires de support. Il fixe les pénalités en cas de non-respect et constitue un engagement contractuel. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 3</span>
+            Décrire le cycle de vie d'un ticket GLPI
+          </div>
+          <div class="q-type-body">
+            Nouveau → Attribué → En cours → En attente → Résolu → Clos
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Dans GLPI, chaque incident est tracé sous forme de ticket. À l'ouverture, le ticket est qualifié (urgence × impact = priorité). Il est attribué à un technicien, qui documente ses actions jusqu'à résolution. Le ticket est clos après validation par l'utilisateur. »
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ CHIFFREMENT / PKI ══════════════════════ -->
+    <div class="theme-section" id="chiffrement">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">🔐</div>
+        <div>
+          <div class="theme-title">Chiffrement / PKI / Certificats</div>
+        </div>
+        <span class="theme-freq high">★★★ Très fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">chiffrement</span>
+          <span class="trigger-tag">PKI</span>
+          <span class="trigger-tag">certificat SSL/TLS</span>
+          <span class="trigger-tag">clé publique / privée</span>
+          <span class="trigger-tag">HTTPS</span>
+          <span class="trigger-tag">VPN</span>
+          <span class="trigger-tag">signature numérique</span>
+          <span class="trigger-tag">AES / RSA</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Distinguer chiffrement symétrique / asymétrique
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le chiffrement <strong>symétrique</strong> (ex : AES-256) utilise la même clé pour chiffrer et déchiffrer : il est très rapide mais pose un problème d'échange de clé. Le chiffrement <strong>asymétrique</strong> (ex : RSA-2048) utilise une paire clé publique / clé privée : la clé publique chiffre, seule la clé privée déchiffre. TLS combine les deux : asymétrique pour l'échange de clé, symétrique pour le chiffrement des données. »
+            </div>
+            <p style="margin-top:10px">→ <a href="#tab-chiffrement">Voir tableau comparatif ↓</a></p>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Expliquer le fonctionnement d'un certificat SSL/TLS
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Un certificat SSL/TLS est un fichier numérique signé par une Autorité de Certification (AC). Il contient la clé publique du serveur, son identité et la durée de validité. Lors d'une connexion HTTPS, le navigateur vérifie la signature de l'AC pour s'assurer de l'authenticité du serveur. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 3</span>
+            Décrire l'infrastructure PKI
+          </div>
+          <div class="q-type-body">
+            <strong>Composants :</strong> AC racine (Root CA) → AC intermédiaire → Certificat final
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Une PKI (Infrastructure à Clés Publiques) est constituée d'une Autorité de Certification racine qui signe les certificats des ACs intermédiaires, lesquelles signent les certificats des entités finales (serveurs, utilisateurs). La chaîne de confiance permet à tout client de vérifier l'authenticité d'un certificat jusqu'à l'AC racine de confiance. »
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ WIFI ══════════════════════ -->
+    <div class="theme-section" id="wifi">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">📶</div>
+        <div>
+          <div class="theme-title">WiFi — Sécurité sans-fil</div>
+        </div>
+        <span class="theme-freq med">★★☆ Fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">WiFi</span>
+          <span class="trigger-tag">WPA2 / WPA3</span>
+          <span class="trigger-tag">RADIUS</span>
+          <span class="trigger-tag">portail captif</span>
+          <span class="trigger-tag">802.1X</span>
+          <span class="trigger-tag">réseau invité</span>
+          <span class="trigger-tag">SSID</span>
+          <span class="trigger-tag">point d'accès</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Choisir entre WPA2-Personal et WPA2-Enterprise
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « WPA2-Personal (PSK) utilise un mot de passe partagé : simple mais peu sûr en entreprise car tout le monde connaît la clé. WPA2-Enterprise utilise le protocole <strong>802.1X avec un serveur RADIUS</strong> : chaque utilisateur s'authentifie avec ses propres identifiants (login/mot de passe ou certificat). C'est la solution recommandée en entreprise car elle permet une gestion individuelle des accès et une traçabilité. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Expliquer le portail captif
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le portail captif est une page web d'authentification qui s'affiche automatiquement quand un utilisateur se connecte à un réseau (ex : WiFi invité). Avant l'authentification, tout trafic est bloqué et redirigé vers cette page. Il permet de contrôler et tracer l'accès Internet (obligation légale HADOPI pour les lieux publics). »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 3</span>
+            Sécuriser un réseau WiFi invité
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le réseau WiFi invité doit être <strong>isolé du LAN entreprise</strong> (VLAN dédié), avec accès uniquement à Internet. Un portail captif assure l'authentification et la traçabilité. Des règles de pare-feu bloquent toute communication vers le réseau interne. »
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:12px; font-size:0.87rem">→ <a href="#tab-wifi">Voir tableau comparatif protocoles WiFi ↓</a></p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ SUPERVISION ══════════════════════ -->
+    <div class="theme-section" id="supervision">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">📊</div>
+        <div>
+          <div class="theme-title">Supervision / SNMP / Nagios</div>
+        </div>
+        <span class="theme-freq med">★★☆ Fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">supervision</span>
+          <span class="trigger-tag">SNMP</span>
+          <span class="trigger-tag">Nagios</span>
+          <span class="trigger-tag">Zabbix</span>
+          <span class="trigger-tag">alerte</span>
+          <span class="trigger-tag">sonde</span>
+          <span class="trigger-tag">disponibilité</span>
+          <span class="trigger-tag">MIB</span>
+          <span class="trigger-tag">trap</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Justifier la mise en place d'un système de supervision
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « La supervision réseau permet de <strong>surveiller en temps réel la disponibilité et les performances</strong> des équipements (serveurs, commutateurs, routeurs). Elle génère des alertes en cas d'anomalie (surcharge CPU, espace disque critique, service down) permettant une intervention avant l'impact utilisateur. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Expliquer SNMP v3 vs v1/v2
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « SNMP v1 et v2 transmettent les informations en <strong>clair avec une communauté en texte brut</strong> (ex : « public ») — facilement interceptable. SNMP v3 apporte l'<strong>authentification</strong> (SHA/MD5) et le <strong>chiffrement</strong> (AES/DES) des échanges. En entreprise, seul SNMP v3 est recommandé. »
+            </div>
+            <div class="piege-box">SNMP v2c n'ajoute pas la sécurité par rapport à v1 ; seul SNMP v3 est sécurisé.</div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 3</span>
+            Différencier polling et trap SNMP
+          </div>
+          <div class="q-type-body">
+            <strong>Polling (requête GET) :</strong> le serveur interroge régulièrement les équipements → proactif mais génère du trafic<br>
+            <strong>Trap :</strong> l'équipement envoie une alerte immédiatement quand un événement survient → réactif, moins de trafic
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « En production, on combine les deux : le polling surveille les métriques de base à intervalle régulier, et les traps remontent instantanément les alertes critiques sans attendre le prochain cycle de polling. »
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ EBIOS ══════════════════════ -->
+    <div class="theme-section" id="ebios">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">⚠️</div>
+        <div>
+          <div class="theme-title">EBIOS RM — Analyse des risques</div>
+        </div>
+        <span class="theme-freq high">★★★ Très fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">EBIOS</span>
+          <span class="trigger-tag">risque</span>
+          <span class="trigger-tag">vraisemblance</span>
+          <span class="trigger-tag">gravité</span>
+          <span class="trigger-tag">bien support</span>
+          <span class="trigger-tag">source de risque</span>
+          <span class="trigger-tag">scénario d'attaque</span>
+          <span class="trigger-tag">traitement du risque</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Définir EBIOS RM et ses 5 ateliers
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « EBIOS Risk Manager est la méthode nationale (ANSSI) d'analyse de risques cybersécurité. Elle s'articule en <strong>5 ateliers</strong> : 1) Cadrage et socle de sécurité → 2) Sources de risque → 3) Scénarios stratégiques → 4) Scénarios opérationnels → 5) Traitement du risque. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Calculer et positionner un risque (matrice)
+          </div>
+          <div class="q-type-body">
+            <strong>Méthode :</strong> Évaluer la <strong>vraisemblance</strong> (probabilité, 1→4) × la <strong>gravité</strong> (impact, 1→4) → placer sur la matrice → décider du traitement
+            <div class="phrase-modele">
+              <span class="phrase-label">Traitement du risque</span>
+              <strong>Accepter</strong> : risque faible, coût de traitement supérieur au risque<br>
+              <strong>Réduire</strong> : mettre en place des mesures de sécurité<br>
+              <strong>Transférer</strong> : souscrire une assurance cyber<br>
+              <strong>Éviter</strong> : supprimer l'activité génératrice du risque
+            </div>
+            <p style="margin-top:10px">→ <a href="#tab-ebios">Voir matrice EBIOS ↓</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ ACTIVE DIRECTORY ══════════════════════ -->
+    <div class="theme-section" id="ad">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">🏢</div>
+        <div>
+          <div class="theme-title">Active Directory / GPO</div>
+        </div>
+        <span class="theme-freq med">★★☆ Fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">Active Directory</span>
+          <span class="trigger-tag">GPO</span>
+          <span class="trigger-tag">domaine</span>
+          <span class="trigger-tag">OU</span>
+          <span class="trigger-tag">groupe</span>
+          <span class="trigger-tag">contrôleur de domaine</span>
+          <span class="trigger-tag">LDAP</span>
+          <span class="trigger-tag">authentification centralisée</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Justifier l'utilisation d'Active Directory
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Active Directory centralise l'<strong>authentification</strong> et la <strong>gestion des ressources</strong> du domaine. Les utilisateurs s'authentifient une seule fois (SSO – Single Sign-On) et accèdent à leurs ressources selon leurs droits. Les GPO permettent d'appliquer des paramètres de sécurité (politique de mot de passe, verrouillage d'écran, restriction des logiciels) à des groupes d'utilisateurs ou d'ordinateurs. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Structurer les OUs et groupes
+          </div>
+          <div class="q-type-body">
+            <strong>Principes :</strong> 1 OU par département ou site → groupes de sécurité → GPO liée à l'OU
+            <div class="phrase-modele">
+              <span class="phrase-label">Exemple de structure</span>
+              Domaine : entreprise.local<br>
+              OU : Direction, Comptabilité, Informatique, RH<br>
+              Groupe : GRP_Compta → membres : tous les comptes du service Comptabilité<br>
+              GPO sur OU Informatique : désactiver le pare-feu Windows (géré par le pare-feu central)
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ IDS ══════════════════════ -->
+    <div class="theme-section" id="ids">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">🔍</div>
+        <div>
+          <div class="theme-title">IDS / IPS / Snort</div>
+        </div>
+        <span class="theme-freq low">★☆☆ Moins fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">IDS</span>
+          <span class="trigger-tag">IPS</span>
+          <span class="trigger-tag">Snort</span>
+          <span class="trigger-tag">intrusion</span>
+          <span class="trigger-tag">détection</span>
+          <span class="trigger-tag">signature</span>
+          <span class="trigger-tag">anomalie</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Différencier IDS et IPS
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Un <strong>IDS</strong> (Intrusion Detection System) analyse le trafic réseau et <strong>génère des alertes</strong> en cas de détection de comportement suspect, sans agir sur les flux. Un <strong>IPS</strong> (Intrusion Prevention System) peut, en plus, <strong>bloquer automatiquement</strong> le trafic malveillant. Snort peut fonctionner en mode IDS (passif) ou IPS (inline). »
+            </div>
+            <div class="piege-box">Un IDS ne bloque rien : il détecte et alerte. C'est l'IPS qui bloque. Le choix dépend du risque de faux positifs.</div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Lire / écrire une règle Snort
+          </div>
+          <div class="q-type-body">
+            <strong>Syntaxe :</strong> <code>action protocole IP_src port_src → IP_dst port_dst (options)</code>
+            <div class="phrase-modele">
+              <span class="phrase-label">Exemple</span>
+              <code>alert tcp any any → 192.168.1.0/24 22 (msg:"Tentative SSH brute-force"; threshold:type both, track by_src, count 5, seconds 60; sid:1000001;)</code><br><br>
+              → Alerte si une IP tente + de 5 connexions SSH en 60s vers le LAN.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════ RGPD ══════════════════════ -->
+    <div class="theme-section" id="rgpd">
+      <div class="theme-header" onclick="toggle(this)">
+        <div class="theme-icon">⚖️</div>
+        <div>
+          <div class="theme-title">RGPD / Conformité</div>
+        </div>
+        <span class="theme-freq med">★★☆ Fréquent</span>
+        <span style="font-size:1.2rem; margin-left:8px; color:var(--text-secondary)">▾</span>
+      </div>
+      <div class="theme-body">
+
+        <div class="trigger-box">
+          <strong>Mots déclencheurs :</strong>
+          <span class="trigger-tag">RGPD</span>
+          <span class="trigger-tag">données personnelles</span>
+          <span class="trigger-tag">DPO</span>
+          <span class="trigger-tag">consentement</span>
+          <span class="trigger-tag">droit à l'oubli</span>
+          <span class="trigger-tag">violation de données</span>
+          <span class="trigger-tag">CNIL</span>
+          <span class="trigger-tag">registre des traitements</span>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 1</span>
+            Identifier les obligations RGPD
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le RGPD impose plusieurs obligations : tenir un <strong>registre des traitements</strong>, recueillir le <strong>consentement explicite</strong> des personnes concernées, respecter les <strong>droits des personnes</strong> (accès, rectification, effacement, portabilité), et <strong>notifier la CNIL sous 72h</strong> en cas de violation de données. »
+            </div>
+          </div>
+        </div>
+
+        <div class="q-type">
+          <div class="q-type-header">
+            <span class="q-type-label">TYPE 2</span>
+            Rôle du DPO
+          </div>
+          <div class="q-type-body">
+            <div class="phrase-modele">
+              <span class="phrase-label">Phrase type</span>
+              « Le DPO (Data Protection Officer / Délégué à la Protection des Données) est le responsable de la conformité RGPD au sein de l'organisation. Il conseille les équipes, sensibilise le personnel, réalise les analyses d'impact (PIA), et est l'interlocuteur de la CNIL. Sa nomination est obligatoire pour les organismes publics et certains traitements à grande échelle. »
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- ████████ SECTION TABLEAUX ████████ -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="section-tableaux" id="tableaux">
+      <h2>📊 Tableaux de référence</h2>
+      <p class="sub">Réponses directement sous forme de tableau — à compléter en examen en suivant la structure ci-dessous.</p>
+
+      <!-- ── TABLE DE FILTRAGE ── -->
+      <div class="tableau-block" id="tab-filtrage">
+        <h3>🛡️ Table de filtrage — Modèle complet</h3>
+        <p class="desc">Comment remplir : lire l'énoncé → identifier chaque flux autorisé → 1 règle par flux → finir par DENY ALL.</p>
+        <div style="overflow-x:auto">
+          <table class="t-table">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>IP Source</th>
+                <th>Port Src</th>
+                <th>IP Destination</th>
+                <th>Port Dest</th>
+                <th>Proto</th>
+                <th>Action</th>
+                <th>Commentaire</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>192.168.10.0/24<br><small>(LAN Admin)</small></td>
+                <td>*</td>
+                <td>10.0.1.10<br><small>(Srv Web)</small></td>
+                <td>443</td>
+                <td>TCP</td>
+                <td><span class="badge-green">ACCEPT</span></td>
+                <td>Administration HTTPS depuis LAN</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>0.0.0.0/0<br><small>(Internet)</small></td>
+                <td>*</td>
+                <td>10.0.1.10<br><small>(Srv Web)</small></td>
+                <td>443</td>
+                <td>TCP</td>
+                <td><span class="badge-green">ACCEPT</span></td>
+                <td>Accès HTTPS public</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>192.168.10.0/24<br><small>(LAN Admin)</small></td>
+                <td>*</td>
+                <td>10.0.1.20<br><small>(Srv SSH)</small></td>
+                <td>22</td>
+                <td>TCP</td>
+                <td><span class="badge-green">ACCEPT</span></td>
+                <td>SSH admin seulement depuis LAN</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>10.0.1.0/24<br><small>(DMZ)</small></td>
+                <td>*</td>
+                <td>8.8.8.8<br><small>(DNS externe)</small></td>
+                <td>53</td>
+                <td>UDP</td>
+                <td><span class="badge-green">ACCEPT</span></td>
+                <td>Résolution DNS serveur DMZ</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>0.0.0.0/0</td>
+                <td>*</td>
+                <td>192.168.0.0/16<br><small>(LAN interne)</small></td>
+                <td>*</td>
+                <td>*</td>
+                <td><span class="badge-red">DROP</span></td>
+                <td>⚠️ Règle par défaut — tout refuser</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px; background:var(--bg); border-radius:10px; padding:12px 16px; font-size:0.84rem;">
+          <strong>Ports à connaître par cœur :</strong><br>
+          20/21=FTP · 22=SSH · 25=SMTP · 53=DNS · 80=HTTP · 110=POP3 · 143=IMAP · 443=HTTPS · 3389=RDP · 3306=MySQL · 5900=VNC · 8080=HTTP alternatif
+        </div>
+      </div>
+
+      <!-- ── MATRICE EBIOS ── -->
+      <div class="tableau-block" id="tab-ebios">
+        <h3>⚠️ Matrice EBIOS RM — Vraisemblance × Gravité</h3>
+        <p class="desc">Positionner chaque scénario de risque sur la matrice, puis décider du traitement.</p>
+        <div style="overflow-x:auto; margin-bottom:16px">
+          <table class="ebios-matrix">
+            <thead>
+              <tr>
+                <th>Vraisemblance ↓ / Gravité →</th>
+                <th>1 - Négligeable</th>
+                <th>2 - Limitée</th>
+                <th>3 - Importante</th>
+                <th>4 - Critique</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>4 - Maximale</th>
+                <td class="risk-2">Modéré</td>
+                <td class="risk-3">Élevé</td>
+                <td class="risk-4">Critique</td>
+                <td class="risk-4">Critique</td>
+              </tr>
+              <tr>
+                <th>3 - Forte</th>
+                <td class="risk-1">Faible</td>
+                <td class="risk-2">Modéré</td>
+                <td class="risk-3">Élevé</td>
+                <td class="risk-4">Critique</td>
+              </tr>
+              <tr>
+                <th>2 - Moyenne</th>
+                <td class="risk-1">Faible</td>
+                <td class="risk-1">Faible</td>
+                <td class="risk-2">Modéré</td>
+                <td class="risk-3">Élevé</td>
+              </tr>
+              <tr>
+                <th>1 - Minime</th>
+                <td class="risk-1">Faible</td>
+                <td class="risk-1">Faible</td>
+                <td class="risk-1">Faible</td>
+                <td class="risk-2">Modéré</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <table class="t-table">
+          <thead><tr><th>Niveau</th><th>Traitement recommandé</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge-green">Faible</span></td><td><strong>Accepter</strong> — surveiller, pas d'action immédiate nécessaire</td></tr>
+            <tr><td><span class="badge-blue">Modéré</span></td><td><strong>Réduire</strong> — mettre en place des mesures de sécurité proportionnées</td></tr>
+            <tr><td><span class="badge-orange">Élevé</span></td><td><strong>Réduire en priorité</strong> — mesures techniques + organisationnelles</td></tr>
+            <tr><td><span class="badge-red">Critique</span></td><td><strong>Réduire ou éviter</strong> — action immédiate, escalade à la direction</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:14px; background:var(--bg); border-radius:10px; padding:12px 16px; font-size:0.84rem;">
+          <strong>Vocabulaire EBIOS à placer :</strong> Bien support · Événement redouté · Source de risque · Parties prenantes · Chemin d'attaque · Mesures de sécurité existantes · Risque résiduel
+        </div>
+      </div>
+
+      <!-- ── VLAN ATTRIBUTION ── -->
+      <div class="tableau-block" id="tab-vlan">
+        <h3>🔀 Plan d'adressage VLAN — Modèle</h3>
+        <p class="desc">À compléter selon l'énoncé. Chaque service = 1 VLAN = 1 sous-réseau.</p>
+        <div style="overflow-x:auto">
+          <table class="t-table">
+            <thead>
+              <tr>
+                <th>VLAN ID</th>
+                <th>Nom</th>
+                <th>Réseau</th>
+                <th>Masque</th>
+                <th>Passerelle</th>
+                <th>Plage DHCP</th>
+                <th>Port type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>10</strong></td>
+                <td>Administration</td>
+                <td>192.168.10.0</td>
+                <td>/24</td>
+                <td>192.168.10.1</td>
+                <td>.10 → .50</td>
+                <td>Access</td>
+              </tr>
+              <tr>
+                <td><strong>20</strong></td>
+                <td>Production</td>
+                <td>192.168.20.0</td>
+                <td>/24</td>
+                <td>192.168.20.1</td>
+                <td>.10 → .100</td>
+                <td>Access</td>
+              </tr>
+              <tr>
+                <td><strong>30</strong></td>
+                <td>Serveurs / DMZ</td>
+                <td>10.0.30.0</td>
+                <td>/24</td>
+                <td>10.0.30.1</td>
+                <td>Statique</td>
+                <td>Access</td>
+              </tr>
+              <tr>
+                <td><strong>40</strong></td>
+                <td>Invités (WiFi)</td>
+                <td>172.16.40.0</td>
+                <td>/24</td>
+                <td>172.16.40.1</td>
+                <td>.10 → .200</td>
+                <td>Access</td>
+              </tr>
+              <tr>
+                <td><strong>99</strong></td>
+                <td>Management</td>
+                <td>10.0.99.0</td>
+                <td>/27</td>
+                <td>10.0.99.1</td>
+                <td>Statique</td>
+                <td>Access</td>
+              </tr>
+              <tr style="background: var(--bg)">
+                <td><strong>Trunk</strong></td>
+                <td colspan="5"><em>Port inter-commutateurs et vers pare-feu — transporte tous les VLANs taggés (802.1Q)</em></td>
+                <td>Trunk</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── RAID ── -->
+      <div class="tableau-block" id="tab-raid">
+        <h3>💾 Comparatif RAID</h3>
+        <p class="desc">À utiliser pour justifier ou comparer des niveaux RAID selon le besoin de l'énoncé.</p>
+        <div style="overflow-x:auto">
+          <table class="t-table">
+            <thead>
+              <tr>
+                <th>Niveau</th>
+                <th>Nom</th>
+                <th>Disques min.</th>
+                <th>Espace utile</th>
+                <th>Tolérance pannes</th>
+                <th>Perf. lecture</th>
+                <th>Perf. écriture</th>
+                <th>Usage recommandé</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>RAID 0</strong></td>
+                <td>Striping</td>
+                <td>2</td>
+                <td>N × d</td>
+                <td><span class="badge-red">0 disque</span></td>
+                <td>⚡⚡⚡</td>
+                <td>⚡⚡⚡</td>
+                <td>Vidéo / scratchpad (pas prod)</td>
+              </tr>
+              <tr>
+                <td><strong>RAID 1</strong></td>
+                <td>Mirroring</td>
+                <td>2</td>
+                <td>1 × d</td>
+                <td><span class="badge-green">1 disque</span></td>
+                <td>⚡⚡</td>
+                <td>⚡</td>
+                <td>OS, données critiques, PRA</td>
+              </tr>
+              <tr>
+                <td><strong>RAID 5</strong></td>
+                <td>Parité répartie</td>
+                <td>3</td>
+                <td>(N−1) × d</td>
+                <td><span class="badge-green">1 disque</span></td>
+                <td>⚡⚡⚡</td>
+                <td>⚡⚡</td>
+                <td>Serveur de fichiers — <strong>le plus utilisé</strong></td>
+              </tr>
+              <tr>
+                <td><strong>RAID 6</strong></td>
+                <td>Double parité</td>
+                <td>4</td>
+                <td>(N−2) × d</td>
+                <td><span class="badge-green">2 disques</span></td>
+                <td>⚡⚡</td>
+                <td>⚡</td>
+                <td>Archivage, données critiques</td>
+              </tr>
+              <tr>
+                <td><strong>RAID 10</strong></td>
+                <td>Mirror + Stripe</td>
+                <td>4</td>
+                <td>(N/2) × d</td>
+                <td><span class="badge-green">1/miroir</span></td>
+                <td>⚡⚡⚡</td>
+                <td>⚡⚡⚡</td>
+                <td>BDD haute dispo (perf + sécu)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:10px; font-size:0.84rem; color:var(--text-secondary)">
+          d = capacité d'un disque · N = nombre total de disques · ⚠️ RAID ≠ sauvegarde
+        </div>
+      </div>
+
+      <!-- ── ATTAQUES / CONTRE-MESURES ── -->
+      <div class="tableau-block" id="tab-attaques">
+        <h3>⚔️ Attaques & Contre-mesures</h3>
+        <p class="desc">Tableau de référence pour identifier une attaque depuis l'énoncé et proposer les bonnes contre-mesures.</p>
+        <div style="overflow-x:auto">
+          <table class="t-table">
+            <thead>
+              <tr>
+                <th>Attaque</th>
+                <th>Principe</th>
+                <th>Indices dans l'énoncé</th>
+                <th>Contre-mesures</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Phishing</strong></td>
+                <td>Usurpation d'identité par e-mail</td>
+                <td>« lien suspect », « e-mail de la banque », « identifiants volés »</td>
+                <td>Sensibilisation, filtre anti-spam, MFA, SPF/DKIM</td>
+              </tr>
+              <tr>
+                <td><strong>Ransomware</strong></td>
+                <td>Chiffrement des fichiers + rançon</td>
+                <td>« fichiers inaccessibles », « message de rançon », « .locked »</td>
+                <td>Sauvegardes hors-ligne (3-2-1), antivirus EDR, segmentation, MàJ</td>
+              </tr>
+              <tr>
+                <td><strong>DDoS</strong></td>
+                <td>Saturation d'un service par flood</td>
+                <td>« site indisponible », « surcharge réseau », « milliers de requêtes »</td>
+                <td>Anti-DDoS (Cloudflare), rate-limiting, pare-feu applicatif (WAF)</td>
+              </tr>
+              <tr>
+                <td><strong>Injection SQL</strong></td>
+                <td>Injection de code SQL dans champs web</td>
+                <td>« formulaire web », « base de données corrompue », « ' OR 1=1 »</td>
+                <td>Requêtes préparées, WAF, contrôle des entrées, moindre privilège BDD</td>
+              </tr>
+              <tr>
+                <td><strong>MITM</strong></td>
+                <td>Interception du trafic en transit</td>
+                <td>« réseau non chiffré », « WiFi public », « ARP spoofing »</td>
+                <td>HTTPS/TLS, VPN, certificats, HSTS, DNSSEC</td>
+              </tr>
+              <tr>
+                <td><strong>Bruteforce</strong></td>
+                <td>Essai systématique de mots de passe</td>
+                <td>« tentatives connexion répétées », « compte bloqué », « SSH exposé »</td>
+                <td>Politique mdp fort, verrouillage compte, MFA, fail2ban, changement port</td>
+              </tr>
+              <tr>
+                <td><strong>ARP Spoofing</strong></td>
+                <td>Fausse réponse ARP → redirection trafic</td>
+                <td>« réseau local », « table ARP corrompue », « interception LAN »</td>
+                <td>DAI (Dynamic ARP Inspection), VLAN isolation, 802.1X</td>
+              </tr>
+              <tr>
+                <td><strong>Social Engineering</strong></td>
+                <td>Manipulation humaine pour obtenir accès</td>
+                <td>« appel téléphonique », « visite locaux », « prétexte »</td>
+                <td>Procédures de vérification d'identité, sensibilisation, charte info</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── WIFI PROTOCOLES ── -->
+      <div class="tableau-block" id="tab-wifi">
+        <h3>📶 Comparatif protocoles WiFi / Sécurité</h3>
+        <p class="desc">Pour choisir et justifier un protocole WiFi en examen.</p>
+        <div style="overflow-x:auto">
+          <table class="t-table">
+            <thead>
+              <tr>
+                <th>Protocole</th>
+                <th>Norme</th>
+                <th>Chiffrement</th>
+                <th>Auth.</th>
+                <th>Niveau sécurité</th>
+                <th>Usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>WEP</strong></td>
+                <td>802.11b</td>
+                <td>RC4 (40 bits)</td>
+                <td>Clé partagée</td>
+                <td><span class="badge-red">Obsolète — cassé</span></td>
+                <td>À ne jamais utiliser</td>
+              </tr>
+              <tr>
+                <td><strong>WPA</strong></td>
+                <td>802.11i (transitoire)</td>
+                <td>TKIP</td>
+                <td>PSK ou 802.1X</td>
+                <td><span class="badge-orange">Faible</span></td>
+                <td>Déprécié</td>
+              </tr>
+              <tr>
+                <td><strong>WPA2-Personal</strong></td>
+                <td>802.11i</td>
+                <td>AES-CCMP</td>
+                <td>PSK (mdp partagé)</td>
+                <td><span class="badge-blue">Moyen</span></td>
+                <td>Domicile / petite structure</td>
+              </tr>
+              <tr>
+                <td><strong>WPA2-Enterprise</strong></td>
+                <td>802.11i + 802.1X</td>
+                <td>AES-CCMP</td>
+                <td>RADIUS (EAP)</td>
+                <td><span class="badge-green">Recommandé</span></td>
+                <td><strong>Entreprise</strong> — auth individuelle</td>
+              </tr>
+              <tr>
+                <td><strong>WPA3</strong></td>
+                <td>802.11ax</td>
+                <td>AES-256 / SAE</td>
+                <td>SAE / 802.1X</td>
+                <td><span class="badge-green">Meilleur actuel</span></td>
+                <td>Nouveaux déploiements</td>
+              </tr>
+              <tr>
+                <td><strong>Portail captif</strong></td>
+                <td>—</td>
+                <td>HTTPS (redirection)</td>
+                <td>Page web</td>
+                <td><span class="badge-blue">Traçabilité</span></td>
+                <td><strong>Réseau invité</strong> — HADOPI</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── CHIFFREMENT ── -->
+      <div class="tableau-block" id="tab-chiffrement">
+        <h3>🔐 Comparatif algorithmes de chiffrement</h3>
+        <p class="desc">Pour choisir ou justifier un algorithme selon le contexte de l'énoncé.</p>
+        <div style="overflow-x:auto">
+          <table class="t-table">
+            <thead>
+              <tr>
+                <th>Algorithme</th>
+                <th>Type</th>
+                <th>Clé</th>
+                <th>Vitesse</th>
+                <th>Usage principal</th>
+                <th>Niveau sécurité</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AES-256</strong></td>
+                <td>Symétrique</td>
+                <td>256 bits</td>
+                <td>⚡⚡⚡ Très rapide</td>
+                <td>Chiffrement données, disques, fichiers, VPN</td>
+                <td><span class="badge-green">Excellent</span></td>
+              </tr>
+              <tr>
+                <td><strong>3DES</strong></td>
+                <td>Symétrique</td>
+                <td>168 bits</td>
+                <td>⚡ Lent</td>
+                <td>Systèmes legacy (à éviter)</td>
+                <td><span class="badge-orange">Déprécié</span></td>
+              </tr>
+              <tr>
+                <td><strong>RSA-2048</strong></td>
+                <td>Asymétrique</td>
+                <td>2048 bits</td>
+                <td>⚡ Lent</td>
+                <td>Échange de clé, signature numérique, certificats</td>
+                <td><span class="badge-green">Bon</span></td>
+              </tr>
+              <tr>
+                <td><strong>RSA-4096</strong></td>
+                <td>Asymétrique</td>
+                <td>4096 bits</td>
+                <td>Très lent</td>
+                <td>AC racine, haute sécurité</td>
+                <td><span class="badge-green">Excellent</span></td>
+              </tr>
+              <tr>
+                <td><strong>ECDSA</strong></td>
+                <td>Asymétrique (courbes)</td>
+                <td>256 bits = RSA-3072</td>
+                <td>⚡⚡ Rapide</td>
+                <td>TLS moderne, certificats web</td>
+                <td><span class="badge-green">Excellent</span></td>
+              </tr>
+              <tr>
+                <td><strong>SHA-256</strong></td>
+                <td>Hachage</td>
+                <td>—</td>
+                <td>⚡⚡⚡</td>
+                <td>Intégrité, signature, mots de passe</td>
+                <td><span class="badge-green">Standard actuel</span></td>
+              </tr>
+              <tr>
+                <td><strong>MD5</strong></td>
+                <td>Hachage</td>
+                <td>—</td>
+                <td>⚡⚡⚡</td>
+                <td>Ne plus utiliser pour sécurité</td>
+                <td><span class="badge-red">Cassé / obsolète</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px; background:var(--bg); border-radius:10px; padding:12px 16px; font-size:0.84rem;">
+          <strong>TLS (HTTPS) en pratique :</strong> RSA/ECDSA pour l'échange de clé → AES-256 pour le chiffrement du canal → SHA-256 pour l'intégrité. TLS 1.2 minimum, TLS 1.3 recommandé.
+        </div>
+      </div>
+
+    </div><!-- /section-tableaux -->
+
+  </main>
+
+  <footer style="text-align:center; padding: 40px 20px; font-size:0.83rem; color:var(--text-secondary); border-top: 1px solid var(--border-light); margin-top: 48px;">
+    BTS SIO SISR — Révision Cybersécurité
+  </footer>
+
+  <script>
+    // ── Toggle section ──
+    function toggle(header) {
+      const body = header.nextElementSibling;
+      const arrow = header.querySelector('span:last-child');
+      const collapsed = body.classList.toggle('collapsed');
+      arrow.textContent = collapsed ? '▸' : '▾';
+    }
+
+    // ── Expand / Collapse all ──
+    let allExpanded = true;
+    function toggleAll() {
+      const bodies = document.querySelectorAll('.theme-body');
+      const btn = document.getElementById('expandAll');
+      allExpanded = !allExpanded;
+      bodies.forEach(b => {
+        if (allExpanded) {
+          b.classList.remove('collapsed');
+        } else {
+          b.classList.add('collapsed');
+        }
+      });
+      btn.textContent = allExpanded ? 'Tout réduire ▲' : 'Tout déplier ▼';
+      // sync arrows
+      document.querySelectorAll('.theme-header span:last-child').forEach(a => {
+        a.textContent = allExpanded ? '▾' : '▸';
+      });
+    }
+  </script>
+
+</body>
+</html>
