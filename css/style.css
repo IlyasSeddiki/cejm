@@ -123,23 +123,42 @@ body {
 .nav-dropdown:hover > a .dd-arrow { transform: rotate(180deg); }
 
 .dropdown-menu {
-  display: none;
+  /* Invisible par défaut — on garde l'élément dans le DOM pour éviter tout "gap" */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 4px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-4px);
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
-  min-width: 180px;
+  min-width: 190px;
   padding: 8px;
   z-index: 500;
   list-style: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+
+/* Pont transparent qui comble le micro-gap entre le lien et le menu */
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
 }
 
 .nav-dropdown:hover .dropdown-menu,
-.nav-dropdown:focus-within .dropdown-menu { display: block; }
+.nav-dropdown:focus-within .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
 
 .dropdown-menu li a {
   display: block;
